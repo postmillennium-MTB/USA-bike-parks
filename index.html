@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>US Lift-Served Bike Parks</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+  :root{--dirt:#c4682a;--forest:#2d4a1e;--sky:#1a2e3b;--chalk:#f5f0e8;--chalk-dim:#ddd6c8;--warn:#e8b84b;--new:#5ba85c;--closed:#c0392b;--loam:#2a8c6e;--card-bg:#1e2f3c;--card-border:#2e4255;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'DM Sans',sans-serif;background:var(--sky);color:var(--chalk);min-height:100vh}
+  header{background:linear-gradient(135deg,var(--forest) 0%,var(--sky) 60%);padding:48px 32px 40px;border-bottom:3px solid var(--dirt);position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;top:-30px;right:-40px;width:280px;height:280px;background:radial-gradient(circle,rgba(196,104,42,.18) 0%,transparent 70%);border-radius:50%}
+  header h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,6vw,4.5rem);letter-spacing:.04em;line-height:1;text-shadow:2px 3px 0 rgba(0,0,0,.4)}
+  header h1 span{color:var(--dirt)}
+  header p{margin-top:12px;font-size:.92rem;color:var(--chalk-dim);font-weight:300;max-width:560px;line-height:1.6}
+  .stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .stat-pill{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 14px;font-size:.8rem;font-weight:500;color:var(--chalk-dim)}
+  .stat-pill strong{color:var(--warn)}
+  .tww-credit{margin-top:18px;display:inline-flex;align-items:center;gap:9px;background:rgba(196,104,42,.13);border:1px solid rgba(196,104,42,.35);border-radius:8px;padding:9px 16px;font-size:.82rem;color:var(--chalk-dim);line-height:1.5;max-width:600px}
+  .tww-credit a{color:var(--warn);font-weight:700;text-decoration:none}
+  .tww-credit a:hover{text-decoration:underline}
+  .legend{display:flex;flex-wrap:wrap;gap:12px;padding:12px 32px;background:rgba(0,0,0,.2);border-bottom:1px solid var(--card-border);font-size:.78rem;color:var(--chalk-dim)}
+  .legend-item{display:flex;align-items:center;gap:5px}
+  .tag{display:inline-block;padding:1px 7px;border-radius:3px;font-size:.7rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase}
+  .tag-new{background:var(--new);color:#fff}
+  .tag-closed{background:var(--closed);color:#fff}
+  .tag-lift{background:var(--dirt);color:#fff}
+  .tag-loam{background:var(--loam);color:#fff;letter-spacing:.01em}
+  .pie-bar{padding:12px 32px;background:rgba(0,0,0,.15);border-bottom:1px solid var(--card-border);display:flex;align-items:center;gap:12px}
+  .pie-toggle-btn{background:var(--card-bg);border:1px solid var(--dirt);color:var(--warn);padding:7px 18px;border-radius:6px;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.06em;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .15s,color .15s}
+  .pie-toggle-btn:hover{background:var(--dirt);color:#fff}
+  .pie-toggle-btn .arrow{transition:transform .25s;display:inline-block}
+  .pie-toggle-btn.open .arrow{transform:rotate(180deg)}
+  .pie-panel{display:none;background:var(--card-bg);border-bottom:2px solid var(--dirt);padding:28px 32px;animation:slideDown .25s ease}
+  .pie-panel.visible{display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}
+  @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+  .pie-panel h3{width:100%;font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.06em;color:var(--warn);margin-bottom:2px}
+  .pie-panel p.pie-sub{font-size:.78rem;color:var(--chalk-dim);margin-bottom:16px;width:100%}
+  #pieCanvas{max-width:340px;width:100%;height:auto;cursor:crosshair}
+  .pie-legend-list{flex:1;min-width:200px;display:flex;flex-direction:column;gap:5px;max-height:380px;overflow-y:auto}
+  .pie-legend-list::-webkit-scrollbar{width:4px}
+  .pie-legend-list::-webkit-scrollbar-thumb{background:var(--dirt);border-radius:2px}
+  .pie-legend-item{display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--chalk-dim);cursor:pointer;padding:3px 6px;border-radius:4px;transition:background .1s}
+  .pie-legend-item:hover,.pie-legend-item.highlighted{background:rgba(232,184,75,.12);color:var(--chalk)}
+  .pie-swatch{width:12px;height:12px;border-radius:2px;flex-shrink:0}
+  .pie-legend-item .pie-label{flex:1}
+  .pie-legend-item .pie-count{font-weight:700;color:var(--warn)}
+  .filter-bar{padding:14px 32px;background:rgba(0,0,0,.12);border-bottom:1px solid var(--card-border);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .filter-bar label{font-size:.78rem;color:var(--chalk-dim);margin-right:4px}
+  .filter-btn{background:transparent;border:1px solid var(--card-border);color:var(--chalk-dim);padding:4px 12px;border-radius:4px;font-family:'DM Sans',sans-serif;font-size:.78rem;cursor:pointer;transition:all .15s}
+  .filter-btn:hover,.filter-btn.active{background:var(--dirt);border-color:var(--dirt);color:#fff}
+  #search{margin-left:auto;background:rgba(255,255,255,.07);border:1px solid var(--card-border);color:var(--chalk);padding:5px 12px;border-radius:4px;font-family:'DM Sans',sans-serif;font-size:.82rem;width:180px;outline:none}
+  #search::placeholder{color:rgba(255,255,255,.3)}
+  #search:focus{border-color:var(--dirt)}
+  main{padding:24px 32px 48px;max-width:1400px;margin:0 auto}
+  .state-section{margin-bottom:36px}
+  .state-header{display:flex;align-items:center;gap:14px;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--card-border)}
+  .state-name{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.06em;color:var(--warn)}
+  .state-count{background:rgba(232,184,75,.15);border:1px solid rgba(232,184,75,.3);color:var(--warn);border-radius:12px;padding:1px 8px;font-size:.72rem;font-weight:700}
+  .park-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+  .park-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:8px;padding:16px 18px;transition:border-color .15s,transform .15s}
+  .park-card:hover{border-color:var(--dirt);transform:translateY(-2px)}
+  .park-card.closed{opacity:.65;border-color:rgba(192,57,43,.4)}
+  .park-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:10px}
+  .park-name{font-weight:700;font-size:.97rem;line-height:1.3}
+  .park-location{font-size:.78rem;color:var(--chalk-dim);font-weight:300;margin-top:2px}
+  .tags{display:flex;gap:4px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+  .park-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.07)}
+  .ps-item{display:flex;flex-direction:column;gap:1px}
+  .ps-label{font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.35);font-weight:500}
+  .ps-value{font-size:.8rem;color:var(--chalk-dim);font-weight:500}
+  .ps-value.hl{color:var(--warn)}
+  .park-note{margin-top:9px;font-size:.75rem;color:var(--warn);font-style:italic;line-height:1.4}
+  .park-link{display:inline-block;margin-top:10px;font-size:.72rem;color:var(--dirt);text-decoration:none;font-weight:600}
+  .park-link:hover{color:var(--warn)}
+  footer{text-align:center;padding:24px;font-size:.75rem;color:rgba(255,255,255,.3);border-top:1px solid var(--card-border)}
+  footer a{color:var(--dirt);text-decoration:none}
+  footer a:hover{color:var(--warn)}
+  .hidden{display:none!important}
+  @media(max-width:600px){header,main,.filter-bar,.legend,.pie-bar,.pie-panel{padding-left:16px;padding-right:16px}.park-grid{grid-template-columns:1fr}#search{width:100%;margin-left:0}}
+</style>
+</head>
+<body>
+<header>
+  <h1>LIFT-SERVED <span>BIKE PARKS</span><br>IN THE USA</h1>
+  <p>A comprehensive guide to every chairlift- and gondola-served downhill mountain bike park across the United States.</p>
+  <div class="stats">
+    <div class="stat-pill"><strong>55+</strong> Lift-Served Parks</div>
+    <div class="stat-pill"><strong>28</strong> States</div>
+    <div class="stat-pill"><strong>Updated</strong> May 2026</div>
+    <div class="stat-pill">Includes <strong>2025–26 Openings</strong></div>
+  </div>
+  <div class="tww-credit">
+    <span style="font-size:1.4rem">🚵</span>
+    <span>Base list sourced from <a href="https://www.twowheeledwanderer.com/posts/mountain-bike-parks-united-states/" target="_blank">Two Wheeled Wanderer</a> — Becky Timbers' incredible resource for bike park guides, MTB trip planning, and destination reviews. Seriously, go check it out.</span>
+  </div>
+</header>
+<div class="legend">
+  <span class="legend-item"><span class="tag tag-lift">Lift</span> Chairlift or gondola</span>
+  <span class="legend-item"><span class="tag tag-new">New</span> Opened 2022–2026</span>
+  <span class="legend-item"><span class="tag tag-closed">Closed</span> Temporarily closed</span>
+  <span class="legend-item"><span class="tag tag-loam">&#127807; Loam</span> On the Loam Pass</span>
+</div>
+<div class="pie-bar">
+  <button class="pie-toggle-btn" id="pieToggle">&#127823; Parks by State <span class="arrow">&#9660;</span></button>
+  <span style="font-size:.78rem;color:var(--chalk-dim)">Toggle to see how each state stacks up</span>
+</div>
+<div class="pie-panel" id="piePanel">
+  <h3>Lift-Served Bike Parks by State</h3>
+  <p class="pie-sub">Hover a slice or legend row to highlight. All parks including closed/coming-soon counted.</p>
+  <canvas id="pieCanvas" width="340" height="340"></canvas>
+  <div class="pie-legend-list" id="pieLegend"></div>
+</div>
+<div class="filter-bar">
+  <label>Filter:</label>
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="new">New 2022–26</button>
+  <button class="filter-btn" data-filter="open">Open</button>
+  <button class="filter-btn" data-filter="loam">Loam Pass</button>
+  <input type="text" id="search" placeholder="Search parks or states…">
+</div>
+<main id="main-content">
+
+<div class="state-section" data-state="Alaska">
+  <div class="state-header"><span class="state-name">Alaska</span><span class="state-count">3 parks</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">Alyeska Bike Park</div><div class="park-location">Girdwood, AK</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,348 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">14 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Fri–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://alyeskaresort.com/alyeska-bike-park/" target="_blank">alyeskaresort.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open" data-new="true" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">Hilltop Bike Park</div><div class="park-location">Anchorage, AK</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span><span class="tag tag-new">New</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">294 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">Growing each season</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">Chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">Summer</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Type</span><span class="ps-value">Nonprofit / community park</span></div></div><div class="park-note">Anchorage's own lift-served bike park — nonprofit, family-friendly, and right in the city. Ideal for skills development and progression. Also on Indy Pass for skiing.</div><a class="park-link" href="https://www.hilltopskiarea.org" target="_blank">hilltopskiarea.org &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="Arizona">
+  <div class="state-header"><span class="state-name">Arizona</span><span class="state-count">1 park</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Sunrise Bike Park</div><div class="park-location">Greer, AZ</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,325 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">17 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Wed–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Elevation</span><span class="ps-value">Starts at 11,100 ft</span></div></div><div class="park-note">Owned by the White Mountain Apache Tribe. Arizona's only bike park.</div><a class="park-link" href="https://www.sunrise.ski/summer/downhill-mountain-biking/" target="_blank">sunrise.ski &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="Arkansas">
+  <div class="state-header"><span class="state-name">Arkansas</span><span class="state-count">2 parks</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open" data-new="true">
+      <div class="park-card-top"><div><div class="park-name">OZ Trails Bike Park</div><div class="park-location">Bella Vista / Bentonville, AR</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-new">New</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">300 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">20+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">High-speed quad chairlift</span></div><div class="ps-item"><span class="ps-label">Opened</span><span class="ps-value">June 2026</span></div><div class="ps-item"><span class="ps-label">Open Days</span><span class="ps-value">Thurs–Mon</span></div><div class="ps-item"><span class="ps-label">Trail Builder</span><span class="ps-value">Gravity Logic</span></div></div><div class="park-note">Arkansas's first chairlift-served bike park! 20+ miles of gravity trails built by Gravity Logic. Huge dining & retail base hub.</div><a class="park-link" href="https://www.oztrails.com/oz-trails-bike-park/" target="_blank">oztrails.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open" data-new="true">
+      <div class="park-card-top"><div><div class="park-name">Trails at Mena <em style="font-weight:300;font-size:.82em">(Under Construction)</em></div><div class="park-location">Mena, AR</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-new">Coming</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,000+ ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">~20 mi Phase 1</span></div><div class="ps-item"><span class="ps-label">Acreage</span><span class="ps-value">1,300 acres</span></div><div class="ps-item"><span class="ps-label">Investment</span><span class="ps-value">~$48 million</span></div><div class="ps-item"><span class="ps-label">Est. Open</span><span class="ps-value">2027</span></div><div class="ps-item"><span class="ps-label">Lift Mfr</span><span class="ps-value">Leitner-Poma</span></div></div><div class="park-note">Ambitious Arkansas State Parks project targeting the world's largest lift-served bike park built exclusively for mountain biking.</div>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="California">
+  <div class="state-header"><span class="state-name">California</span><span class="state-count">8 parks</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Mammoth Mountain Bike Park</div><div class="park-location">Mammoth Lakes, CA</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">3,100 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">80+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 gondola, 3 chairlifts, 1 bus</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May/June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Summit</span><span class="ps-value">11,035 ft</span></div></div><div class="park-note">California's biggest park. Epic Eastern Sierra views.</div><a class="park-link" href="https://www.mammothmountain.com/things-to-do/activities/bike-park" target="_blank">mammothmountain.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Northstar Bike Park</div><div class="park-location">Truckee, CA</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,062 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">45+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 gondola, 2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Thurs–Mon)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><div class="park-note">Gnarly, loose Tahoe terrain. Advanced riders.</div><a class="park-link" href="https://www.northstarcalifornia.com" target="_blank">northstarcalifornia.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Snow Summit Bike Park</div><div class="park-location">Big Bear, CA</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,158 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">15 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Oct (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Builder</span><span class="ps-value">Gravity Logic</span></div></div><div class="park-note">Closest major park to LA. Built with help from Whistler's Gravity Logic.</div><a class="park-link" href="https://www.bigbearmountainresort.com/mountain-biking" target="_blank">bigbearmountainresort.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Snow Valley Bike Park</div><div class="park-location">Running Springs, CA</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">849 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">7 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Fri–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.bigbearmountainresort.com" target="_blank">bigbearmountainresort.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">China Peak Bike Park</div><div class="park-location">Lakeshore, CA</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,443 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">21 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Sat–Sun)</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">4 hrs east of SF</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><div class="park-note">Weekend-only gem with beautiful lake views.</div><a class="park-link" href="https://www.skichinapeak.com/mountain-biking-scenic-chair-rides" target="_blank">skichinapeak.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">Woodward Bike Park Tahoe</div><div class="park-location">Tahoe, CA</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">500 ft</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Daily)</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Focus</span><span class="ps-value">Freeride / training</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Indoor</span><span class="ps-value">33,000 sq ft Bunker</span></div></div><div class="park-note">Action sports training facility with trampolines, pump track, and skate park indoors. Indoor access also included with Loam Pass.</div><a class="park-link" href="https://www.rideboreal.com/explore/who-we-are/woodward-tahoe/" target="_blank">rideboreal.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open" data-new="true">
+      <div class="park-card-top"><div><div class="park-name">Mountain High Bike Park</div><div class="park-location">Wrightwood, CA</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-new">New</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Summit</span><span class="ps-value hl">8,200 ft</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">Chairlift</span></div><div class="ps-item"><span class="ps-label">Opened</span><span class="ps-value">June 2025</span></div><div class="ps-item"><span class="ps-label">Phase 3</span><span class="ps-value">Spring 2026</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">90 min from LA</span></div><div class="ps-item"><span class="ps-label">Forest</span><span class="ps-value">Angeles NF</span></div></div><div class="park-note">SoCal's newest lift-served bike park. Phases 1–2 open; Phase 3 under development.</div><a class="park-link" href="https://www.mthigh.com" target="_blank">mthigh.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open" data-new="true" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">Dodge Ridge Bike Park</div><div class="park-location">Pinecrest, CA</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span><span class="tag tag-new">New</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Summit</span><span class="ps-value hl">7,400 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">~7.5 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">Motherlode Chairlift 3</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">Sat–Sun, Aug–Oct</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">2.5 hrs east of Bay Area</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><div class="park-note">Central Sierra hidden gem — lift-served since 2022. Closest chairlift park to the Bay Area and Central Valley. Owned by Invision Capital (same as Mountain High).</div><a class="park-link" href="https://summer.dodgeridge.com/mountain-biking/" target="_blank">dodgeridge.com &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="Colorado">
+  <div class="state-header"><span class="state-name">Colorado</span><span class="state-count">13 parks</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Trestle Bike Park</div><div class="park-location">Winter Park, CO</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,680 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">40+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 gondola, 2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><div class="park-note">Arguably Colorado's best all-around bike park.</div><a class="park-link" href="https://www.trestlebikepark.com" target="_blank">trestlebikepark.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Keystone Bike Park</div><div class="park-location">Keystone, CO</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,303 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">100+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Thurs–Mon)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><div class="park-note">One of the largest in the US with massive backcountry access.</div><a class="park-link" href="https://www.keystoneresort.com" target="_blank">keystoneresort.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Vail Bike Park</div><div class="park-location">Vail, CO</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,214 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">63 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 gondolas</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Oct (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.vail.com" target="_blank">vail.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Snowmass Bike Park</div><div class="park-location">Aspen/Snowmass, CO</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,925 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">50+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 gondola, 1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Level</span><span class="ps-value">IMBA Gold Ride Center</span></div></div><a class="park-link" href="https://www.aspensnowmass.com/plan-your-stay/biking/snowmass-bike-park" target="_blank">aspensnowmass.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Steamboat Bike Park</div><div class="park-location">Steamboat Springs, CO</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,200 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">40 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Nickname</span><span class="ps-value">Bike Town USA</span></div></div><a class="park-link" href="https://www.steamboat.com/things-to-do/activities/mountain-biking" target="_blank">steamboat.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Crested Butte Bike Park</div><div class="park-location">Crested Butte, CO</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">971 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">30 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.skicb.com" target="_blank">skicb.com &#8599;</a>
+    </div>
+    <div class="park-card closed" data-status="closed">
+      <div class="park-card-top"><div><div class="park-name">Telluride Bike Park</div><div class="park-location">Telluride, CO</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-closed">Closed</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,243 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">17 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 gondola, 1 chairlift</span></div><div class="ps-item"><span class="ps-label">Status</span><span class="ps-value">Closed 2026</span></div><div class="ps-item"><span class="ps-label">Reopens</span><span class="ps-value">2027</span></div><div class="ps-item"><span class="ps-label">Elevation</span><span class="ps-value">Starts at 10,000+ ft</span></div></div><div class="park-note">Closed for the 2026 season — expected to reopen 2027. Trails built by Gravity Logic.</div><a class="park-link" href="https://tellurideskiresort.com/bike-park/" target="_blank">tellurideskiresort.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Granby Ranch Bike Park</div><div class="park-location">Granby, CO</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">839 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">61 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Thurs–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">XC only</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://granbyranch.com/things-to-do/summer-activities/biking/" target="_blank">granbyranch.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Beaver Creek Bike Park</div><div class="park-location">Avon, CO</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,100 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">46 miles XC</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May/June–Sept</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes (no lift)</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.beavercreek.com" target="_blank">beavercreek.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">Copper Mountain Bike Park</div><div class="park-location">Copper Mountain, CO</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,482 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">18 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.coppercolorado.com" target="_blank">coppercolorado.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Powderhorn Bike Park</div><div class="park-location">Palisade, CO</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,650 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">13 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Thurs–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.powderhorn.com" target="_blank">powderhorn.com &#8599;</a>
+    </div>
+    <div class="park-card closed" data-status="closed">
+      <div class="park-card-top"><div><div class="park-name">Purgatory Bike Park</div><div class="park-location">Durango, CO</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-closed">Closed</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,512 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">45 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Status</span><span class="ps-value">Closed 2025</span></div><div class="ps-item"><span class="ps-label">Note</span><span class="ps-value">New lift install</span></div><div class="ps-item"><span class="ps-label">History</span><span class="ps-value">First UCI DH World Champs (1990)</span></div></div><div class="park-note">Closed for 2025 for new Gelände chairlift installation. Expected to reopen 2026.</div><a class="park-link" href="https://www.purgatoryresort.com" target="_blank">purgatoryresort.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open" data-new="true">
+      <div class="park-card-top"><div><div class="park-name">Mighty Argo / Virginia Canyon Mountain Park</div><div class="park-location">Idaho Springs, CO</div></div><div class="tags"><span class="tag tag-lift">Gondola</span><span class="tag tag-new">New</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,300 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">14+ mi (28 planned)</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1.2-mile gondola</span></div><div class="ps-item"><span class="ps-label">Opened</span><span class="ps-value">May 2026</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">Year-round</span></div><div class="ps-item"><span class="ps-label">Distance</span><span class="ps-value">40 min from Denver on I-70</span></div></div><div class="park-note">Opened May 2026! Special bike-cab gondola carries bikes without disassembly — a North American first. Continental Divide views.</div><a class="park-link" href="https://argomilltour.com" target="_blank">mightyargo.com &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="Connecticut">
+  <div class="state-header"><span class="state-name">Connecticut</span><span class="state-count">1 park</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Powder Ridge Bike Park</div><div class="park-location">Middlefield, CT</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">419 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">7 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">April–Nov (Wed–Sat)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><div class="park-note">Connecticut's only lift-served bike park.</div><a class="park-link" href="https://powderridgepark.com/activities/mountain-bike/" target="_blank">powderridgepark.com &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="Idaho">
+  <div class="state-header"><span class="state-name">Idaho</span><span class="state-count">5 parks</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Silver Mountain Bike Park</div><div class="park-location">Kellogg, ID</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">3,400 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">40 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">3-mile gondola + chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Acclaim</span><span class="ps-value">#1 NW park (multi-year)</span></div></div><div class="park-note">Home to the longest gondola in the US.</div><a class="park-link" href="https://www.silvermt.com/mountain/bike-park" target="_blank">silvermt.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Bald Mountain Bike Park @ Sun Valley</div><div class="park-location">Ketchum, ID</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">3,100 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">32 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 gondola, 1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Surroundings</span><span class="ps-value">Sawtooth NRA, 400+ mi</span></div></div><a class="park-link" href="https://www.sunvalley.com/things-to-do/biking/" target="_blank">sunvalley.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Schweitzer Mountain Bike Park</div><div class="park-location">Sandpoint, ID</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,548 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">40 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">Chairlift + lower shuttle</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Views</span><span class="ps-value">Lake Pend Oreille</span></div></div><a class="park-link" href="https://www.schweitzer.com/things-to-do/activities/mountain-biking" target="_blank">schweitzer.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Brundage Mountain Bike Park</div><div class="park-location">McCall, ID</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,555 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">26 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Forest</span><span class="ps-value">Payette NF</span></div></div><a class="park-link" href="https://brundage.com/mountain-biking/" target="_blank">brundage.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Bogus Basin Bike Park</div><div class="park-location">Boise, ID</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">633 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">20 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Oct (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Park only</span></div><div class="ps-item"><span class="ps-label">Type</span><span class="ps-value">Non-profit community resort</span></div></div><a class="park-link" href="https://bogusbasin.org" target="_blank">bogusbasin.org &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="Illinois">
+  <div class="state-header"><span class="state-name">Illinois</span><span class="state-count">1 park</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">Farside Bike Park @ Chestnut Mountain</div><div class="park-location">Galena, IL</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">475 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">10 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Oct (Fri–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Opened</span><span class="ps-value">2022</span></div></div><div class="park-note">Illinois's only bike park. Great community vibe, progression-focused trails.</div><a class="park-link" href="https://www.chestnutmtn.com/activity/farside-bike-park/" target="_blank">chestnutmtn.com &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="Maine">
+  <div class="state-header"><span class="state-name">Maine</span><span class="state-count">2 parks</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">Mt. Abram Bike Park</div><div class="park-location">Greenwood, ME</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">415 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">19 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Thurs–Sun)</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">1 hr north of Portland</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://mtabram.com/" target="_blank">mtabram.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open" data-new="true">
+      <div class="park-card-top"><div><div class="park-name">Sugarloaf Bike Park</div><div class="park-location">Carrabassett Valley, ME</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-new">New</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value hl">Whiffletree Quad</span></div><div class="ps-item"><span class="ps-label">Opened</span><span class="ps-value">Summer 2025</span></div><div class="ps-item"><span class="ps-label">Flagship Trail</span><span class="ps-value">Emerald (3 mi flow)</span></div><div class="ps-item"><span class="ps-label">More Trails</span><span class="ps-value">In progress</span></div></div><div class="park-note">New England's newest lift-served bike park (2025). Emerald is a 3-mile machine-built intermediate flow trail. More trails planned each season.</div><a class="park-link" href="https://www.sugarloaf.com" target="_blank">sugarloaf.com &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="Massachusetts">
+  <div class="state-header"><span class="state-name">Massachusetts</span><span class="state-count">2 parks</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Thunder Mountain Bike Park</div><div class="park-location">Charlemont, MA</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">965 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">25 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Nov</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Builder</span><span class="ps-value">Gravity Logic</span></div></div><div class="park-note">Gold standard East Coast bike park in the Berkshires.</div><a class="park-link" href="https://berkshireeast.com/summer/thunder-mountain-bike-park/overview" target="_blank">berkshireeast.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Jiminy Peak Bike Park</div><div class="park-location">Hancock, MA</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,100 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">22 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">July–Sept (Sat, Sun & holidays)</span></div><div class="ps-item"><span class="ps-label">Level</span><span class="ps-value">Advanced/Expert</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">Berkshires</span></div></div><div class="park-note">Rocky, rooty East Coast riding at its finest.</div><a class="park-link" href="https://www.jiminypeak.com/Summer/Attractions/Mountain-Biking" target="_blank">jiminypeak.com &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="Michigan">
+  <div class="state-header"><span class="state-name">Michigan</span><span class="state-count">3 parks</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">The Highlands Bike Park</div><div class="park-location">Harbor Springs, MI</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">507 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">22 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Sept (Wed–Sun)</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Nearby</span><span class="ps-value">Bigfoot XC trails</span></div></div><a class="park-link" href="https://www.highlandsharborsprings.com/bike" target="_blank">highlandsharborsprings.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">Marquette Mountain Bike Park</div><div class="park-location">Marquette, MI</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">650 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">10 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Oct (Sat–Sun)</span></div><div class="ps-item"><span class="ps-label">Views</span><span class="ps-value">Lake Superior</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.marquettemountain.com/summer/downhill-bike-park/" target="_blank">marquettemountain.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open" data-new="true" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">Pine Mountain Bike Park</div><div class="park-location">Iron Mountain, MI</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span><span class="tag tag-new">New</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">~500 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">46+ miles (full network)</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">Chairlift (upgraded 2025)</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">Summer/Fall</span></div><div class="ps-item"><span class="ps-label">Partner</span><span class="ps-value">Dickinson Trail Network</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div></div><div class="park-note">Michigan's Upper Peninsula hidden gem. Adapted chairlift for bikes in 2025. Trails built by the Dickinson Trail Network across 46 miles of terrain; the lift-served park trails are downhill-only.</div><a class="park-link" href="https://www.pinemountainresort.com/mountain-biking/" target="_blank">pinemountainresort.com &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="Minnesota">
+  <div class="state-header"><span class="state-name">Minnesota</span><span class="state-count">3 parks</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">Spirit Mountain Bike Park</div><div class="park-location">Duluth, MN</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">564 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">19 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Thurs–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Area</span><span class="ps-value">IMBA Gold Ride Center</span></div></div><div class="park-note">Views of Lake Superior and St. Louis River.</div><a class="park-link" href="https://spiritmt.com/summer/mountain-biking/" target="_blank">spiritmt.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Giants Ridge Bike Park</div><div class="park-location">Biwabik, MN</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">478 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">10+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Fri–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Nearby</span><span class="ps-value">Superior National Forest</span></div></div><a class="park-link" href="https://www.giantsridge.com/mountain-biking/" target="_blank">giantsridge.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Detroit Mountain Bike Park</div><div class="park-location">Detroit Lakes, MN</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">164 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">15 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Nov (Sat–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://detroitmountain.com/mountain-biking/" target="_blank">detroitmountain.com &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="Montana">
+  <div class="state-header"><span class="state-name">Montana</span><span class="state-count">3 parks</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Whitefish Bike Park</div><div class="park-location">Whitefish, MT</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,083 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">23 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Zones</span><span class="ps-value">Bad Rock, B-Side, Summit</span></div></div><a class="park-link" href="https://skiwhitefish.com/mountain-biking/" target="_blank">skiwhitefish.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">Big Sky Bike Park</div><div class="park-location">Big Sky, MT</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,646 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">50 miles (20 lift-served)</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">3 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Views</span><span class="ps-value">Rocky Mountains</span></div></div><a class="park-link" href="https://bigskyresort.com/summer-activities/mountain-biking" target="_blank">bigskyresort.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Discovery Bike Park</div><div class="park-location">Phillipsburg, MT</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,050 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">7 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Fri–Sun)</span></div><div class="ps-item"><span class="ps-label">Vibe</span><span class="ps-value">Small & local "Disco"</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.skidiscovery.com/bike-park/" target="_blank">skidiscovery.com &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="New Hampshire">
+  <div class="state-header"><span class="state-name">New Hampshire</span><span class="state-count">5 parks</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">Highland Bike Park</div><div class="park-location">Northfield, NH</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">678 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">14+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">April–Nov</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">90 min from Boston</span></div></div><div class="park-note">100% dedicated to mountain biking — the gold standard East Coast bike park.</div><a class="park-link" href="https://www.highlandmountain.com/" target="_blank">highlandmountain.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Loon Mountain Bike Park</div><div class="park-location">Lincoln, NH</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">797 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">11 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Thurs–Mon)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">White Mountains</span></div></div><a class="park-link" href="https://www.loonmtn.com/summer-activities/biking/bike-park" target="_blank">loonmtn.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Mount Sunapee Bike Park</div><div class="park-location">Newbury, NH</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">374 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">5 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Thurs–Sun)</span></div><div class="ps-item"><span class="ps-label">Views</span><span class="ps-value">Lake Sunapee</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.mountsunapee.com" target="_blank">mountsunapee.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Waterville Valley Bike Park</div><div class="park-location">Waterville, NH</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">858 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">3 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Level</span><span class="ps-value">Family-friendly</span></div></div><a class="park-link" href="https://www.waterville.com" target="_blank">waterville.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open" data-new="true" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">Cranmore Bike Park</div><div class="park-location">North Conway, NH</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span><span class="tag tag-new">New</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">~1,200 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">6+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">Chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Wknd + holidays)</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">White Mountains / Mt. Washington Valley</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><div class="park-note">North Conway's lift-served bike park in the heart of the White Mountains. Machine-groomed flow trails for all abilities. New beginner hybrid trail added summer 2026. Joined Loam Pass for 2026.</div><a class="park-link" href="https://cranmore.com/bike-park" target="_blank">cranmore.com &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="New Jersey">
+  <div class="state-header"><span class="state-name">New Jersey</span><span class="state-count">1 park</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Mountain Creek Bike Park</div><div class="park-location">Vernon, NJ</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">846 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">40+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 cabriolet</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Nov (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Acclaim</span><span class="ps-value">Best Park NA (x2)</span></div></div><div class="park-note">Only 1 hour from NYC. Voted Best Bike Park in North America twice.</div><a class="park-link" href="https://www.mountaincreek.com/bike-park" target="_blank">mountaincreek.com &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="New Mexico">
+  <div class="state-header"><span class="state-name">New Mexico</span><span class="state-count">2 parks</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">Angel Fire Bike Park</div><div class="park-location">Angel Fire, NM</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,066 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">60 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Elevation</span><span class="ps-value">Starts at 10,677 ft</span></div></div><div class="park-note">Stunning fall aspen colors. Best bang-for-buck in the Southwest.</div><a class="park-link" href="https://www.angelfireresort.com/bike-park/" target="_blank">angelfireresort.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Pajarito Bike Park</div><div class="park-location">Los Alamos, NM</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,440 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">39 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Sat–Sun)</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">NW of Santa Fe</span></div></div><div class="park-note">Rough, rowdy, volunteer-built. Not for beginners.</div><a class="park-link" href="https://www.pajarito.ski/pajarito-mountain-biking/" target="_blank">pajarito.ski &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="New York">
+  <div class="state-header"><span class="state-name">New York</span><span class="state-count">3 parks</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Greek Peak Bike Park</div><div class="park-location">Cortland, NY</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">734 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">19 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Oct (Fri–Sun)</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">Finger Lakes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><div class="park-note">Free Bird trail has 40+ features including a wooden rollercoaster!</div><a class="park-link" href="https://www.greekpeak.net/bike-park/" target="_blank">greekpeak.net &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">HoliMont Bike Park</div><div class="park-location">Ellicottville, NY</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">503 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">10 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Fri–Sun)</span></div><div class="ps-item"><span class="ps-label">Nearby</span><span class="ps-value">26-mi IMBA Epic</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://holimont.com/programs/bike-park/" target="_blank">holimont.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Gore Mountain Bike Park</div><div class="park-location">North Creek, NY</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,700 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">7 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Oct (Thurs–Sun)</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">Adirondacks</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div></div><a class="park-link" href="https://goremountain.com/todo/downhill-mountain-biking/" target="_blank">goremountain.com &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="North Carolina">
+  <div class="state-header"><span class="state-name">North Carolina</span><span class="state-count">2 parks</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Beech Mountain Bike Park</div><div class="park-location">Beech Mountain, NC</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">744 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">6 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Thurs–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">Blue Ridge Mountains</span></div></div><a class="park-link" href="https://www.beechmountainresort.com/summer/mountain-biking/" target="_blank">beechmountainresort.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Sugar Mountain Bike Park</div><div class="park-location">Sugar Mountain, NC</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,131 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">4 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Thurs–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">Blue Ridge Mountains</span></div></div><a class="park-link" href="https://seesugar.com/summer-bike-lift/" target="_blank">seesugar.com &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="Oregon">
+  <div class="state-header"><span class="state-name">Oregon</span><span class="state-count">2 parks</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Timberline Bike Park</div><div class="park-location">Government Camp, OR</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,213 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">20 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Longest Trail</span><span class="ps-value">5+ miles</span></div></div><div class="park-note">On Mt. Hood near Portland. Known for excellent dirt and long runs.</div><a class="park-link" href="https://www.timberlinelodge.com/mountain/bike-park" target="_blank">timberlinelodge.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">Mt. Bachelor Bike Park</div><div class="park-location">Bend, OR</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,361 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">13+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Oct</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><div class="park-note">Gateway to hundreds of miles of epic Bend-area singletrack.</div><a class="park-link" href="https://www.mtbachelor.com/the-mountain/bike-park/info/" target="_blank">mtbachelor.com &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="Pennsylvania">
+  <div class="state-header"><span class="state-name">Pennsylvania</span><span class="state-count">1 park</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Blue Mountain Bike Park</div><div class="park-location">Palmerton, PA</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,072 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">12 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Thurs–Sun)</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">90 min from NYC/Philly</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><div class="park-note">Camping and glamping available. Dialed-in park with great terrain mix.</div><a class="park-link" href="https://www.skibluemt.com/outdoor/mountain-biking/" target="_blank">skibluemt.com &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="Texas">
+  <div class="state-header"><span class="state-name">Texas</span><span class="state-count">1 park</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">Spider Mountain Bike Park</div><div class="park-location">Burnet, TX</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">351 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">6 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">Year-round</span></div><div class="ps-item"><span class="ps-label">Open Days</span><span class="ps-value">Fri–Mon lift; Tue–Thu pedal</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div></div><div class="park-note">Texas's only chairlift bike park! Surprisingly steep. Great views of Lake Buchanan.</div><a class="park-link" href="https://www.spidermountain.com/" target="_blank">spidermountain.com &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="Utah">
+  <div class="state-header"><span class="state-name">Utah</span><span class="state-count">7 parks</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Deer Valley Bike Park</div><div class="park-location">Park City, UT</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">3,000 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">70 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">3 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Builder</span><span class="ps-value">Gravity Logic</span></div></div><div class="park-note">Spread over 6 mountains. Twilight riding Tuesdays.</div><a class="park-link" href="https://www.deervalley.com/things-to-do/activities/mountain-biking" target="_blank">deervalley.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Solitude Mountain Bike Park</div><div class="park-location">Brighton, UT</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,494 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">39 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Oct (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Builder</span><span class="ps-value">Gravity Logic</span></div></div><a class="park-link" href="https://www.solitudemountain.com/things-to-do/mountain-bike" target="_blank">solitudemountain.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">Sundance Bike Park</div><div class="park-location">Sundance, UT</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,147 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">25+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.sundanceresort.com" target="_blank">sundanceresort.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Brian Head Bike Park</div><div class="park-location">Brian Head, UT</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,161 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">63 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.brianhead.com/mountain-biking/" target="_blank">brianhead.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Snow Basin Bike Park</div><div class="park-location">Ogden, UT</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,303 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">67 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 gondola</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Oct (Sat–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Park only</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.snowbasin.com/hiking-biking/" target="_blank">snowbasin.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">Woodward Park City</div><div class="park-location">Park City, UT</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">728 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">7 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Oct (Daily)</span></div><div class="ps-item"><span class="ps-label">Focus</span><span class="ps-value">Freeride / sends</span></div><div class="ps-item"><span class="ps-label">Indoor</span><span class="ps-value">Foam pit + ramps (included w/ Loam)</span></div></div><a class="park-link" href="https://www.woodwardparkcity.com/" target="_blank">woodwardparkcity.com &#8599;</a>
+    </div>
+    <div class="park-card closed" data-status="closed">
+      <div class="park-card-top"><div><div class="park-name">Powder Mountain Bike Park</div><div class="park-location">Eden, UT</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-closed">Closed</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,268 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">10+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Status</span><span class="ps-value">Closed 2025</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Opened</span><span class="ps-value">2022</span></div></div><div class="park-note">Closed for 2025. Check for 2026 status. Connects to a huge XC network.</div><a class="park-link" href="https://powdermountain.com/activities/multi-use-trails" target="_blank">powdermountain.com &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="Vermont">
+  <div class="state-header"><span class="state-name">Vermont</span><span class="state-count">5 parks</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">Killington Bike Park</div><div class="park-location">Killington, VT</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,643 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">32 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts, 1 gondola</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><div class="park-note">Vermont's biggest bike park. Each lift accesses a different difficulty level.</div><a class="park-link" href="https://www.killington.com/things-to-do/activities/bike-park/" target="_blank">killington.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">Burke Mountain Bike Park</div><div class="park-location">East Burke, VT</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,587 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">21 mi + Kingdom Trails</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Thurs–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Builder</span><span class="ps-value">Knight Ide</span></div></div><div class="park-note">Gateway to the legendary Kingdom Trails XC network.</div><a class="park-link" href="https://skiburke.com/mountain-biking/the-trails/burke-mountain-bike-park/" target="_blank">skiburke.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Mt. Snow Bike Park</div><div class="park-location">West Dover, VT</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,700 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">12 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Oct (Fri–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.mountsnow.com" target="_blank">mountsnow.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Bolton Valley Bike Park</div><div class="park-location">Bolton Valley, VT</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">961 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">28 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Wed–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><div class="park-note">Rocky, rooty East Coast riding. HUGE drop on the Waterfall trail.</div><a class="park-link" href="https://www.boltonvalley.com/summer/mountain-biking/" target="_blank">boltonvalley.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">Stratton Mountain Bike Park</div><div class="park-location">Stratton, VT</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">673 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">10+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">Chairlift + magic carpet</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Thurs–Sun)</span></div><div class="ps-item"><span class="ps-label">Builder</span><span class="ps-value">Sinuosity</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><div class="park-note">Stunning fall foliage. Don't miss "Bermie Sanders."</div><a class="park-link" href="https://www.stratton.com/Plan-your-trip/Bike-Park" target="_blank">stratton.com &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="Virginia">
+  <div class="state-header"><span class="state-name">Virginia</span><span class="state-count">1 park</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Bryce Bike Park</div><div class="park-location">Bayse, VA</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">~500 ft</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">Chairlift</span></div><div class="ps-item"><span class="ps-label">Builder</span><span class="ps-value">Gravity Logic</span></div><div class="ps-item"><span class="ps-label">Nearby</span><span class="ps-value">Shenandoah NP</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">TBD</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><div class="park-note">Built in partnership with Whistler's Gravity Logic. Beautiful Shenandoah Valley setting.</div><a class="park-link" href="https://www.bryceresort.com" target="_blank">bryceresort.com &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="Washington">
+  <div class="state-header"><span class="state-name">Washington</span><span class="state-count">2 parks</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Stevens Pass Bike Park</div><div class="park-location">Skykomish, WA</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">~1,800 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">20+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">Chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">Summer</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">75 min from Seattle</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.stevenspass.com/things-to-do/summer" target="_blank">stevenspass.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open" data-new="true">
+      <div class="park-card-top"><div><div class="park-name">Summit Bike Park at Snoqualmie Pass</div><div class="park-location">Snoqualmie Pass, WA</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-new">New</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value hl">10 miles (11 trails)</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">High-speed quad (Silver Fir)</span></div><div class="ps-item"><span class="ps-label">Opened</span><span class="ps-value">Summer 2022</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">~1 hr from Seattle on I-90</span></div><div class="ps-item"><span class="ps-label">Trail Types</span><span class="ps-value">Flow, tech, DH</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><div class="park-note">Opened 2022. Super accessible from Seattle on I-90.</div><a class="park-link" href="https://summitatsnoqualmie.com" target="_blank">summitatsnoqualmie.com &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="West Virginia">
+  <div class="state-header"><span class="state-name">West Virginia</span><span class="state-count">1 park</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">Snowshoe Mountain Bike Park</div><div class="park-location">Snowshoe, WV</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">~1,500 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">40+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">Chairlift(s)</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">Summer/Fall</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><div class="park-note">Classic Appalachian MTB destination. Long history in the East Coast scene.</div><a class="park-link" href="https://www.snowshoemtn.com/things-to-do/summer/mountain-biking" target="_blank">snowshoemtn.com &#8599;</a>
+    </div>
+  </div>
+</div>
+<div class="state-section" data-state="Wyoming">
+  <div class="state-header"><span class="state-name">Wyoming</span><span class="state-count">2 parks</span></div>
+  <div class="park-grid">
+    <div class="park-card" data-status="open" data-loam="true">
+      <div class="park-card-top"><div><div class="park-name">Jackson Hole Mountain Resort Bike Park</div><div class="park-location">Teton Village, WY</div></div><div class="tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,500+ ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">21 trails</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">Sweetwater Gondola + Teewinot Quad</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">Summer (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes (Class 1 on lifts)</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><div class="park-note">World-class big-mountain bike park with 21 graded trails. Gondola + quad lift combo. On Loam Pass since 2025. Completely separate from Snow King (the "town hill").</div><a class="park-link" href="https://www.jacksonhole.com/summer-activities/bike-park" target="_blank">jacksonhole.com &#8599;</a>
+    </div>
+    <div class="park-card" data-status="open">
+      <div class="park-card-top"><div><div class="park-name">Snow King Mountain</div><div class="park-location">Jackson, WY</div></div><div class="tags"><span class="tag tag-lift">Lift</span></div></div>
+      <div class="park-stats"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">~1,600 ft</span></div><div class="ps-item"><span class="ps-label">Gondola</span><span class="ps-value">Scenic gondola / NO bike lift currently</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">Summer</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">Downtown Jackson</span></div><div class="ps-item"><span class="ps-label">Note</span><span class="ps-value">XC & pedal trails only</span></div><div class="ps-item"><span class="ps-label">Nearby</span><span class="ps-value">Grand Teton NP</span></div></div><div class="park-note">Note: Snow King currently does NOT transport bikes on its lifts (as of 2026) — it's a pedal/XC destination in town. For lift-served riding in Jackson, head to JHMR at Teton Village.</div><a class="park-link" href="https://snowkingmountain.com/activities/biking/" target="_blank">snowkingmountain.com &#8599;</a>
+    </div>
+  </div>
+</div>
+</main>
+<footer>
+  <p>Base list sourced from <a href="https://www.twowheeledwanderer.com/posts/mountain-bike-parks-united-states/" target="_blank">Two Wheeled Wanderer</a> by Becky Timbers — the best MTB travel resource on the web. Go check it out!<br>
+  <span style="color:var(--loam)">&#127807;</span> Loam Pass data current as of May 2026. Always verify hours, pricing, and season status directly with each park before visiting.</p>
+</footer>
+<script>
+const filterBtns = document.querySelectorAll('.filter-btn');
+const searchInput = document.getElementById('search');
+function applyFilters() {
+  const af = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+  const q = searchInput.value.toLowerCase().trim();
+  document.querySelectorAll('.state-section').forEach(sec => {
+    let any = false;
+    sec.querySelectorAll('.park-card').forEach(card => {
+      const status = card.dataset.status || '';
+      const isNew = card.dataset.new === 'true';
+      const isLoam = card.dataset.loam === 'true';
+      const text = card.textContent.toLowerCase();
+      const state = sec.dataset.state?.toLowerCase() || '';
+      let fm = af==='all'||(af==='new'&&isNew)||(af==='open'&&status==='open')||(af==='loam'&&isLoam);
+      let sm = !q||text.includes(q)||state.includes(q);
+      const show = fm&&sm;
+      card.classList.toggle('hidden',!show);
+      if(show) any = true;
+    });
+    sec.classList.toggle('hidden',!any);
+  });
+}
+filterBtns.forEach(b=>{b.addEventListener('click',()=>{filterBtns.forEach(x=>x.classList.remove('active'));b.classList.add('active');applyFilters();});});
+searchInput.addEventListener('input',applyFilters);
+
+// Pie chart
+const pieToggle=document.getElementById('pieToggle');
+const piePanel=document.getElementById('piePanel');
+const canvas=document.getElementById('pieCanvas');
+const ctx=canvas.getContext('2d');
+const legendEl=document.getElementById('pieLegend');
+function countByState(){const map={};document.querySelectorAll('.state-section').forEach(sec=>{const state=sec.dataset.state;const count=sec.querySelectorAll('.park-card').length;if(count>0)map[state]=count;});return Object.entries(map).sort((a,b)=>b[1]-a[1]);}
+const PALETTE=['#c4682a','#3d6128','#e8b84b','#2e7d7d','#7b4fa6','#c94040','#4a7cb5','#a06b1a','#5ba85c','#8c5a38','#1a7a8c','#b85c8a','#6e8c3a','#4a5e8c','#c4882a','#2a8c6e','#8c3a4a','#5a7a3a','#6a4a8c','#8c6a2a','#3a6a8c','#8c4a2a','#4a8c6a','#8c8a2a','#2a4a8c','#8c2a6a','#4a8c3a','#5a2a8c'];
+let hoveredIndex=-1,piData=[];
+function drawPie(){const data=piData;const total=data.reduce((s,d)=>s+d[1],0);const W=canvas.width,H=canvas.height,cx=W/2,cy=H/2,r=W*.44,inner=W*.18;ctx.clearRect(0,0,W,H);let angle=-Math.PI/2;data.forEach(([,count],i)=>{const slice=(count/total)*2*Math.PI;const hov=i===hoveredIndex;const off=hov?10:0;const mid=angle+slice/2;const ox=Math.cos(mid)*off,oy=Math.sin(mid)*off;ctx.beginPath();ctx.moveTo(cx+ox,cy+oy);ctx.arc(cx+ox,cy+oy,r,angle,angle+slice);ctx.lineTo(cx+ox,cy+oy);ctx.fillStyle=PALETTE[i%PALETTE.length];ctx.fill();ctx.strokeStyle='#1a2e3b';ctx.lineWidth=2;ctx.stroke();angle+=slice;});ctx.beginPath();ctx.arc(cx,cy,inner,0,2*Math.PI);ctx.fillStyle='#1e2f3c';ctx.fill();ctx.textAlign='center';ctx.textBaseline='middle';if(hoveredIndex>=0&&piData[hoveredIndex]){const[st,cnt]=piData[hoveredIndex];ctx.fillStyle='#e8b84b';ctx.font=`bold ${W*.065}px 'Bebas Neue',sans-serif`;ctx.fillText(st,cx,cy-W*.045);ctx.font=`bold ${W*.09}px 'Bebas Neue',sans-serif`;ctx.fillStyle='#f5f0e8';ctx.fillText(cnt+(cnt===1?' park':' parks'),cx,cy+W*.05);}else{ctx.fillStyle='#e8b84b';ctx.font=`bold ${W*.09}px 'Bebas Neue',sans-serif`;ctx.fillText(total+' parks',cx,cy-W*.03);ctx.font=`${W*.05}px 'DM Sans',sans-serif`;ctx.fillStyle='#ddd6c8';ctx.fillText('28 states',cx,cy+W*.06);}}
+function buildLegend(data){legendEl.innerHTML='';data.forEach(([state,count],i)=>{const item=document.createElement('div');item.className='pie-legend-item';item.innerHTML=`<span class="pie-swatch" style="background:${PALETTE[i%PALETTE.length]}"></span><span class="pie-label">${state}</span><span class="pie-count">${count}</span>`;item.addEventListener('mouseenter',()=>{hoveredIndex=i;drawPie();hlLegend(i);});item.addEventListener('mouseleave',()=>{hoveredIndex=-1;drawPie();hlLegend(-1);});legendEl.appendChild(item);});}
+function hlLegend(idx){legendEl.querySelectorAll('.pie-legend-item').forEach((el,i)=>el.classList.toggle('highlighted',i===idx));}
+canvas.addEventListener('mousemove',e=>{const rect=canvas.getBoundingClientRect();const sx=canvas.width/rect.width,sy=canvas.height/rect.height;const mx=(e.clientX-rect.left)*sx,my=(e.clientY-rect.top)*sy;const cx=canvas.width/2,cy=canvas.height/2,r=canvas.width*.44,inner=canvas.width*.18;const dx=mx-cx,dy=my-cy,dist=Math.sqrt(dx*dx+dy*dy);if(dist<inner||dist>r){hoveredIndex=-1;drawPie();hlLegend(-1);return;}const total=piData.reduce((s,d)=>s+d[1],0);let angle=-Math.PI/2,found=-1,ma=Math.atan2(dy,dx);if(ma<-Math.PI/2)ma+=2*Math.PI;piData.forEach(([,count],i)=>{const slice=(count/total)*2*Math.PI;if(ma>=angle&&ma<angle+slice)found=i;angle+=slice;});if(found!==hoveredIndex){hoveredIndex=found;drawPie();hlLegend(found);}});
+canvas.addEventListener('mouseleave',()=>{hoveredIndex=-1;drawPie();hlLegend(-1);});
+let pieBuilt=false;
+pieToggle.addEventListener('click',()=>{const open=piePanel.classList.toggle('visible');pieToggle.classList.toggle('open',open);if(open&&!pieBuilt){piData=countByState();buildLegend(piData);drawPie();pieBuilt=true;}});
+</script>
+</body>
+</html>
