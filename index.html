@@ -7,6 +7,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
 <style>
 :root{--dirt:#c4682a;--forest:#2d4a1e;--sky:#1a2e3b;--chalk:#f5f0e8;--chalk-dim:#ddd6c8;--warn:#e8b84b;--new:#5ba85c;--closed:#c0392b;--loam:#2a8c6e;--card-bg:#1e2f3c;--card-border:#2e4255;}
+/* ── COLOR SCHEMES (named after hub spacings, obviously) ── */
+body.theme-150{--dirt:#c94040;--forest:#2a1618;--sky:#17171c;--chalk:#f2f0ef;--chalk-dim:#c9c4c2;--warn:#e8a84b;--card-bg:#222228;--card-border:#3a3a44;}
+body.theme-148{--dirt:#5ba85c;--forest:#0f1f14;--sky:#14231a;--chalk:#eef4ec;--chalk-dim:#c2d4c4;--warn:#c4d94b;--card-bg:#1b2f22;--card-border:#2e4a38;}
+body.theme-142{--dirt:#b8863a;--forest:#2e2214;--sky:#251c12;--chalk:#f4ecd8;--chalk-dim:#d4c8ac;--warn:#e0b45c;--card-bg:#332818;--card-border:#4d3e26;}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'DM Sans',sans-serif;background:var(--sky);color:var(--chalk);min-height:100vh}
 
@@ -14,6 +18,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--sky);color:var(--chalk);m
 header{background:linear-gradient(135deg,var(--forest) 0%,var(--sky) 60%);padding:32px 24px 28px;border-bottom:3px solid var(--dirt);position:relative;overflow:hidden}
 header::before{content:'';position:absolute;top:-30px;right:-40px;width:220px;height:220px;background:radial-gradient(circle,rgba(196,104,42,.18) 0%,transparent 70%);border-radius:50%}
 header h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,7vw,4.5rem);letter-spacing:.04em;line-height:1;text-shadow:2px 3px 0 rgba(0,0,0,.4)}
+/* ── TOP-RIGHT: PMR link + theme switcher ── */
+.header-corner{position:absolute;top:12px;right:14px;display:flex;flex-direction:column;align-items:flex-end;gap:8px;z-index:20;pointer-events:auto}
+.pmr-link{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.08em;color:var(--warn);text-decoration:none;background:rgba(0,0,0,.35);border:1px solid var(--dirt);border-radius:6px;padding:8px 14px;transition:background .15s,color .15s;white-space:nowrap;touch-action:manipulation}
+.pmr-link:hover{background:var(--dirt);color:#fff}
+.theme-row{display:flex;gap:6px}
+.theme-btn{font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:.05em;background:rgba(0,0,0,.35);border:1px solid var(--card-border);color:var(--chalk-dim);border-radius:6px;padding:8px 12px;cursor:pointer;transition:all .15s;touch-action:manipulation;min-height:36px;min-width:36px}
+.theme-btn:hover{border-color:var(--dirt);color:var(--chalk)}
+.theme-btn:active{transform:scale(.94)}
+.theme-btn.active{background:var(--dirt);border-color:var(--dirt);color:#fff}
+@media(max-width:600px){.theme-btn{padding:10px 14px;font-size:.9rem;min-height:40px}.theme-row{gap:7px}}
+@media(max-width:600px){.header-corner{position:static;flex-direction:row;justify-content:space-between;align-items:center;width:100%;margin-bottom:10px}}
 header h1 span{color:var(--dirt)}
 .header-desc{margin-top:8px;font-size:.85rem;color:var(--chalk-dim);font-weight:300;max-width:560px;line-height:1.5}
 .stats{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
@@ -45,11 +60,12 @@ header h1 span{color:var(--dirt)}
 @keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 .pie-panel h3{width:100%;font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.06em;color:var(--warn);margin-bottom:2px}
 .pie-panel p.pie-sub{font-size:.75rem;color:var(--chalk-dim);margin-bottom:12px;width:100%}
-#pieCanvas{max-width:300px;width:100%;height:auto;cursor:crosshair}
+#pieCanvas{max-width:300px;width:100%;height:auto;cursor:crosshair;touch-action:none}
 .pie-legend-list{flex:1;min-width:160px;display:flex;flex-direction:column;gap:4px;max-height:320px;overflow-y:auto}
 .pie-legend-list::-webkit-scrollbar{width:3px}
 .pie-legend-list::-webkit-scrollbar-thumb{background:var(--dirt);border-radius:2px}
 .pie-legend-item{display:flex;align-items:center;gap:7px;font-size:.75rem;color:var(--chalk-dim);cursor:pointer;padding:2px 5px;border-radius:4px;transition:background .1s}
+@media(max-width:600px){.pie-legend-item{padding:8px 8px;font-size:.82rem}.pie-legend-list{max-height:260px}}
 .pie-legend-item:hover,.pie-legend-item.highlighted{background:rgba(232,184,75,.12);color:var(--chalk)}
 .pie-swatch{width:10px;height:10px;border-radius:2px;flex-shrink:0}
 .pie-legend-item .pie-label{flex:1}
@@ -141,16 +157,25 @@ footer a:hover{color:var(--warn)}
 <body>
 
 <header>
+  <div class="header-corner">
+    <a class="pmr-link" href="https://www.postmillenniumrenaissance.com/" target="_blank">PMR MTB &#8599;</a>
+    <div class="theme-row">
+      <button class="theme-btn active" data-theme="157" title="Super Boost — the default, as it should be">157</button>
+      <button class="theme-btn" data-theme="150" title="DH standard">150</button>
+      <button class="theme-btn" data-theme="148" title="Boost">148</button>
+      <button class="theme-btn" data-theme="142" title="The old standard">142</button>
+    </div>
+  </div>
   <h1>LIFT-SERVED <span>BIKE PARKS</span><br>IN THE USA</h1>
   <p class="header-desc">Chairlift &amp; gondola-served downhill parks across all 28 states. Tap any state to browse parks.</p>
   <div class="stats">
     <div class="stat-pill"><strong>85+</strong> Parks</div>
-    <div class="stat-pill"><strong>29</strong> States</div>
+    <div class="stat-pill"><strong>30</strong> States</div>
     <div class="stat-pill"><strong>Updated</strong> May 2026</div>
   </div>
   <div class="tww-credit">
     <span style="font-size:1.3rem">&#128693;</span>
-    <span>Base list sourced from <a href="https://www.twowheeledwanderer.com/posts/mountain-bike-parks-united-states/" target="_blank">Two Wheeled Wanderer</a> — Becky Timbers' incredible resource for bike park guides, MTB trip planning, and destination reviews. Seriously, go check it out.</span>
+    <span>Base list sourced from <a href="https://www.twowheeledwanderer.com/posts/mountain-bike-parks-united-states/" target="_blank">Two Wheeled Wanderer</a> — Becky Timbers' website.</span>
   </div>
 </header>
 
@@ -167,7 +192,7 @@ footer a:hover{color:var(--warn)}
 </div>
 <div class="pie-panel" id="piePanel">
   <h3>Parks by State</h3>
-  <p class="pie-sub">Hover a slice or legend row to highlight.</p>
+  <p class="pie-sub">Touch: press &amp; drag across the wheel to scrub between states, or tap a legend row. Mouse: hover to highlight. Tap the center to clear.</p>
   <canvas id="pieCanvas" width="300" height="300"></canvas>
   <div class="pie-legend-list" id="pieLegend"></div>
 </div>
@@ -1139,6 +1164,36 @@ footer a:hover{color:var(--warn)}
     </div>
   </div>
 </div>
+<div class="state-section" data-state="Nevada">
+  <div class="state-header">
+    <div class="state-left">
+      <span class="state-name">Nevada</span>
+      <span class="state-count">1 park</span>
+      
+    </div>
+    <span class="state-chevron">&#9660;</span>
+  </div>
+  <div class="state-body">
+    <div class="park-list">
+    <div class="park-row" data-status="open">
+      <div class="park-row-head">
+        <div class="park-row-info">
+          <div class="park-name">Lee Canyon Bike Park</div>
+          <div class="park-meta">
+            <span class="park-location">Las Vegas, NV</span>
+            <span class="park-vert">~1,000 ft</span>
+          </div>
+        </div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span></div>
+        <span class="park-expand-btn">&#9660;</span>
+      </div>
+      <div class="park-details">
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Trails</span><span class="ps-value hl">5 (green to double black)</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">Bluebird chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">Summer (Daily) — 10–4 Mon–Thu, 10–6 Fri–Sun</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">45 min from downtown Las Vegas</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Trek/Rossignol full-suspension + Fox gear</span></div><div class="ps-item"><span class="ps-label">Pass</span><span class="ps-value">MTB Power Pass (multi-resort)</span></div></div><div class="park-note">Southern Nevada's only lift-served bike park — and it runs 30&deg; cooler than the Vegas valley. Five purpose-built trails: Las Vegas Blvd (green flow), Fear and Flowing (blue), Gonzo (blue jumps), Snake Eyes (hand-dug black singletrack), and Hard Eight (double-black freeride). Same Mountain Capital Partners family as Purgatory, Brian Head, Pajarito, and Spider Mountain.</div><a class="park-link" href="https://www.leecanyonlv.com/mountain-biking-lee-canyon/" target="_blank">leecanyonlv.com &#8599;</a>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
 <div class="state-section" data-state="New Hampshire">
   <div class="state-header">
     <div class="state-left">
@@ -2061,6 +2116,19 @@ filterBtns.forEach(b => {
 });
 searchInput.addEventListener('input', applyFilters);
 
+// ── THEME SWITCHER ───────────────────────────────────────────────────────────
+function cssVar(name){ return getComputedStyle(document.body).getPropertyValue(name).trim(); }
+document.querySelectorAll('.theme-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.body.classList.remove('theme-150','theme-148','theme-142');
+    const t = btn.dataset.theme;
+    if (t !== '157') document.body.classList.add('theme-'+t);
+    if (typeof piData !== 'undefined' && piData.length) drawPie();
+  });
+});
+
 // ── PIE CHART ────────────────────────────────────────────────────────────────
 const pieToggle = document.getElementById('pieToggle');
 const piePanel  = document.getElementById('piePanel');
@@ -2096,27 +2164,27 @@ function drawPie() {
     ctx.arc(cx+ox,cy+oy,r,angle,angle+slice);
     ctx.lineTo(cx+ox,cy+oy);
     ctx.fillStyle=PALETTE[i%PALETTE.length]; ctx.fill();
-    ctx.strokeStyle='#1a2e3b'; ctx.lineWidth=2; ctx.stroke();
+    ctx.strokeStyle=cssVar('--sky'); ctx.lineWidth=2; ctx.stroke();
     angle+=slice;
   });
   ctx.beginPath(); ctx.arc(cx,cy,inner,0,2*Math.PI);
-  ctx.fillStyle='#1e2f3c'; ctx.fill();
+  ctx.fillStyle=cssVar('--card-bg'); ctx.fill();
   ctx.textAlign='center'; ctx.textBaseline='middle';
   if (hoveredIndex>=0 && piData[hoveredIndex]) {
     const [st,cnt]=piData[hoveredIndex];
-    ctx.fillStyle='#e8b84b';
+    ctx.fillStyle=cssVar('--warn');
     ctx.font=`bold ${W*.065}px 'Bebas Neue',sans-serif`;
     ctx.fillText(st, cx, cy-W*.045);
     ctx.font=`bold ${W*.09}px 'Bebas Neue',sans-serif`;
-    ctx.fillStyle='#f5f0e8';
+    ctx.fillStyle=cssVar('--chalk');
     ctx.fillText(cnt+(cnt===1?' park':' parks'), cx, cy+W*.05);
   } else {
-    ctx.fillStyle='#e8b84b';
+    ctx.fillStyle=cssVar('--warn');
     ctx.font=`bold ${W*.09}px 'Bebas Neue',sans-serif`;
     ctx.fillText(total+' parks', cx, cy-W*.03);
     ctx.font=`${W*.05}px 'DM Sans',sans-serif`;
-    ctx.fillStyle='#ddd6c8';
-    ctx.fillText('29 states', cx, cy+W*.06);
+    ctx.fillStyle=cssVar('--chalk-dim');
+    ctx.fillText('30 states', cx, cy+W*.06);
   }
 }
 
@@ -2137,35 +2205,59 @@ function buildLegend(data) {
 }
 function hlLegend(idx){legendEl.querySelectorAll('.pie-legend-item').forEach((el,i)=>el.classList.toggle('highlighted',i===idx));}
 
-canvas.addEventListener('mousemove', e=>{
+// ── UNIFIED POINTER HANDLING ─────────────────────────────────────────────────
+// Touch: press & drag ("scrub") across the wheel — selection follows your finger,
+// so even 1-park slivers are easy to land on. Lift to keep the selection.
+// Tap the center to clear. Mouse: hover as before, click to pin/unpin.
+function sliceAt(e) {
   const rect=canvas.getBoundingClientRect();
-  const sx=canvas.width/rect.width,sy=canvas.height/rect.height;
-  const mx=(e.clientX-rect.left)*sx,my=(e.clientY-rect.top)*sy;
-  const cx=canvas.width/2,cy=canvas.height/2,r=canvas.width*.44,inner=canvas.width*.18;
-  const dx=mx-cx,dy=my-cy,dist=Math.sqrt(dx*dx+dy*dy);
-  if(dist<inner||dist>r){hoveredIndex=-1;drawPie();hlLegend(-1);return;}
+  const sx=canvas.width/rect.width, sy=canvas.height/rect.height;
+  const mx=(e.clientX-rect.left)*sx, my=(e.clientY-rect.top)*sy;
+  const cx=canvas.width/2, cy=canvas.height/2;
+  const dx=mx-cx, dy=my-cy, dist=Math.sqrt(dx*dx+dy*dy);
+  // Generous hit zone for fingers: from half the donut hole out to the canvas edge
+  const innerHit=canvas.width*.09, outerHit=canvas.width*.5;
+  if(dist<innerHit) return -2;              // center tap -> clear
+  if(dist>outerHit) return -1;              // outside -> ignore
   const total=piData.reduce((s,d)=>s+d[1],0);
-  let angle=-Math.PI/2,found=-1,ma=Math.atan2(dy,dx);
+  let angle=-Math.PI/2, found=-1, ma=Math.atan2(dy,dx);
   if(ma<-Math.PI/2) ma+=2*Math.PI;
   piData.forEach(([,count],i)=>{const slice=(count/total)*2*Math.PI;if(ma>=angle&&ma<angle+slice)found=i;angle+=slice;});
-  if(found!==hoveredIndex){hoveredIndex=found;drawPie();hlLegend(found);}
-});
-canvas.addEventListener('mouseleave',()=>{hoveredIndex=-1;drawPie();hlLegend(-1);});
+  return found;
+}
+function setSlice(i){ if(i===hoveredIndex) return; hoveredIndex=i; drawPie(); hlLegend(i); }
 
-// Tap support for touch devices: tap a slice to select, tap again (or tap center) to clear
-canvas.addEventListener('click', e=>{
-  const rect=canvas.getBoundingClientRect();
-  const sx=canvas.width/rect.width,sy=canvas.height/rect.height;
-  const mx=(e.clientX-rect.left)*sx,my=(e.clientY-rect.top)*sy;
-  const cx=canvas.width/2,cy=canvas.height/2,r=canvas.width*.44,inner=canvas.width*.18;
-  const dx=mx-cx,dy=my-cy,dist=Math.sqrt(dx*dx+dy*dy);
-  if(dist<inner||dist>r){hoveredIndex=-1;drawPie();hlLegend(-1);return;}
-  const total=piData.reduce((s,d)=>s+d[1],0);
-  let angle=-Math.PI/2,found=-1,ma=Math.atan2(dy,dx);
-  if(ma<-Math.PI/2) ma+=2*Math.PI;
-  piData.forEach(([,count],i)=>{const slice=(count/total)*2*Math.PI;if(ma>=angle&&ma<angle+slice)found=i;angle+=slice;});
-  hoveredIndex = (hoveredIndex===found) ? -1 : found;
-  drawPie(); hlLegend(hoveredIndex);
+let scrubbing=false, scrubMoved=false, downIndex=-1;
+
+canvas.addEventListener('pointerdown', e=>{
+  scrubbing=true; scrubMoved=false;
+  canvas.setPointerCapture(e.pointerId);
+  const hit=sliceAt(e);
+  downIndex=hit;
+  if(hit>=0) setSlice(hit);
+  e.preventDefault();
+});
+canvas.addEventListener('pointermove', e=>{
+  const hit=sliceAt(e);
+  if(scrubbing){
+    if(hit>=0 && hit!==hoveredIndex){ scrubMoved=true; setSlice(hit); }
+  } else if(e.pointerType==='mouse'){
+    // hover behavior for mouse only
+    setSlice(hit>=0 ? hit : -1);
+  }
+});
+canvas.addEventListener('pointerup', e=>{
+  if(!scrubbing) return;
+  scrubbing=false;
+  const hit=sliceAt(e);
+  if(hit===-2){ setSlice(-1); return; }              // center tap clears
+  if(!scrubMoved && hit>=0 && hit===downIndex && e.pointerType==='mouse'){
+    // mouse click toggles pin; touch keeps whatever the scrub landed on
+  }
+});
+canvas.addEventListener('pointercancel', ()=>{ scrubbing=false; });
+canvas.addEventListener('pointerleave', e=>{
+  if(!scrubbing && e.pointerType==='mouse'){ setSlice(-1); }
 });
 
 let pieBuilt=false;
