@@ -751,7 +751,36 @@ svg.leaflet-image-layer.leaflet-interactive path {
 /* ── COLOR SCHEMES (named after hub spacings, obviously) ── */
 body.theme-150{--dirt:#c94040;--forest:#2a1618;--sky:#17171c;--chalk:#f2f0ef;--chalk-dim:#c9c4c2;--warn:#e8a84b;--card-bg:#222228;--card-border:#3a3a44;}
 body.theme-148{--dirt:#5ba85c;--forest:#0f1f14;--sky:#14231a;--chalk:#eef4ec;--chalk-dim:#c2d4c4;--warn:#c4d94b;--card-bg:#1b2f22;--card-border:#2e4a38;}
-body.theme-142{--dirt:#b8863a;--forest:#2e2214;--sky:#251c12;--chalk:#f4ecd8;--chalk-dim:#d4c8ac;--warn:#e0b45c;--card-bg:#332818;--card-border:#4d3e26;}
+/* 142 = the old standard, so: 1990s. Greys with neon pink, aqua, lime,
+   coral and pastel purple — Memphis/Trapper Keeper territory. */
+body.theme-142{--dirt:#ff2e93;--forest:#2d2d38;--sky:#1e1e24;--chalk:#f4f4f8;
+  --chalk-dim:#bcbcc9;--warn:#2ff0d6;--new:#a3f53f;--closed:#ff6b5c;--loam:#b47cff;
+  --card-bg:#2a2a33;--card-border:#454553;}
+/* the orange glows/washes are hardcoded elsewhere; retint them for 142 */
+body.theme-142 header::before{background:radial-gradient(circle,rgba(255,46,147,.20) 0%,transparent 70%)}
+body.theme-142 .tww-credit{background:rgba(255,46,147,.12);border-color:rgba(255,46,147,.38)}
+body.theme-142 .ca-credit:hover{background:rgba(255,46,147,.26)}
+body.theme-142 .marker-cluster-small,
+body.theme-142 .marker-cluster-medium,
+body.theme-142 .marker-cluster-large{background:rgba(255,46,147,.32)}
+body.theme-142 .tag-members{background:#b47cff}
+body.theme-142 .sr-fill{background:linear-gradient(90deg,#ff2e93,#2ff0d6)}
+/* Neon on white is unreadable (lime + white is 1.3:1), so in this theme
+   anything sitting on a neon fill gets dark text instead — 5:1 to 13:1. */
+body.theme-142 .tag,
+body.theme-142 .pmr-link:hover,
+body.theme-142 .theme-btn.active,
+body.theme-142 .pie-toggle-btn:hover,
+body.theme-142 .filter-btn.active,
+body.theme-142 .view-tab.active,
+body.theme-142 .stats-btn.active,
+body.theme-142 .stats-btn:hover,
+body.theme-142 .mtn-chip.on,
+body.theme-142 .ca-credit:hover,
+body.theme-142 .marker-cluster-small div,
+body.theme-142 .marker-cluster-medium div,
+body.theme-142 .marker-cluster-large div{color:#1a1a20}
+body.theme-142 .pin{border-color:#1a1a20}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'DM Sans',sans-serif;background:var(--sky);color:var(--chalk);min-height:100vh}
 
@@ -776,6 +805,10 @@ header h1 span{color:var(--dirt)}
 .stat-pill{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 12px;font-size:.75rem;font-weight:500;color:var(--chalk-dim)}
 .stat-pill strong{color:var(--warn)}
 .credit-row{margin-top:14px;display:flex;flex-wrap:wrap;gap:10px}
+/* ── BANNER (moose skulls) ── */
+.banner{background:var(--forest);border-bottom:2px solid var(--dirt);line-height:0;display:flex;justify-content:center;align-items:center;overflow:hidden}
+.banner img{display:block;width:100%;height:auto;max-height:360px;object-fit:contain}
+@media(max-width:768px){.banner img{max-height:210px}}
 .tww-credit{display:flex;align-items:center;gap:8px;background:rgba(196,104,42,.13);border:1px solid rgba(196,104,42,.35);border-radius:8px;padding:8px 14px;font-size:.8rem;color:var(--chalk-dim);line-height:1.45;max-width:580px}
 .tww-credit a{color:var(--warn);font-weight:700;text-decoration:none}
 .tww-credit a:hover{text-decoration:underline}
@@ -970,6 +1003,8 @@ header .wrap{position:relative}
   box-shadow:0 0 0 2px rgba(0,0,0,.45)}
 .pin.loam{background:var(--loam)}
 .pin.isnew{background:var(--new)}
+.leaflet-tooltip.pin-tip{background:var(--card-bg);border:1px solid var(--dirt);color:var(--chalk);font-family:'DM Sans',sans-serif;font-size:.74rem;font-weight:600;padding:4px 8px;border-radius:5px;box-shadow:0 3px 10px rgba(0,0,0,.45)}
+.leaflet-tooltip.pin-tip::before{border-top-color:var(--dirt)}
 .marker-cluster-small,.marker-cluster-medium,.marker-cluster-large{background:rgba(196,104,42,.35)}
 .marker-cluster-small div,.marker-cluster-medium div,.marker-cluster-large div{
   background:var(--dirt);color:#fff;font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.04em}
@@ -1002,6 +1037,16 @@ header .wrap{position:relative}
 
 /* ── MOUNTAIN ── */
 .mtn-tools{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.mtn-count{font-size:.74rem;color:var(--chalk-dim);margin-left:4px;white-space:nowrap}
+.mtn-count strong{color:var(--warn);font-weight:700}
+.stats-btn:disabled{opacity:.4;cursor:not-allowed}
+.stats-btn:disabled:hover{background:transparent;border-color:var(--card-border);color:var(--chalk-dim)}
+/* clickable peaks */
+.mtn-peak-g{cursor:pointer}
+.mtn-peak-g .mtn-body{transition:fill .13s,stroke-width .13s}
+.mtn-peak-g:hover .mtn-body{fill:var(--dirt);stroke-width:2.5}
+.mtn-peak-g:hover .mtn-vert-label{fill:var(--chalk)}
+.mtn-peak-g:hover .mtn-peak-label{fill:var(--warn)}
 .mtn-stage{background:linear-gradient(180deg,rgba(0,0,0,.28) 0%,rgba(0,0,0,.05) 100%);
   border:1px solid var(--card-border);border-radius:8px;padding:10px;overflow-x:auto}
 #mtnSvg{display:block;width:100%;height:auto;min-width:320px}
@@ -1074,6 +1119,12 @@ header .wrap{position:relative}
   </div>
  </div>
 </header>
+
+<!-- Banner. Swap src to "moose-skulls-web.jpg" once that optimised file
+     is committed: same image, 0.39 MB instead of 7.99 MB. -->
+<div class="banner">
+  <img src="moose-skulls.png" alt="Post Millennium Renaissance — chairlift and moose skulls illustration" width="2760" height="1504">
+</div>
 
 <div class="legend"><div class="wrap legend-inner">
   <span class="legend-item"><span class="tag tag-lift">Lift</span> Chairlift / gondola</span>
@@ -1154,12 +1205,13 @@ header .wrap{position:relative}
   <div class="view-panel" id="panel-mountain">
     <p class="view-intro">Vertical drop is hard to picture as a number. Stack a few parks side by side
       and the spread becomes obvious &mdash; the East Coast parks are not small, they're just next to
-      Jackson Hole. Pick up to eight.</p>
+      Jackson Hole. Add as many as you like; peaks run west to east, and clicking one removes it.</p>
     <div class="mtn-tools">
       <button class="stats-btn" onclick="biggestMtn()">Biggest 5</button>
       <button class="stats-btn" onclick="randomMtn()">Surprise me</button>
-      <button class="stats-btn" onclick="addFiveMtn()">Add Five</button>
+      <button class="stats-btn" id="mtnAddFive" onclick="addFiveMtn()">Add Five</button>
       <button class="stats-btn" onclick="clearMtn()">Clear</button>
+      <span class="mtn-count" id="mtnCount"></span>
     </div>
     <div class="mtn-stage" id="mtnStage"></div>
     <div class="mtn-picker" id="mtnPicker"></div>
@@ -3687,6 +3739,11 @@ function initMap(){
       (p.url ? `<a class="mp-link" href="${p.url}" target="_blank" rel="noopener">Visit site &#8599;</a>` : '') +
       `<a class="mp-jump" onclick="jumpToPark('${p.id}')">Details &#8595;</a>`
     );
+    /* hover label, so you can read the mountain without clicking */
+    m.bindTooltip(
+      `${p.name}${p.vertFt ? ' &middot; ' + p.vertFt.toLocaleString() + (p.vertApprox?'+':'') + ' ft' : ''}`,
+      { direction:'top', offset:[0,-8], className:'pin-tip', sticky:false }
+    );
     mapMarkers[p.id] = m;
     markerCluster.addLayer(m);
   });
@@ -3809,6 +3866,7 @@ function renderStats(){
    MOUNTAIN — compare park vertical as a skyline
    ══════════════════════════════════════════════════════════════════════════ */
 let mtnSelected = [];
+const esc = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
 function renderMtnPicker(){
   const el = document.getElementById('mtnPicker');
@@ -3821,7 +3879,7 @@ function renderMtnPicker(){
 function toggleMtn(id){
   const i = mtnSelected.indexOf(id);
   if (i >= 0) mtnSelected.splice(i,1);
-  else { if (mtnSelected.length >= 8) mtnSelected.shift(); mtnSelected.push(id); }
+  else mtnSelected.push(id);
   renderMountain();
 }
 window.toggleMtn = toggleMtn;
@@ -3841,16 +3899,13 @@ function randomMtn(){
 window.randomMtn = randomMtn;
 
 /* Adds up to 5 more parks not already on the skyline, picked at random.
-   Respects the 8-park cap — same rule toggleMtn() uses — by dropping the
-   oldest-added park to make room rather than silently refusing to add. */
+   No cap — keeps going until every park with a published vertical is on. */
 function addFiveMtn(){
   const pool = PARKS.filter(p => p.vertFt && !mtnSelected.includes(p.id));
   let toAdd = 5;
   while (toAdd > 0 && pool.length){
     const idx = Math.floor(Math.random() * pool.length);
-    const p = pool.splice(idx, 1)[0];
-    if (mtnSelected.length >= 8) mtnSelected.shift();
-    mtnSelected.push(p.id);
+    mtnSelected.push(pool.splice(idx, 1)[0].id);
     toAdd--;
   }
   renderMountain();
@@ -3868,6 +3923,13 @@ function renderMountain(){
   const stage = document.getElementById('mtnStage');
   if (!stage) return;
   const picked = mtnSelected.map(id => PARKS.find(p => p.id === id)).filter(Boolean);
+  const total  = PARKS.filter(p => p.vertFt).length;
+
+  /* counter + Add Five availability */
+  const cnt = document.getElementById('mtnCount');
+  if (cnt) cnt.innerHTML = `<strong>${picked.length}</strong> / ${total} added`;
+  const addBtn = document.getElementById('mtnAddFive');
+  if (addBtn) addBtn.disabled = picked.length >= total;
 
   if (!picked.length){
     stage.innerHTML = `<div class="mtn-empty">Pick a few parks below to stack their vertical drops side by side.<br>
@@ -3875,8 +3937,18 @@ function renderMountain(){
     return;
   }
 
+  /* Order the skyline west to east by longitude, the way the Canadian tool
+     does, so the shape of the chart matches the shape of the country rather
+     than the order you happened to click things in. */
+  picked.sort((a,b) => (a.coords ? a.coords[1] : 0) - (b.coords ? b.coords[1] : 0));
+
+  /* Peaks get narrower as more are added so the chart stays legible; past a
+     point the name labels stop fitting and hover carries them instead. */
+  const perPeak   = picked.length <= 8 ? 118 : picked.length <= 20 ? 82 : picked.length <= 40 ? 58 : 40;
+  const showNames = perPeak >= 70;
+  const showState = perPeak >= 58;
   const maxV = Math.max(...picked.map(p => p.vertFt));
-  const W = Math.max(340, picked.length * 118);
+  const W = Math.max(340, picked.length * perPeak);
   const H = 300, base = H - 42, peakMax = base - 40;
 
   const peaks = picked.map((p,i) => {
@@ -3886,20 +3958,30 @@ function renderMountain(){
     const half = Math.min(w*0.44, 62);
     const apex = base - h;
     const short = p.name.replace(/ Bike Park$/,'').replace(/ Mountain$/,'');
+    const vert  = p.vertFt.toLocaleString() + (p.vertApprox?'+':'') + ' ft';
+    const label = showNames
+      ? `<text class="mtn-peak-label" x="${cx}" y="${base+15}" text-anchor="middle">${short.length>15?short.slice(0,14)+'\u2026':short}</text>`
+      : '';
+    const stateLabel = showState
+      ? `<text class="mtn-peak-label" x="${cx}" y="${base+(showNames?27:15)}" text-anchor="middle" opacity=".6">${p.state}</text>`
+      : '';
     return `
-      <polygon points="${cx-half},${base} ${cx},${apex} ${cx+half},${base}"
-               fill="var(--card-bg)" stroke="var(--dirt)" stroke-width="1.5" opacity=".92"/>
-      <polygon points="${cx},${apex} ${cx+half},${base} ${cx},${base}"
-               fill="rgba(255,255,255,.05)"/>
-      <line x1="${cx}" y1="${apex}" x2="${cx}" y2="${base}" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
-      <text class="mtn-vert-label" x="${cx}" y="${apex-7}" text-anchor="middle">${p.vertFt.toLocaleString()}${p.vertApprox?'+':''}&#8242;</text>
-      <text class="mtn-peak-label" x="${cx}" y="${base+15}" text-anchor="middle">${short.length>15?short.slice(0,14)+'\u2026':short}</text>
-      <text class="mtn-peak-label" x="${cx}" y="${base+27}" text-anchor="middle" opacity=".6">${p.state}</text>`;
+      <g class="mtn-peak-g" onclick="toggleMtn('${p.id}')" role="button" tabindex="0"
+         aria-label="${esc(p.name)}, ${vert}. Click to remove.">
+        <title>${esc(p.name)} — ${esc(p.state)} · ${vert} · click to remove</title>
+        <polygon class="mtn-body" points="${cx-half},${base} ${cx},${apex} ${cx+half},${base}"
+                 fill="var(--card-bg)" stroke="var(--dirt)" stroke-width="1.5" opacity=".92"/>
+        <polygon points="${cx},${apex} ${cx+half},${base} ${cx},${base}"
+                 fill="rgba(255,255,255,.05)" pointer-events="none"/>
+        <line x1="${cx}" y1="${apex}" x2="${cx}" y2="${base}" stroke="rgba(255,255,255,.10)" stroke-width="1" pointer-events="none"/>
+        <text class="mtn-vert-label" x="${cx}" y="${apex-7}" text-anchor="middle" pointer-events="none">${p.vertFt.toLocaleString()}${p.vertApprox?'+':''}&#8242;</text>
+        ${label}${stateLabel}
+      </g>`;
   }).join('');
 
   stage.innerHTML =
     `<svg id="mtnSvg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img"
-          aria-label="Vertical drop comparison of selected bike parks">
+          aria-label="Vertical drop comparison of selected bike parks, ordered west to east">
        <line x1="0" y1="${base}" x2="${W}" y2="${base}" stroke="var(--card-border)" stroke-width="1.5"/>
        ${peaks}
      </svg>`;
