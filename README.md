@@ -155,20 +155,41 @@ guessed at."
 
 ### 11. Banner image, mountain overhaul, map hover, 1990s theme
 
-**Banner.** `moose-skulls.png` now sits between the header and the legend row,
-full width, capped at 360px tall (210px on mobile) using `object-fit:contain`
-so the whole illustration — including the PMR text at the bottom — is always
-visible and never cropped or distorted.
+**Header pattern (tiled).** The artwork is a *surface pattern*, not a banner
+image, so it's now a repeating CSS background across the whole upper band —
+same approach as the Viscosity Ledger's hero: a `.header-pattern` layer
+(`z-index:0`) tiled behind everything, a `.header-scrim` gradient
+(`z-index:1`) over it to keep the title readable, and the header content on
+top (`z-index:2`). The earlier `<img>` version is gone — it letterboxed into
+the middle of the band with empty space either side, which is what you saw.
 
-> ⚠️ **The committed PNG is 7.99 MB**, which is very heavy for a banner and
-> will noticeably slow first load. An optimised **`moose-skulls-web.jpg`**
-> (0.39 MB — a 95% reduction, 1800px wide, no visible quality loss; the
-> original's alpha channel was fully opaque so it was doing nothing) is
-> provided alongside this README. To use it: commit that file to the repo,
-> then change one line in `index.html` —
-> `src="moose-skulls.png"` → `src="moose-skulls-web.jpg"`.
-> There's an HTML comment at that spot as a reminder. Until you do, the
-> banner still works, just heavily.
+> **A new file is required: `moose-pattern-tile.jpg` (198 KB).** Commit it to
+> the repo root alongside `index.html`.
+>
+> **Why a new file rather than the original PNG:** the source image does not
+> tile seamlessly. Measured edge discontinuity was ~8× the interior baseline,
+> so repeating it directly would show visible seams. Autocorrelation found the
+> true horizontal repeat at **1406px** of the source's 2760px width, so the
+> tile is cut to exactly that one period — its wrap seam now measures 10.1
+> against an interior baseline of 6.9, i.e. seamless. Also downscaled and
+> JPEG'd, taking 7.99 MB to 198 KB.
+>
+> If you don't commit it, the header still renders correctly — just with the
+> gradient and no pattern. A missing CSS background fails silently, so there's
+> no broken-image icon.
+
+**One caveat on the source artwork:** it's one complete *horizontal* repeat but
+only a partial *vertical* one (top and bottom edges don't meet). So the CSS
+uses `background-repeat:repeat-x` with `background-size:auto 100%` — the tile
+scales to the band's height and repeats only sideways, which means a vertical
+seam can never appear regardless of how tall the header gets. On mobile
+(≤768px), where the header stacks taller, it switches to full `repeat` at a
+fixed 460px height. If you ever get a properly seamless vertical repeat from
+the original design file, this can become a plain `repeat` at a fixed size.
+
+`moose-skulls-web.jpg` (0.39 MB, the full optimised image) is still included in
+case you want the whole illustration somewhere else, but it is no longer
+referenced by the tool.
 
 **Mountain tab — cap removed.** "Add Five" now keeps adding until every park
 with a published vertical is on the skyline (87 of 93). The old 8-park limit
