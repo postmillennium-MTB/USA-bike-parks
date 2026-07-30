@@ -30,8 +30,9 @@ Added the same three-tab structure as the Canadian tool, same icons:
   (biggest, median, average, combined). Parks with no published vertical are
   visibly excluded rather than guessed at — see "Known data issues" below.
 - **Mountain** — pick up to 8 parks and see their vertical drops stacked as a
-  skyline, so the scale differences are visible rather than abstract. "Biggest
-  5" and "Surprise me" buttons for quick starts.
+  skyline, so the scale differences are visible rather than abstract.
+  "Biggest 5," "Surprise me," and "Add Five" buttons for quick starts —
+  Add Five appends to the current selection rather than replacing it.
 
 Leaflet 1.9.4 and Leaflet.markercluster 1.5.3 are inlined in full (copied out
 of the Canadian tool's file) so this stays a single self-contained HTML file.
@@ -72,11 +73,35 @@ The same cable-car icon is reused above the state list itself (a small
 "Provinces" and before the Map/Stats/Mountain tab labels.
 
 ### 6. Canada cross-link
-A bar under the legend links to
-`https://www.postmillenniumrenaissance.com/parks-ca/`, styled to match the
-rest of the page.
+Moved from its own bar into a small card next to the Two Wheeled Wanderer
+credit, right under the header — same "riding north of the border?" text,
+now with no subtext (the "28 lift-served parks..." line was removed per your
+request). Click it to go to the Canadian tool.
 
-### 7. Not changed
+### 7. "Add Five" on the Mountain tab
+Sits between "Surprise me" and "Clear." Adds five more random parks to
+whatever's already selected (rather than replacing the selection), so you
+can build up a comparison incrementally. Respects the existing 8-park cap —
+if adding would push past 8, the oldest-selected park drops off first, same
+rule the individual chip-toggle already used.
+
+### 8. "Map" link on every park card
+Each park card now has a second link next to the resort site link, using the
+map icon you provided. Clicking it switches to the Map tab, flies to that
+park specifically, unclusters it if needed, and opens its popup — landing
+you on the exact same information a moment later, just via the map.
+
+One judgment call worth flagging: the Canadian tool's cards link out to each
+resort's *own* trail-map page (Trailforks, resort PDF, etc.) — a real URL
+per park. This USA list has no such per-park data, and I didn't want to
+invent or guess 87 external map links with no way to verify they're correct
+or still live. So this "Map" link points into the interactive Map tab
+already built this round instead of an external site. If you'd rather have
+real per-park trail-map URLs like the Canadian cards, send them over (or
+point me at where to find them) and I'll wire those in instead — it's a
+small change once the data exists.
+
+### 9. Not changed
 Per your instruction, no mountain/skyline graphic sits behind the hero title
 block ("LIFT-SERVED BIKE PARKS IN THE USA / Chairlift & gondola-served
 downhill parks..."). That header is untouched aside from being wrapped in the
@@ -163,25 +188,29 @@ join the ranked views.
 index.html
 ├── <style>
 │   ├── Leaflet + MarkerCluster CSS (inlined, ~16KB)
-│   └── existing theme system + new CSS (centering, tabs, map, stats,
-│       mountain, reset button, note, section head, Canada link)
-├── <header> — now wrapped in .wrap for centering; unchanged otherwise
-├── legend, Canada link bar, pie bar/panel — wrapped in .wrap
+│   └── existing theme system + new CSS (centering, credit-row/ca-credit,
+│       tabs, map, stats, mountain, park-links-row/map link, reset button,
+│       note, section head)
+├── <header> — wrapped in .wrap for centering; credit-row added
+│              (Two Wheeled Wanderer + "Riding north of the border?" side
+│              by side); otherwise unchanged
+├── legend, pie bar/panel — wrapped in .wrap
 ├── filter bar — reset button added
-├── view-section — Map / Stats / Mountain tabs + no-parks note (new)
-├── <main> — section heading (new) + existing state-section park list
+├── view-section — Map / Stats / Mountain tabs + no-parks note
+├── <main> — section heading + existing state-section park list
 │             (untouched structure — still the data source)
 └── <script>
     ├── Leaflet + MarkerCluster JS (inlined, ~180KB)
     └── existing accordion/filter/theme/pie code, followed by:
-        COORDS table, ALL_STATES list, buildParks(), jumpToState/Park,
-        toggleView, map init, stats render, mountain render,
-        renderNoParkNote, resetAll, pie-click handlers
+        COORDS table, ALL_STATES list, buildParks(), MAP_ICON_SVG +
+        injectMapLinks() (per-card Map link), jumpToState/Park/MapFor,
+        toggleView, map init, stats render, mountain render (incl.
+        addFiveMtn), renderNoParkNote, resetAll, pie-click handlers
 ```
 
-File size: ~404KB (was 162KB before this update — the increase is almost
-entirely the inlined Leaflet + MarkerCluster libraries, needed to keep the
-map single-file and dependency-free like the rest of your tools).
+File size: ~407KB (was 162KB before this round of updates — the increase is
+almost entirely the inlined Leaflet + MarkerCluster libraries, needed to
+keep the map single-file and dependency-free like the rest of your tools).
 
 ---
 
@@ -191,8 +220,11 @@ The built file was executed in a real DOM (jsdom) to check for runtime
 errors, and to verify: all parks parse into the `PARKS` array; every park has
 a coordinate; Stats/Mountain correctly exclude parks with no vertical;
 sorting works in both directions; the pie-click jump lands on the correct
-state section; Reset actually clears filters/search/selection; the header
-has no mountain graphic behind it; and the centering wrapper is present
-around every band. 45 automated checks were run; all passed except the two
-data issues documented above, which are pre-existing data problems rather
-than bugs in the new code.
+state section; Reset actually clears filters/search/selection; the credit
+row shows both cards with the Canada card stripped to just its link text;
+Add Five appends without duplicating and respects the 8-park cap; every
+mapped park's card got a working Map link using the specified icon, which
+switches tabs and opens that park's popup; and the header still has no
+mountain graphic behind it. 61 automated checks were run — 59 passed; the 2
+failures are the pre-existing Mountain High / Dodge Ridge vertical-drop data
+issue documented above, not bugs introduced by this round of changes.
