@@ -153,6 +153,77 @@ guessed at."
 - **Telluride** — already correctly marked (`data-status="closed"`, Closed
   tag, "Closed 2026 / Reopens 2027", explanatory note). No change needed.
 
+### 11. Banner image, mountain overhaul, map hover, 1990s theme
+
+**Banner.** `moose-skulls.png` now sits between the header and the legend row,
+full width, capped at 360px tall (210px on mobile) using `object-fit:contain`
+so the whole illustration — including the PMR text at the bottom — is always
+visible and never cropped or distorted.
+
+> ⚠️ **The committed PNG is 7.99 MB**, which is very heavy for a banner and
+> will noticeably slow first load. An optimised **`moose-skulls-web.jpg`**
+> (0.39 MB — a 95% reduction, 1800px wide, no visible quality loss; the
+> original's alpha channel was fully opaque so it was doing nothing) is
+> provided alongside this README. To use it: commit that file to the repo,
+> then change one line in `index.html` —
+> `src="moose-skulls.png"` → `src="moose-skulls-web.jpg"`.
+> There's an HTML comment at that spot as a reminder. Until you do, the
+> banner still works, just heavily.
+
+**Mountain tab — cap removed.** "Add Five" now keeps adding until every park
+with a published vertical is on the skyline (87 of 93). The old 8-park limit
+is gone from both the button and individual chip clicks. The button disables
+itself once everything is added and re-enables as soon as you remove one.
+
+**Counter.** Reads `<strong>30</strong> / 87 added`, matching the Canadian
+tool's wording. The denominator is parks with a published vertical, not all 93.
+
+**Click a peak to remove it.** Each peak is now a clickable `<g>` with a
+pointer cursor and a hover state (fills with the accent colour, brightens its
+labels). This mirrors the Canadian tool's behaviour.
+
+**Hover shows the full name.** Each peak carries an SVG `<title>` reading
+`Park Name — State · 2,200 ft · click to remove`. This matters because on-chart
+labels truncate at 15 characters and disappear entirely once many peaks are
+added — hover always gives the untruncated name. Map pins also got hover
+tooltips (Leaflet `bindTooltip`) showing name and vertical, so you no longer
+have to click a pin to identify it.
+
+**West-to-east ordering.** Borrowed from the Canadian tool: peaks sort by
+longitude rather than click order, so the chart's shape tracks the country's
+— California on the left, New England on the right.
+
+**Adaptive peak width.** With the cap gone, up to 87 peaks can be on screen.
+Peak width steps down as more are added (118 → 82 → 58 → 40px), name labels
+drop out below 70px and state labels below 58px, with hover carrying the
+information instead. The stage scrolls horizontally.
+
+**On replicating the Canadian mountain widget:** you asked whether it'd be
+easier to port it wholesale. Having compared them — no. The Canadian version
+renders peaks as HTML divs with per-province colours, a `hexToRgba` helper,
+and bilingual/metric label formatting; porting it would mean bringing all of
+that across, inventing a 50-state colour scheme, and ending up with two
+different visual languages between the two tools. The four behaviours you
+wanted were ~40 lines against the existing SVG. So the *behaviour* is now
+replicated, and two good ideas were borrowed (longitude ordering, the counter),
+but the rendering stayed SVG.
+
+**Theme 142 → 1990s.** Fitting, since 142mm *was* the old standard. Charcoal
+and slate greys (`--sky:#1e1e24`, `--forest:#2d2d38`) with hot neon pink as
+the primary accent (`--dirt:#ff2e93`), aqua highlights (`--warn:#2ff0d6`), and
+the tag colours repainted to lime (`--new:#a3f53f`), coral (`--closed:#ff6b5c`)
+and pastel purple (`--loam:#b47cff`) — Memphis / Trapper Keeper territory.
+
+Two details worth knowing:
+- Several orange washes were hardcoded rather than themed (the header glow,
+  the Two Wheeled Wanderer credit background, map cluster bubbles). These are
+  now retinted for 142 specifically. *The same hardcoding still affects themes
+  150 and 148* — pre-existing, not addressed here, but worth a look sometime.
+- **Text on the neon fills is dark, not white.** White on the lime "New" tag
+  measured 1.34:1 contrast (illegible); white on aqua 1.44:1. Switching to
+  `#1a1a20` puts all five neon fills between 5:1 and 12.9:1. This applies only
+  to theme 142.
+
 ---
 
 ## How the data flows
