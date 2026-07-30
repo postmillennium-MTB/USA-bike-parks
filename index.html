@@ -786,7 +786,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sky);color:var(--chalk);m
 
 /* ── HEADER ── */
 header{background:linear-gradient(135deg,var(--forest) 0%,var(--sky) 60%);padding:32px 24px 28px;border-bottom:3px solid var(--dirt);position:relative;overflow:hidden}
-header::before{content:'';position:absolute;top:-30px;right:-40px;width:220px;height:220px;background:radial-gradient(circle,rgba(196,104,42,.18) 0%,transparent 70%);border-radius:50%}
+header::before{content:'';position:absolute;z-index:1;top:-30px;right:-40px;width:220px;height:220px;background:radial-gradient(circle,rgba(196,104,42,.18) 0%,transparent 70%);border-radius:50%}
 header h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,7vw,4.5rem);letter-spacing:.04em;line-height:1;text-shadow:2px 3px 0 rgba(0,0,0,.4)}
 /* ── TOP-RIGHT: PMR link + theme switcher ── */
 .header-corner{position:absolute;top:12px;right:14px;display:flex;flex-direction:column;align-items:flex-end;gap:8px;z-index:20;pointer-events:auto}
@@ -805,10 +805,20 @@ header h1 span{color:var(--dirt)}
 .stat-pill{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 12px;font-size:.75rem;font-weight:500;color:var(--chalk-dim)}
 .stat-pill strong{color:var(--warn)}
 .credit-row{margin-top:14px;display:flex;flex-wrap:wrap;gap:10px}
-/* ── BANNER (moose skulls) ── */
-.banner{background:var(--forest);border-bottom:2px solid var(--dirt);line-height:0;display:flex;justify-content:center;align-items:center;overflow:hidden}
-.banner img{display:block;width:100%;height:auto;max-height:360px;object-fit:contain}
-@media(max-width:768px){.banner img{max-height:210px}}
+/* ── HEADER PATTERN (tiled moose skulls) ────────────────────────────────
+   The artwork is a surface pattern, so it belongs as a repeating background
+   rather than a single <img>. moose-pattern-tile.jpg is cut to exactly one
+   horizontal repeat (1406px of the source), so it wraps seamlessly across.
+   It is NOT a full vertical repeat, so this uses repeat-x with the tile
+   scaled to the band height — that way a vertical seam can never appear. */
+.header-pattern{position:absolute;inset:0;z-index:0;pointer-events:none;
+  background-image:url('moose-pattern-tile.jpg');
+  background-repeat:repeat-x;background-size:auto 100%;background-position:left top;
+  opacity:.5}
+/* Scrim keeps the title and body copy readable over the busy pattern. */
+.header-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(8,12,16,.34) 0%,rgba(8,12,16,.80) 100%)}
+@media(max-width:768px){.header-pattern{background-size:auto 460px;background-repeat:repeat}}
 .tww-credit{display:flex;align-items:center;gap:8px;background:rgba(196,104,42,.13);border:1px solid rgba(196,104,42,.35);border-radius:8px;padding:8px 14px;font-size:.8rem;color:var(--chalk-dim);line-height:1.45;max-width:580px}
 .tww-credit a{color:var(--warn);font-weight:700;text-decoration:none}
 .tww-credit a:hover{text-decoration:underline}
@@ -944,7 +954,7 @@ footer a:hover{color:var(--warn)}
    hugging the left on a wide laptop screen.
    ══════════════════════════════════════════════════════════════════ */
 .wrap{max-width:1400px;margin-left:auto;margin-right:auto;width:100%}
-header .wrap{position:relative}
+header .wrap{position:relative;z-index:2}
 .legend-inner{display:flex;flex-wrap:wrap;gap:10px}
 .legend{display:block}
 .pie-bar-inner{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -1090,6 +1100,8 @@ header .wrap{position:relative}
 <body>
 
 <header>
+ <div class="header-pattern"></div>
+ <div class="header-scrim"></div>
  <div class="wrap">
   <div class="header-corner">
     <a class="pmr-link" href="https://www.postmillenniumrenaissance.com/" target="_blank">PMR MTB &#8599;</a>
@@ -1119,12 +1131,6 @@ header .wrap{position:relative}
   </div>
  </div>
 </header>
-
-<!-- Banner. Swap src to "moose-skulls-web.jpg" once that optimised file
-     is committed: same image, 0.39 MB instead of 7.99 MB. -->
-<div class="banner">
-  <img src="moose-skulls.png" alt="Post Millennium Renaissance — chairlift and moose skulls illustration" width="2760" height="1504">
-</div>
 
 <div class="legend"><div class="wrap legend-inner">
   <span class="legend-item"><span class="tag tag-lift">Lift</span> Chairlift / gondola</span>
