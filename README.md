@@ -107,6 +107,52 @@ block ("LIFT-SERVED BIKE PARKS IN THE USA / Chairlift & gondola-served
 downhill parks..."). That header is untouched aside from being wrapped in the
 new centering column.
 
+### 10. Six parks added (July 2026 review)
+
+A review against Singletracks coverage and resort sources surfaced six
+lift-served parks missing from the base list. Header now reads "Updated
+July 2026" and the park count pill reads 93 (was "85+").
+
+| Park | State | Vertical | Notes |
+|---|---|---|---|
+| Grand Targhee Bike Park | WY | 2,200 ft | 17 mi lift-served, Shoshone + Dreamcatcher lifts. The largest omission. |
+| Windham Mountain Bike Park | NY | 1,600 ft | **Members only** — see below |
+| Plattekill Bike Park | NY | 1,100 ft | 11 trails, Eastern States Cup venue |
+| Massanutten Bike Park | VA | 1,080 ft | Creekside + Peak Express lifts; vertical per Trailforks |
+| Hatley Pointe Bike Park | NC | 700 ft | Opens Aug 1 2026, tagged New |
+| Brighton Bike Park | UT | *not published* | Majestic + Crest 6 lifts |
+
+State counts updated: Wyoming 2→3, New York 3→5, Virginia 1→2,
+North Carolina 2→3, Utah 7→8. Still 30 states, so the
+"states without bike parks" note is unchanged at 20 states.
+
+**New "Members" tag.** Windham rebranded as Windham Mountain Club and
+restricted bike park access to members and guests on qualifying lodging
+packages. It's listed for completeness with a purple **Members** tag, a
+matching legend entry, an "Access: Members & lodging guests only" stat, and
+a bolded note that it is not open to the general public.
+
+**Brighton has no vertical figure on purpose.** No source publishes a
+bike-park vertical for Brighton (its 4 flow trails run off two lifts, not the
+full 1,745 ft ski vertical), so rather than invent a number the Vertical Drop
+stat is omitted — which means Brighton is automatically excluded from the
+ranked Stats and Mountain views. The on-page disclosure now reads "87 of 93
+parks ranked · 6 publish no vertical drop and are left out rather than
+guessed at."
+
+### Checked and deliberately NOT added
+
+- **Sunday River (ME)** — no longer offers lift-served MTB.
+- **Wisp Resort (MD)** — XC and trail riding remain, but the dedicated
+  lift-served downhill park is no longer operational. Maryland therefore
+  stays on the states-without list.
+- **Tyrol Basin / Granite Peak (WI)** — scenic chairlift rides only, no bike
+  park. Wisconsin's absence is genuine, not an oversight.
+- **Seven Springs (PA)** — no evidence of a currently operating lift-served
+  park; Blue Mountain is described as Pennsylvania's premier lift-served park.
+- **Telluride** — already correctly marked (`data-status="closed"`, Closed
+  tag, "Closed 2026 / Reopens 2027", explanatory note). No change needed.
+
 ---
 
 ## How the data flows
