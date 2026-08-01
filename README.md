@@ -245,6 +245,138 @@ Two details worth knowing:
   `#1a1a20` puts all five neon fills between 5:1 and 12.9:1. This applies only
   to theme 142.
 
+### 12. Peak elevation as a separate metric from vertical drop
+
+**The Mountain High / Dodge Ridge bug is fixed — and it turned out to affect
+both parks the same way.** Independently confirmed by roughly a dozen sources
+including each resort's own site:
+
+| Park | Was showing | Now shows |
+|---|---|---|
+| Mountain High | Vertical Drop: 8,200 ft *(summit, mislabeled)* | **Vertical Drop: 1,600 ft** &nbsp;+&nbsp; **Peak Elevation: 8,200 ft** |
+| Dodge Ridge | Vertical Drop: 7,400 ft *(wrong on both counts)* | **Vertical Drop: 1,600 ft** &nbsp;+&nbsp; **Peak Elevation: 8,200 ft** |
+
+Dodge Ridge's old figure (7,400 ft) wasn't a mislabeled summit like Mountain
+High's — it was simply incorrect. Every source checked agrees on 8,200 ft
+summit / 1,600 ft vertical for **both** parks, which is a genuine coincidence
+(they're different mountains) rather than a data error.
+
+**Every park card can now carry two separate stats**: `Vertical Drop` (how far
+the lift-served trails descend — the figure already in use throughout) and
+`Peak Elevation` (how tall the mountain is — new). These are genuinely
+different things and were being conflated. A resort can have a modest bike
+park partway up an enormous mountain (Jackson Hole: 2,500+ ft of trail on a
+mountain that tops out much higher), or the reverse.
+
+**Coverage: 39 of 93 parks now have a sourced peak elevation.** This is a
+solid first pass, not a complete one — see the exact list and sourcing notes
+below. The remaining 54 aren't estimated; they simply don't show a Peak
+Elevation stat.
+
+<details>
+<summary>Full list of the 39 parks with sourced peak elevation, and where the figures came from</summary>
+
+**Newly added this round (37 parks)**, sourced from Wikipedia's
+"Comparison of [state] ski resorts" tables, individual resort Wikipedia
+infoboxes, and resort websites, cross-checked against multiple sources where
+more than one was readily available:
+
+Colorado (12): Trestle/Winter Park 12,060 &middot; Keystone 12,408 &middot; Vail 11,570 &middot;
+Snowmass 12,510 &middot; Steamboat 10,568 &middot; Crested Butte 12,162 &middot; Telluride 13,150 &middot;
+Granby Ranch 9,202 &middot; Beaver Creek 11,440 &middot; Copper Mountain 12,441 &middot; Powderhorn 9,850 &middot;
+Purgatory 10,822
+
+California (7, incl. the 2 corrections above): Mammoth 11,053 &middot; Northstar 8,610 &middot;
+Snow Summit 8,174 &middot; China Peak 8,709 &middot; Woodward Tahoe (Boreal) 7,700 &middot;
+Mountain High 8,200 &middot; Dodge Ridge 8,200
+
+Utah (6): Deer Valley 9,570 &middot; Solitude 10,488 &middot; Sundance 8,250 &middot; Brian Head 11,307 &middot;
+Snow Basin 9,350 &middot; Brighton 10,750
+
+Vermont (5): Killington 4,241 &middot; Burke 3,267 &middot; Mt. Snow 3,600 &middot; Bolton Valley 3,150 &middot;
+Stratton 3,940
+
+New Hampshire (3): Mount Sunapee 2,743 &middot; Loon 3,065 &middot; Waterville Valley 4,004
+
+New York (2): Windham 3,100 &middot; Plattekill 3,500
+
+Wyoming (1): Grand Targhee 9,862
+
+Virginia (1): Massanutten ~2,922 — **lower confidence**: this is Massanutten
+Mountain's highest point per Wikipedia, not independently confirmed as the
+bike park's specific lift-top elevation.
+
+**Already present before this round (2 parks, untouched):** Sunrise Bike Park
+(AZ) and Angel Fire Bike Park (NM), both listed as "Elevation: Starts at
+X ft."
+
+**One other lower-confidence figure:** Brian Head shows 11,307 ft, derived
+from base (9,600 ft) + vertical (1,707 ft) because the same Wikipedia article
+contradicts itself with a "10,920 ft" figure elsewhere in the infobox: the
+11,307 ft figure is the one that's internally consistent.
+
+</details>
+
+**Not covered, by state:** every park in AK, AR, AZ (has elevation via the
+pre-existing "starts at" field), CT, IL, MA, MI, MN, MT, ND, NJ, NM (Angel Fire
+has it), NV, ND, OH, OK, PA, SD, TX, WA, WV, and the remaining parks in CA
+(Snow Valley), UT (Woodward Park City, Powder Mountain), NH (Cranmore,
+Highland), NY (Greek Peak, HoliMont, Gore Mountain), CO (Mighty Argo — not a
+mountain resort), and WY (Jackson Hole, Snow King).
+
+**A full sweep of the remaining ~54 parks is a reasonable follow-up** if you
+want complete coverage — it's the same Wikipedia-comparison-table approach,
+just more of it.
+
+### 13. "Peak" added to the Stats sort
+
+Sort order is now **Vertical, Peak, Name, State** as requested. Sorting by
+Peak ranks the same list (parks with a published vertical drop) by summit
+elevation instead; parks with no peak elevation on file drop to the bottom,
+sorted alphabetically rather than being hidden or guessed at. A line above
+the sort buttons discloses coverage: "38 of 87 have a published peak/summit
+elevation." (38, not 39 — Brighton has a peak elevation but no vertical drop,
+so it doesn't appear in this vertical-drop-based ranked list at all; its peak
+elevation is still visible on its own card.) Each row's subtitle now shows
+peak elevation inline when available: "Telluride, CO &middot; peak 13,150 ft."
+
+### 14. Three follow-up fixes from your screenshot
+
+**The confusing Peak-sort display is fixed.** You were right to flag this —
+sorting by Peak was reordering the list correctly, but the big number and bar
+length kept showing Vertical Drop regardless of sort mode. So Telluride
+(genuinely the #1 peak at 13,150 ft) sorted to the top, while its bar and big
+value still read "1,243 ft" — the *vertical* figure — making it look broken
+even though the ranking itself wasn't. Now whichever metric you're sorting by
+is what's shown big, and the other one moves to the subtitle:
+
+- **Sort: Peak** &rarr; big value + bar = peak elevation; subtitle reads
+  "Telluride, CO &middot; vertical 1,243 ft"
+- **Sort: Vertical / Name / State** &rarr; big value + bar = vertical drop
+  (as before); subtitle reads "Mammoth Lakes, CA &middot; peak 11,053 ft" when
+  a peak figure exists
+
+**Peak sort order was already correct** — b.peakFt - a.peakFt is descending,
+and Telluride's 13,150 ft genuinely is the highest of the 39 sourced peaks.
+It only *looked* wrong because of the display bug above: the first bar wasn't
+the longest bar on screen, which reads as "not sorted" even when the order is
+right. Worth flagging since it explains why Silver Mountain, ID also looks
+surprising at the top of the *Vertical* sort — its 3,400 ft is a real, sourced
+figure, genuinely bigger than Jackson Hole's.
+
+**Parks with no peak elevation, when sorted by Peak**, now show a muted
+italic "no peak data" instead of silently displaying nothing or (worse) a
+number that isn't the one you asked to sort by. Their subtitle still shows
+their real vertical drop, so nothing is hidden, just not conflated.
+
+**Mountain tab now discloses its exclusions.** You asked directly: yes, the
+same 6 parks with no published vertical drop (Sugarloaf, Lee Canyon, Deer
+Mountain Village, Snoqualmie Summit, Snow King, and Brighton) are left out of
+the Mountain tab, same as Stats — the skyline can't plot a bar with no height.
+That was already true but undisclosed; there's now a line under the picker:
+"6 parks with no published vertical drop can't be plotted here and aren't in
+the 87 above — same parks left out of Stats, for the same reason."
+
 ---
 
 ## How the data flows
