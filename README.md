@@ -377,6 +377,23 @@ That was already true but undisclosed; there's now a line under the picker:
 "6 parks with no published vertical drop can't be plotted here and aren't in
 the 87 above — same parks left out of Stats, for the same reason."
 
+### 15. Breckenridge Bike Park added (Colorado, 94th park)
+
+Confirmed via breckenridge.com: bikes are hauled on the Colorado SuperChair
+from the Peak 8 base, with 12 named trails (1 green, 8 blue, 3 black) across
+Peaks 7 and 8, roughly 25 miles combined.
+
+**Vertical Drop is deliberately the SuperChair's own rise (1,325 ft), not
+Breckenridge's full ski vertical (3,398 ft).** This is the same mistake
+already fixed once this session for Mountain High and Dodge Ridge, so it got
+checked carefully here too: the bike lift only reaches Vista Haus at 11,059 ft
+(base 9,734 ft), not the resort's true 12,998 ft summit reached by other
+lifts the bike park doesn't use. Using the full ski vertical would have
+overstated the park by more than 2,000 ft. Peak Elevation (12,998 ft) is
+still the resort's actual summit, same convention as every other park.
+
+State count: Colorado 13 &rarr; 14. Total: 93 &rarr; 94 parks.
+
 ---
 
 ## How the data flows
