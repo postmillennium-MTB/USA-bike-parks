@@ -3,9 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" href="favicon.ico">
-<link rel="icon" type="image/png" href="favicon-32x32.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>US Lift-Served Bike Parks</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
 <style id="leaflet-css">/* Leaflet 1.9.4 */
@@ -1040,6 +1037,7 @@ header .wrap{position:relative;z-index:2}
 .sr-fill{height:100%;background:linear-gradient(90deg,var(--dirt),var(--warn));border-radius:3px;
   transition:width .5s cubic-bezier(.22,1,.36,1)}
 .stat-row .sr-val{font-size:.75rem;color:var(--warn);font-weight:700;white-space:nowrap;min-width:62px;text-align:right}
+.stat-row .sr-val.sr-val-empty{color:var(--chalk-dim);font-weight:500;font-style:italic;font-size:.7rem}
 @media(max-width:600px){.stat-row{grid-template-columns:1fr auto;gap:4px 8px}
   .sr-track{grid-column:1/-1;order:3}}
 .stats-summary{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
@@ -1201,10 +1199,12 @@ header .wrap{position:relative;z-index:2}
       one that can be compared honestly across all of them. Trail mileage and lift counts are recorded
       inconsistently, so they're left on the individual cards rather than ranked here.</p>
     <div class="stats-summary" id="statsSummary"></div>
-    <p class="view-intro" id="statsOmitted" style="font-size:.72rem;opacity:.75;margin-bottom:10px"></p>
+    <p class="view-intro" id="statsOmitted" style="font-size:.72rem;opacity:.75;margin-bottom:4px"></p>
+    <p class="view-intro" id="statsPeakNote" style="font-size:.72rem;opacity:.75;margin-bottom:10px"></p>
     <div class="stats-tools">
       <label>Sort:</label>
       <button class="stats-btn active" data-sort="vert" onclick="setStatsSort('vert')">Vertical</button>
+      <button class="stats-btn" data-sort="peak" onclick="setStatsSort('peak')">Peak</button>
       <button class="stats-btn" data-sort="name" onclick="setStatsSort('name')">Name</button>
       <button class="stats-btn" data-sort="state" onclick="setStatsSort('state')">State</button>
     </div>
@@ -1224,6 +1224,7 @@ header .wrap{position:relative;z-index:2}
     </div>
     <div class="mtn-stage" id="mtnStage"></div>
     <div class="mtn-picker" id="mtnPicker"></div>
+    <p class="view-intro" id="mtnOmitted" style="font-size:.7rem;opacity:.7;margin-top:10px"></p>
   </div>
 
   <div class="map-note" id="noParkNote"></div>
@@ -1383,7 +1384,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">3,100 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">80+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 gondola, 3 chairlifts, 1 bus</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May/June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Summit</span><span class="ps-value">11,035 ft</span></div></div><div class="park-note">California's biggest park. Epic Eastern Sierra views.</div><a class="park-link" href="https://www.mammothmountain.com/things-to-do/activities/bike-park" target="_blank">mammothmountain.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">11,053 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">3,100 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">80+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 gondola, 3 chairlifts, 1 bus</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May/June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Summit</span><span class="ps-value">11,035 ft</span></div></div><div class="park-note">California's biggest park. Epic Eastern Sierra views.</div><a class="park-link" href="https://www.mammothmountain.com/things-to-do/activities/bike-park" target="_blank">mammothmountain.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open">
@@ -1399,7 +1400,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,062 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">45+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 gondola, 2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Thurs–Mon)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.northstarcalifornia.com" target="_blank">northstarcalifornia.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">8,610 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,062 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">45+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 gondola, 2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Thurs–Mon)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.northstarcalifornia.com" target="_blank">northstarcalifornia.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open">
@@ -1415,7 +1416,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,158 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">15 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Oct (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Builder</span><span class="ps-value">Gravity Logic</span></div></div><div class="park-note">Closest major park to LA. Built with help from Whistler's Gravity Logic.</div><a class="park-link" href="https://www.bigbearmountainresort.com/mountain-biking" target="_blank">bigbearmountainresort.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">8,174 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,158 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">15 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Oct (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Builder</span><span class="ps-value">Gravity Logic</span></div></div><div class="park-note">Closest major park to LA. Built with help from Whistler's Gravity Logic.</div><a class="park-link" href="https://www.bigbearmountainresort.com/mountain-biking" target="_blank">bigbearmountainresort.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open">
@@ -1447,7 +1448,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,443 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">21 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Sat–Sun)</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">4 hrs east of SF</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.skichinapeak.com/mountain-biking-scenic-chair-rides" target="_blank">skichinapeak.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">8,709 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,443 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">21 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Sat–Sun)</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">4 hrs east of SF</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.skichinapeak.com/mountain-biking-scenic-chair-rides" target="_blank">skichinapeak.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open" data-loam="true">
@@ -1463,7 +1464,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">500 ft</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Daily)</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Focus</span><span class="ps-value">Freeride / training</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Indoor</span><span class="ps-value">33,000 sq ft Bunker</span></div></div><div class="park-note">Action sports training facility with indoor foam pits, pump track, and skate park.</div><a class="park-link" href="https://www.rideboreal.com/explore/who-we-are/woodward-tahoe/" target="_blank">rideboreal.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">7,700 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">500 ft</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Daily)</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Focus</span><span class="ps-value">Freeride / training</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Indoor</span><span class="ps-value">33,000 sq ft Bunker</span></div></div><div class="park-note">Action sports training facility with indoor foam pits, pump track, and skate park.</div><a class="park-link" href="https://www.rideboreal.com/explore/who-we-are/woodward-tahoe/" target="_blank">rideboreal.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open" data-new="true">
@@ -1472,14 +1473,14 @@ header .wrap{position:relative;z-index:2}
           <div class="park-name">Mountain High Bike Park</div>
           <div class="park-meta">
             <span class="park-location">Wrightwood, CA</span>
-            <span class="park-vert">8,200 ft</span>
+            <span class="park-vert">1,600 ft</span>
           </div>
         </div>
         <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-new">New</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Summit</span><span class="ps-value hl">8,200 ft</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">Chairlift</span></div><div class="ps-item"><span class="ps-label">Opened</span><span class="ps-value">June 2025</span></div><div class="ps-item"><span class="ps-label">Phase 3</span><span class="ps-value">Spring 2026</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">90 min from LA</span></div><div class="ps-item"><span class="ps-label">Forest</span><span class="ps-value">Angeles NF</span></div></div><div class="park-note">SoCal's newest lift-served bike park.</div><a class="park-link" href="https://www.mthigh.com" target="_blank">mthigh.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,600 ft</span></div><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">8,200 ft</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">Chairlift</span></div><div class="ps-item"><span class="ps-label">Opened</span><span class="ps-value">June 2025</span></div><div class="ps-item"><span class="ps-label">Phase 3</span><span class="ps-value">Spring 2026</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">90 min from LA</span></div><div class="ps-item"><span class="ps-label">Forest</span><span class="ps-value">Angeles NF</span></div></div><div class="park-note">SoCal's newest lift-served bike park.</div><a class="park-link" href="https://www.mthigh.com" target="_blank">mthigh.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open" data-new="true" data-loam="true">
@@ -1488,14 +1489,14 @@ header .wrap{position:relative;z-index:2}
           <div class="park-name">Dodge Ridge Bike Park</div>
           <div class="park-meta">
             <span class="park-location">Pinecrest, CA</span>
-            <span class="park-vert">7,400 ft</span>
+            <span class="park-vert">1,600 ft</span>
           </div>
         </div>
         <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span><span class="tag tag-new">New</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Summit</span><span class="ps-value hl">7,400 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">~7.5 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">Motherlode Chairlift 3</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">Sat–Sun, Aug–Oct</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">2.5 hrs east of Bay Area</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><div class="park-note">Central Sierra hidden gem — closest chairlift park to the Bay Area.</div><a class="park-link" href="https://summer.dodgeridge.com/mountain-biking/" target="_blank">dodgeridge.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,600 ft</span></div><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">8,200 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">~7.5 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">Motherlode Chairlift 3</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">Sat–Sun, Aug–Oct</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">2.5 hrs east of Bay Area</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><div class="park-note">Central Sierra hidden gem — closest chairlift park to the Bay Area.</div><a class="park-link" href="https://summer.dodgeridge.com/mountain-biking/" target="_blank">dodgeridge.com &#8599;</a>
       </div>
     </div>
     </div>
@@ -1525,7 +1526,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,680 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">40+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 gondola, 2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><div class="park-note">Arguably Colorado's best all-around bike park.</div><a class="park-link" href="https://www.trestlebikepark.com" target="_blank">trestlebikepark.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">12,060 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,680 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">40+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 gondola, 2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><div class="park-note">Arguably Colorado's best all-around bike park.</div><a class="park-link" href="https://www.trestlebikepark.com" target="_blank">trestlebikepark.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open">
@@ -1541,7 +1542,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,303 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">100+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Thurs–Mon)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.keystoneresort.com" target="_blank">keystoneresort.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">12,408 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,303 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">100+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Thurs–Mon)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.keystoneresort.com" target="_blank">keystoneresort.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open">
@@ -1557,7 +1558,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,214 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">63 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 gondolas</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Oct (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.vail.com" target="_blank">vail.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">11,570 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,214 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">63 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 gondolas</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Oct (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.vail.com" target="_blank">vail.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open">
@@ -1573,7 +1574,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,925 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">50+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 gondola, 1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Level</span><span class="ps-value">IMBA Gold Ride Center</span></div></div><a class="park-link" href="https://www.aspensnowmass.com/plan-your-stay/biking/snowmass-bike-park" target="_blank">aspensnowmass.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">12,510 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,925 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">50+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 gondola, 1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Level</span><span class="ps-value">IMBA Gold Ride Center</span></div></div><a class="park-link" href="https://www.aspensnowmass.com/plan-your-stay/biking/snowmass-bike-park" target="_blank">aspensnowmass.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open">
@@ -1589,7 +1590,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,200 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">40 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Nickname</span><span class="ps-value">Bike Town USA</span></div></div><a class="park-link" href="https://www.steamboat.com/things-to-do/activities/mountain-biking" target="_blank">steamboat.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">10,568 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,200 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">40 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Nickname</span><span class="ps-value">Bike Town USA</span></div></div><a class="park-link" href="https://www.steamboat.com/things-to-do/activities/mountain-biking" target="_blank">steamboat.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open">
@@ -1605,7 +1606,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">971 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">30 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.skicb.com" target="_blank">skicb.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">12,162 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">971 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">30 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.skicb.com" target="_blank">skicb.com &#8599;</a>
       </div>
     </div>
     <div class="park-row closed" data-status="closed">
@@ -1621,7 +1622,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,243 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">17 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 gondola, 1 chairlift</span></div><div class="ps-item"><span class="ps-label">Status</span><span class="ps-value">Closed 2026</span></div><div class="ps-item"><span class="ps-label">Reopens</span><span class="ps-value">2027</span></div><div class="ps-item"><span class="ps-label">Builder</span><span class="ps-value">Gravity Logic</span></div></div><div class="park-note">Closed for 2026 season — expected to reopen 2027.</div><a class="park-link" href="https://tellurideskiresort.com/bike-park/" target="_blank">tellurideskiresort.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">13,150 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,243 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">17 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 gondola, 1 chairlift</span></div><div class="ps-item"><span class="ps-label">Status</span><span class="ps-value">Closed 2026</span></div><div class="ps-item"><span class="ps-label">Reopens</span><span class="ps-value">2027</span></div><div class="ps-item"><span class="ps-label">Builder</span><span class="ps-value">Gravity Logic</span></div></div><div class="park-note">Closed for 2026 season — expected to reopen 2027.</div><a class="park-link" href="https://tellurideskiresort.com/bike-park/" target="_blank">tellurideskiresort.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open">
@@ -1637,7 +1638,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">839 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">61 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Thurs–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">XC only</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://granbyranch.com/things-to-do/summer-activities/biking/" target="_blank">granbyranch.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">9,202 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">839 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">61 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Thurs–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">XC only</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://granbyranch.com/things-to-do/summer-activities/biking/" target="_blank">granbyranch.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open">
@@ -1653,7 +1654,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,100 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">46 miles XC</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May/June–Sept</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes (no lift)</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.beavercreek.com" target="_blank">beavercreek.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">11,440 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,100 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">46 miles XC</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May/June–Sept</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes (no lift)</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.beavercreek.com" target="_blank">beavercreek.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open" data-loam="true">
@@ -1669,7 +1670,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,482 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">18 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.coppercolorado.com" target="_blank">coppercolorado.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">12,441 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,482 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">18 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.coppercolorado.com" target="_blank">coppercolorado.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open">
@@ -1685,7 +1686,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,650 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">13 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Thurs–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.powderhorn.com" target="_blank">powderhorn.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">9,850 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,650 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">13 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Thurs–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.powderhorn.com" target="_blank">powderhorn.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open">
@@ -1701,7 +1702,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,512 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">45 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Reopens</span><span class="ps-value">June 20, 2026</span></div><div class="ps-item"><span class="ps-label">Open Days</span><span class="ps-value">Thurs–Sun</span></div><div class="ps-item"><span class="ps-label">History</span><span class="ps-value">First UCI DH World Champs (1990)</span></div></div><div class="park-note">Back for 2026! Reopens June 20 (Thurs–Sun) after a one-season hiatus for the new lift project. The only resort in the Rockies with clay-based soil — predictable grip all season.</div><a class="park-link" href="https://www.purgatory.ski/activities/mountain-biking/" target="_blank">purgatory.ski &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">10,822 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,512 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">45 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Reopens</span><span class="ps-value">June 20, 2026</span></div><div class="ps-item"><span class="ps-label">Open Days</span><span class="ps-value">Thurs–Sun</span></div><div class="ps-item"><span class="ps-label">History</span><span class="ps-value">First UCI DH World Champs (1990)</span></div></div><div class="park-note">Back for 2026! Reopens June 20 (Thurs–Sun) after a one-season hiatus for the new lift project. The only resort in the Rockies with clay-based soil — predictable grip all season.</div><a class="park-link" href="https://www.purgatory.ski/activities/mountain-biking/" target="_blank">purgatory.ski &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open" data-new="true">
@@ -2258,7 +2259,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">797 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">11 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Thurs–Mon)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">White Mountains</span></div></div><a class="park-link" href="https://www.loonmtn.com/summer-activities/biking/bike-park" target="_blank">loonmtn.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">3,065 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">797 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">11 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Thurs–Mon)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Location</span><span class="ps-value">White Mountains</span></div></div><a class="park-link" href="https://www.loonmtn.com/summer-activities/biking/bike-park" target="_blank">loonmtn.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open">
@@ -2274,7 +2275,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">374 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">5 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Thurs–Sun)</span></div><div class="ps-item"><span class="ps-label">Views</span><span class="ps-value">Lake Sunapee</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.mountsunapee.com" target="_blank">mountsunapee.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">2,743 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">374 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">5 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Thurs–Sun)</span></div><div class="ps-item"><span class="ps-label">Views</span><span class="ps-value">Lake Sunapee</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.mountsunapee.com" target="_blank">mountsunapee.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open">
@@ -2290,7 +2291,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">858 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">3 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Level</span><span class="ps-value">Family-friendly</span></div></div><a class="park-link" href="https://www.waterville.com" target="_blank">waterville.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">4,004 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">858 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">3 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Level</span><span class="ps-value">Family-friendly</span></div></div><a class="park-link" href="https://www.waterville.com" target="_blank">waterville.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open" data-new="true" data-loam="true">
@@ -2460,7 +2461,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid">
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">3,100 ft</span></div>
           <div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,600 ft</span></div>
           <div class="ps-item"><span class="ps-label">Trails</span><span class="ps-value">15 progressive</span></div>
           <div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">High-speed quad</span></div>
@@ -2485,7 +2486,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid">
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">3,500 ft</span></div>
           <div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,100 ft</span></div>
           <div class="ps-item"><span class="ps-label">Trails</span><span class="ps-value">11 dedicated MTB trails</span></div>
           <div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">Double chairlift</span></div>
@@ -2777,7 +2778,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">3,000 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">70 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">3 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Builder</span><span class="ps-value">Gravity Logic</span></div></div><a class="park-link" href="https://www.deervalley.com/things-to-do/activities/mountain-biking" target="_blank">deervalley.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">9,570 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">3,000 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">70 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">3 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Builder</span><span class="ps-value">Gravity Logic</span></div></div><a class="park-link" href="https://www.deervalley.com/things-to-do/activities/mountain-biking" target="_blank">deervalley.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open">
@@ -2793,7 +2794,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,494 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">39 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Oct (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Builder</span><span class="ps-value">Gravity Logic</span></div></div><a class="park-link" href="https://www.solitudemountain.com/things-to-do/mountain-bike" target="_blank">solitudemountain.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">10,488 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,494 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">39 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Oct (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Builder</span><span class="ps-value">Gravity Logic</span></div></div><a class="park-link" href="https://www.solitudemountain.com/things-to-do/mountain-bike" target="_blank">solitudemountain.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open" data-loam="true">
@@ -2809,7 +2810,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,147 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">25+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.sundanceresort.com" target="_blank">sundanceresort.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">8,250 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,147 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">25+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.sundanceresort.com" target="_blank">sundanceresort.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open">
@@ -2825,7 +2826,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,161 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">63 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.brianhead.com/mountain-biking/" target="_blank">brianhead.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">11,307 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,161 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">63 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Sept (Daily)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.brianhead.com/mountain-biking/" target="_blank">brianhead.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open">
@@ -2841,7 +2842,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,303 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">67 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 gondola</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Oct (Sat–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Park only</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.snowbasin.com/hiking-biking/" target="_blank">snowbasin.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">9,350 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,303 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">67 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 gondola</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Oct (Sat–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Park only</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.snowbasin.com/hiking-biking/" target="_blank">snowbasin.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open" data-loam="true">
@@ -2889,7 +2890,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid">
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">10,750 ft</span></div>
           <div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">5+ miles</span></div>
           <div class="ps-item"><span class="ps-label">Trails</span><span class="ps-value">4 flow trails, more for 2026</span></div>
           <div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">Majestic + Crest 6</span></div>
@@ -2928,7 +2929,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,643 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">32 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts, 1 gondola</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><div class="park-note">Vermont's biggest bike park.</div><a class="park-link" href="https://www.killington.com/things-to-do/activities/bike-park/" target="_blank">killington.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">4,241 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,643 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">32 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts, 1 gondola</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><div class="park-note">Vermont's biggest bike park.</div><a class="park-link" href="https://www.killington.com/things-to-do/activities/bike-park/" target="_blank">killington.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open" data-loam="true">
@@ -2944,7 +2945,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,587 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">21 mi + Kingdom Trails</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Thurs–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Builder</span><span class="ps-value">Knight Ide</span></div></div><div class="park-note">Gateway to the legendary Kingdom Trails XC network.</div><a class="park-link" href="https://skiburke.com/mountain-biking/the-trails/burke-mountain-bike-park/" target="_blank">skiburke.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">3,267 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,587 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">21 mi + Kingdom Trails</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Thurs–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Builder</span><span class="ps-value">Knight Ide</span></div></div><div class="park-note">Gateway to the legendary Kingdom Trails XC network.</div><a class="park-link" href="https://skiburke.com/mountain-biking/the-trails/burke-mountain-bike-park/" target="_blank">skiburke.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open">
@@ -2960,7 +2961,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,700 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">12 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Oct (Fri–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.mountsnow.com" target="_blank">mountsnow.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">3,600 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,700 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">12 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">2 chairlifts</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">June–Oct (Fri–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">No</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.mountsnow.com" target="_blank">mountsnow.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open">
@@ -2976,7 +2977,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">961 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">28 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Wed–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.boltonvalley.com/summer/mountain-biking/" target="_blank">boltonvalley.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">3,150 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">961 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">28 miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">1 chairlift</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Wed–Sun)</span></div><div class="ps-item"><span class="ps-label">e-Bikes</span><span class="ps-value">Yes</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.boltonvalley.com/summer/mountain-biking/" target="_blank">boltonvalley.com &#8599;</a>
       </div>
     </div>
     <div class="park-row" data-status="open" data-loam="true">
@@ -2992,7 +2993,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">673 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">10+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">Chairlift + magic carpet</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Thurs–Sun)</span></div><div class="ps-item"><span class="ps-label">Builder</span><span class="ps-value">Sinuosity</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.stratton.com/Plan-your-trip/Bike-Park" target="_blank">stratton.com &#8599;</a>
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">3,940 ft</span></div><div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">673 ft</span></div><div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">10+ miles</span></div><div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">Chairlift + magic carpet</span></div><div class="ps-item"><span class="ps-label">Season</span><span class="ps-value">May–Oct (Thurs–Sun)</span></div><div class="ps-item"><span class="ps-label">Builder</span><span class="ps-value">Sinuosity</span></div><div class="ps-item"><span class="ps-label">Rentals</span><span class="ps-value">Yes</span></div></div><a class="park-link" href="https://www.stratton.com/Plan-your-trip/Bike-Park" target="_blank">stratton.com &#8599;</a>
       </div>
     </div>
     </div>
@@ -3038,7 +3039,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid">
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">2,922 ft</span></div>
           <div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">1,080 ft</span></div>
           <div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">~6 miles</span></div>
           <div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">Creekside (4) + Peak Express (6)</span></div>
@@ -3185,7 +3186,7 @@ header .wrap{position:relative;z-index:2}
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
-        <div class="park-stats-grid">
+        <div class="park-stats-grid"><div class="ps-item"><span class="ps-label">Peak Elevation</span><span class="ps-value">9,862 ft</span></div>
           <div class="ps-item"><span class="ps-label">Vertical Drop</span><span class="ps-value hl">2,200 ft</span></div>
           <div class="ps-item"><span class="ps-label">Trail Miles</span><span class="ps-value">17 miles lift-served</span></div>
           <div class="ps-item"><span class="ps-label">Lifts</span><span class="ps-value">Shoshone + Dreamcatcher</span></div>
@@ -3598,11 +3599,27 @@ const PARKS = [];
         const m = meta.match(/^([\d,]+)\s*(\+?)\s*ft$/i);
         if (m){ vert = parseInt(m[1].replace(/,/g,''),10); vertApprox = m[2] === '+'; }
       }
+
+      /* Peak/summit elevation — a separate metric from vertical drop (how
+         tall the mountain is vs. how far the trails descend). Matches
+         "Summit", "Peak Elevation", or a bare "Elevation" label. Not every
+         park publishes this; it stays null rather than being estimated. */
+      let peak = null;
+      row.querySelectorAll('.ps-item').forEach(it => {
+        if (peak !== null) return;
+        const lab = it.querySelector('.ps-label');
+        if (!lab || !/summit|elevation/i.test(lab.textContent)) return;
+        const raw = (it.querySelector('.ps-value')?.textContent || '');
+        const m = raw.match(/([\d,]+)\s*ft/i);
+        if (m) peak = parseInt(m[1].replace(/,/g,''),10);
+      });
+
       PARKS.push({
         id: 'p' + (i++),
         name, state, city,
         vertFt: vert,
         vertApprox,
+        peakFt: peak,
         status: row.dataset.status || '',
         isNew: row.dataset.new === 'true',
         isLoam: row.dataset.loam === 'true',
@@ -3844,6 +3861,15 @@ function renderStats(){
   const sorted = [...list].sort((a,b) => {
     if (statsSort === 'name')  return a.name.localeCompare(b.name);
     if (statsSort === 'state') return a.state.localeCompare(b.state) || b.vertFt - a.vertFt;
+    if (statsSort === 'peak'){
+      // Ranked by mountain height rather than trail descent. Parks with no
+      // published peak elevation aren't guessed at — they drop to the
+      // bottom, sorted by name so their position is at least predictable.
+      if (a.peakFt && b.peakFt) return b.peakFt - a.peakFt;
+      if (a.peakFt) return -1;
+      if (b.peakFt) return 1;
+      return a.name.localeCompare(b.name);
+    }
     return b.vertFt - a.vertFt;
   });
 
@@ -3854,19 +3880,54 @@ function renderStats(){
       ? `${list.length} of ${PARKS.length} parks ranked \u00b7 ${omitted} publish no vertical drop and are left out rather than guessed at.`
       : `All ${list.length} parks ranked.`;
   }
+  const withPeak = list.filter(p => p.peakFt).length;
+  const pn = document.getElementById('statsPeakNote');
+  if (pn){
+    pn.textContent = `${withPeak} of ${list.length} have a published peak/summit elevation \u2014 a separate `
+      + `figure from vertical drop (how tall the mountain is, not how far the trails descend). Sourced from `
+      + `resort stats and ski-industry references; the rest aren't estimated.`;
+  }
 
   const rows = document.getElementById('statRows');
   if (!rows) return;
-  rows.innerHTML = sorted.map(p => `
+
+  /* Whichever metric you're sorting by is the one shown as the big value
+     and the bar length — sorting by Peak while the bar still showed
+     Vertical made the list look unsorted, because the longest bar wasn't
+     first. Now the displayed number always matches the sort. */
+  const usingPeak = statsSort === 'peak';
+  const peakMax = usingPeak ? Math.max(...list.filter(p => p.peakFt).map(p => p.peakFt)) : null;
+  const widths = [];
+
+  rows.innerHTML = sorted.map(p => {
+    let valHtml, sub, width, empty = false;
+    if (usingPeak){
+      sub = `${p.city} &middot; vertical ${p.vertFt.toLocaleString()}${p.vertApprox?'+':''} ft`;
+      if (p.peakFt){
+        valHtml = `${p.peakFt.toLocaleString()} ft`;
+        width = p.peakFt / peakMax * 100;
+      } else {
+        valHtml = `no peak data`;
+        width = 0;
+        empty = true;
+      }
+    } else {
+      sub = `${p.city}${p.peakFt ? ' &middot; peak ' + p.peakFt.toLocaleString() + ' ft' : ''}`;
+      valHtml = `${p.vertFt.toLocaleString()}${p.vertApprox?'+':''} ft`;
+      width = p.vertFt / max * 100;
+    }
+    widths.push(width);
+    return `
     <div class="stat-row">
-      <div class="sr-name" onclick="jumpToPark('${p.id}')" title="Jump to ${p.name}">${p.name}<br><small>${p.city}</small></div>
+      <div class="sr-name" onclick="jumpToPark('${p.id}')" title="Jump to ${p.name}">${p.name}<br><small>${sub}</small></div>
       <div class="sr-track"><div class="sr-fill" style="width:0"></div></div>
-      <div class="sr-val">${p.vertFt.toLocaleString()}${p.vertApprox?'+':''} ft</div>
-    </div>`).join('');
+      <div class="sr-val${empty ? ' sr-val-empty' : ''}">${valHtml}</div>
+    </div>`;
+  }).join('');
   // animate the bars in after paint
   requestAnimationFrame(() => {
     rows.querySelectorAll('.stat-row').forEach((r,i) => {
-      r.querySelector('.sr-fill').style.width = (sorted[i].vertFt / max * 100) + '%';
+      r.querySelector('.sr-fill').style.width = widths[i] + '%';
     });
   });
 }
@@ -3933,12 +3994,20 @@ function renderMountain(){
   if (!stage) return;
   const picked = mtnSelected.map(id => PARKS.find(p => p.id === id)).filter(Boolean);
   const total  = PARKS.filter(p => p.vertFt).length;
+  const omitted = PARKS.length - total;
 
   /* counter + Add Five availability */
   const cnt = document.getElementById('mtnCount');
   if (cnt) cnt.innerHTML = `<strong>${picked.length}</strong> / ${total} added`;
   const addBtn = document.getElementById('mtnAddFive');
   if (addBtn) addBtn.disabled = picked.length >= total;
+
+  const mo = document.getElementById('mtnOmitted');
+  if (mo){
+    mo.textContent = omitted
+      ? `${omitted} park${omitted===1?'':'s'} with no published vertical drop can't be plotted here and aren't in the ${total} above \u2014 same parks left out of Stats, for the same reason.`
+      : '';
+  }
 
   if (!picked.length){
     stage.innerHTML = `<div class="mtn-empty">Pick a few parks below to stack their vertical drops side by side.<br>
