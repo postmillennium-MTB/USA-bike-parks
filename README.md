@@ -398,18 +398,33 @@ State count: Colorado 13 &rarr; 14. Total: 93 &rarr; 94 parks.
 
 Ski Bluewood, near Dayton in the Blue Mountains of southeast Washington, is
 building the state's third lift-served bike park — after Summit at
-Snoqualmie Pass and Stevens Pass. Per Singletracks (Aug 2026) and Bluewood's
-own GM update letter: four top-to-bottom trails with roughly 1,100 feet of
-descent are under construction, built by Tamarack Trail Works, with 10+ more
-trails planned after launch.
+Snoqualmie Pass and Stevens Pass — in a part of the state (east of the
+Cascades, including the quarter-million-person Tri-Cities area) that
+otherwise has no lift-served riding within a couple hours. Sourced directly
+from Singletracks' Aug 25, 2026 article (interview with Bluewood Marketing
+Director Will Weisz) and Bluewood's own Aug 18, 2026 GM update letter, both
+supplied by the user after the initial add — this entry replaces an earlier
+version built from secondhand search snippets, one of which turned out to
+be wrong (see correction below).
 
-The bike park is tied to a new high-speed quad (Skyliner) replacing an
-existing lift, which has slipped repeatedly — most recently past the
-2025-26 season over a lift-broker dispute. As of the August 2026 update the
-resort is targeting lift installation in April 2027 and completion by
-September/October 2027, with the bike trails opening that fall. Marked
-`data-status="coming"`, same convention as Deer Mountain Village and Trails
-at Mena, since neither the lift nor the trails are open yet.
+Four top-to-bottom trails (~1,100 ft descent, green/blue) are under
+construction with Craig Piefer of Tamarack Trail Works — Green Giant is
+already taking shape, with three more planned. Soft opening could be up to
+six trails; once phase one is done the network totals 20+ miles, with
+10+ trails and a beginner pump track (its own conveyor lift) planned
+long-term. The bike park depends on a new high-speed quad replacing the
+original 1979 Skyline Express fixed-grip triple. Per the GM letter, the
+delay is shipping delays on lift hardware (gearbox and tower components
+arrived; haul rope expected within two weeks of the letter; bull wheels not
+until mid-September 2026) — not a lift-broker dispute, which was an
+unrelated detail an earlier web search pulled in and got attributed to this
+lift by mistake. Installation is now planned for after the 2026-27 ski
+season, targeting completion September/early October 2027, with a bike
+trail preview that fall and full lift-served operations (rentals, lessons)
+in summer 2028.
+
+Marked `data-status="coming"`, same convention as Deer Mountain Village and
+Trails at Mena, since neither the lift nor the trails are open yet.
 
 State count: Washington 2 &rarr; 3. Total: 94 &rarr; 95 parks.
 
