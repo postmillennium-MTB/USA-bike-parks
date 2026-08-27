@@ -394,6 +394,25 @@ still the resort's actual summit, same convention as every other park.
 
 State count: Colorado 13 &rarr; 14. Total: 93 &rarr; 94 parks.
 
+### 16. Bluewood Bike Park added (Washington, 95th park, under construction)
+
+Ski Bluewood, near Dayton in the Blue Mountains of southeast Washington, is
+building the state's third lift-served bike park — after Summit at
+Snoqualmie Pass and Stevens Pass. Per Singletracks (Aug 2026) and Bluewood's
+own GM update letter: four top-to-bottom trails with roughly 1,100 feet of
+descent are under construction, built by Tamarack Trail Works, with 10+ more
+trails planned after launch.
+
+The bike park is tied to a new high-speed quad (Skyliner) replacing an
+existing lift, which has slipped repeatedly — most recently past the
+2025-26 season over a lift-broker dispute. As of the August 2026 update the
+resort is targeting lift installation in April 2027 and completion by
+September/October 2027, with the bike trails opening that fall. Marked
+`data-status="coming"`, same convention as Deer Mountain Village and Trails
+at Mena, since neither the lift nor the trails are open yet.
+
+State count: Washington 2 &rarr; 3. Total: 94 &rarr; 95 parks.
+
 ---
 
 ## How the data flows
