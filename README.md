@@ -21,7 +21,8 @@ that doesn't turn into a scrub-drag counts as a jump).
 Added the same three-tab structure as the Canadian tool, same icons:
 
 - **Map** — every park with a known location, pinned on a dark Leaflet map
-  (CARTO dark basemap, no API key needed) with clustering. Click a pin for
+  (OpenStreetMap tiles darkened with a CSS filter, no API key needed) with
+  clustering. Click a pin for
   vertical drop, a link to the resort site, and a "Details ↓" link that jumps
   to the full card below. Region-jump buttons (West / Rockies / Midwest /
   Northeast / South / whole country) sit above the map.
