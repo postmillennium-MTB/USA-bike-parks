@@ -30,6 +30,34 @@ here propagates there automatically. That repo isn't attached to your
 session by default — use `add_repo` (or ask Jon) before assuming its
 current state.
 
+## Scope: what counts as a "bike park" here
+
+"Bike park" is an overloaded term in the industry. Many facilities that
+call themselves a "bike park" are pump tracks, dirt-jump lines, or skills
+areas with no real descent — Frisco Bike Park in Frisco, CO (pump track +
+jump lines, no lift) is the canonical example. This guide's definition is
+narrower:
+
+> A "bike park" here means **lift-access, downhill-oriented mountain bike
+> riding** — a chairlift, gondola, or similar fixed lift carries riders
+> (and usually bikes) uphill so they can ride trails back down.
+
+Explicitly excluded, even when the operator's own marketing says "bike
+park":
+- Pump tracks, dirt jump lines, skills parks, BMX-style facilities — no
+  lift, no real vertical descent.
+- **Shuttle access** — a truck or van with bike racks driving riders to a
+  trailhead. No fixed lift, so it doesn't qualify no matter how good the
+  descent is. (A park that's mostly lift-served but uses a shuttle for one
+  lower section — e.g. the Schweitzer row's "Chairlift + lower shuttle" —
+  is still in-scope; the test is whether the *primary* access is a lift.)
+
+Unlike the Canada repo, this rule isn't stated anywhere in this tool's own
+UI copy — it's enforced only by which rows exist, nowhere written down
+until now. When vetting a "new park" candidate (see Recurring maintenance
+below), apply it explicitly: the test is always "is there a lift," never
+"does the operator call it a bike park."
+
 ## Who you're working with
 
 Jon (repo owner) has no coding background and edits through GitHub's web UI,
@@ -65,6 +93,9 @@ This is a living guide of a fast-moving industry. When asked to update this
 tool, or periodically on your own initiative, check both directions:
 
 **New parks (opened or announced).**
+- Apply the Scope definition above first — a pump track, skills park, or
+  shuttle-access operation calling itself a "bike park" doesn't belong
+  here even if it's popular or newly opened.
 - Sources: the resort's own site/press release, Trailforks region pages,
   Pinkbike/Bike Magazine/Freehub news coverage, local news for the region,
   NSAA (National Ski Areas Association) reporting, and Jon's own industry
