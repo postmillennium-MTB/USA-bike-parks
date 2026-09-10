@@ -20,9 +20,9 @@ that doesn't turn into a scrub-drag counts as a jump).
 ### 2. Map / Stats / Mountain tabs
 Added the same three-tab structure as the Canadian tool, same icons:
 
-- **Map** — every park with a known location, pinned on a dark Leaflet map
-  (OpenStreetMap tiles darkened with a CSS filter, no API key needed) with
-  clustering. Click a pin for
+- **Map** — every park with a known location, pinned on a Leaflet map of
+  real US state boundaries (baked-in vector data, no tile server, no API
+  key, no external request of any kind) with clustering. Click a pin for
   vertical drop, a link to the resort site, and a "Details ↓" link that jumps
   to the full card below. Region-jump buttons (West / Rockies / Midwest /
   Northeast / South / whole country) sit above the map.

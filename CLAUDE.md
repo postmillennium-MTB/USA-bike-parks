@@ -138,20 +138,37 @@ which is just what the `Season` stat already says).
 
 ## Gotchas (recorded so nobody re-introduces them)
 
-- **CARTO tiles require an API key now.** The map used to use CARTO's free
-  dark raster basemap (`basemaps.cartocdn.com/dark_all/...`). CARTO gated
-  that behind an account API key at some point, and the failure is sneaky:
-  an unauthenticated request comes back **HTTP 200**, not an error, with
-  "API KEY REQUIRED" burned directly into the tile image — so it looked
-  like a rendering bug, not a dead tile source. Fixed by switching to
-  OpenStreetMap's standard tile server (free, no key, no account). OSM
-  only ships light cartography, so the permanent dark map here now comes
-  from a CSS filter (`invert(1) hue-rotate(180deg) brightness(0.92)
-  contrast(0.88) saturate(0.65)`) applied to Leaflet's tile pane, tuned by
-  eye rather than pixel-verified — nudge the numbers if the map ever looks
-  off, no logic change needed. If CARTO ever becomes genuinely free again,
-  that's a reason to *reconsider*, not a reason to assume the old code was
-  fine — check the actual tile response before reverting.
+- **The map has no tile server at all now — this is the second basemap
+  rewrite, and the reason there won't need to be a third.** Originally used
+  CARTO's free dark raster basemap, which CARTO later gated behind an
+  account API key (an unauthenticated request came back HTTP 200 with "API
+  KEY REQUIRED" burned into the tile image, not an error — looked like a
+  rendering bug). Swapped to OpenStreetMap's tile server as a stopgap, but
+  that carries the same risk one layer down: OSM's own usage policy says
+  that server isn't meant for embedded production use at any real traffic,
+  so it was only ever a matter of time before something broke again. Fixed
+  for good by dropping raster tiles entirely — `US_STATES_GEO` (search for
+  it, right above the `MAP` section) is real WGS84 state-boundary polygons,
+  converted once from the `us-atlas` npm package (public-domain Census
+  Bureau data, ISC-licensed tooling) and simplified down to ~52KB, baked
+  directly into this file. Leaflet renders it as an ordinary GeoJSON layer,
+  the exact same way it already renders park markers from real lat/lng —
+  no server to ever fetch from, ever, so there's no pricing/rate-limit
+  cliff left to fall off. Fill/stroke come from `.us-state-shape` in CSS,
+  reading the page's own `--card-bg`/`--card-border` custom properties, so
+  it re-themes on every theme-switcher click for free, with no JS
+  re-render. `vector-effect: non-scaling-stroke` on that rule keeps borders
+  a crisp 1px at every zoom level and every container size — without it,
+  state borders visually disappear when the SVG is scaled down (found this
+  the hard way building the preview; it's not optional).
+  Previous (OSM tile) version is preserved at commit
+  `483fc82cea02ea4a708feed5b940160bb827119e` if this ever needs reverting —
+  `git show 483fc82:index.html > index.html` restores it wholesale, or
+  `git diff 483fc82 HEAD -- index.html` shows exactly what changed.
+  Canada's sibling repo could not get the same treatment yet: there's no
+  verified-real (not pre-projected-for-display) province boundary dataset
+  reachable from a standard sandboxed session — check that repo's own
+  CLAUDE.md before assuming otherwise.
 - Park data lives in the HTML, not a data array — a future refactor to a
   `PARKS` array literal (matching the Canada repo's pattern) would make
   bulk edits and consistency checks easier, but that's a real structural
