@@ -747,14 +747,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	}
 </style>
 <style>
-:root{--dirt:#c4682a;--forest:#2d4a1e;--sky:#1a2e3b;--chalk:#f5f0e8;--chalk-dim:#ddd6c8;--warn:#e8b84b;--new:#5ba85c;--closed:#c0392b;--loam:#2a8c6e;--power:#3d7dc9;--card-bg:#1e2f3c;--card-border:#2e4255;}
+:root{--dirt:#c4682a;--forest:#2d4a1e;--sky:#1a2e3b;--chalk:#f5f0e8;--chalk-dim:#ddd6c8;--warn:#e8b84b;--new:#5ba85c;--closed:#c0392b;--loam:#2a8c6e;--power:#3d7dc9;--metro:#7c5cbf;--card-bg:#1e2f3c;--card-border:#2e4255;}
 /* ── COLOR SCHEMES (named after hub spacings, obviously) ── */
 body.theme-150{--dirt:#c94040;--forest:#2a1618;--sky:#17171c;--chalk:#f2f0ef;--chalk-dim:#c9c4c2;--warn:#e8a84b;--card-bg:#222228;--card-border:#3a3a44;}
 body.theme-148{--dirt:#5ba85c;--forest:#0f1f14;--sky:#14231a;--chalk:#eef4ec;--chalk-dim:#c2d4c4;--warn:#c4d94b;--card-bg:#1b2f22;--card-border:#2e4a38;}
 /* 142 = the old standard, so: 1990s. Greys with neon pink, aqua, lime,
    coral and pastel purple — Memphis/Trapper Keeper territory. */
 body.theme-142{--dirt:#ff2e93;--forest:#2d2d38;--sky:#1e1e24;--chalk:#f4f4f8;
-  --chalk-dim:#bcbcc9;--warn:#2ff0d6;--new:#a3f53f;--closed:#ff6b5c;--loam:#b47cff;--power:#4dd0ff;
+  --chalk-dim:#bcbcc9;--warn:#2ff0d6;--new:#a3f53f;--closed:#ff6b5c;--loam:#b47cff;--power:#4dd0ff;--metro:#ffb703;
   --card-bg:#2a2a33;--card-border:#454553;}
 /* the orange glows/washes are hardcoded elsewhere; retint them for 142 */
 body.theme-142 header::before{background:radial-gradient(circle,rgba(255,46,147,.20) 0%,transparent 70%)}
@@ -833,6 +833,8 @@ header h1 span{color:var(--dirt)}
 .tag-loam{background:var(--loam);color:#fff}
 .tag-power{background:var(--power);color:#fff}
 .tag-power svg{width:11px;height:11px;vertical-align:-1px;margin-right:2px}
+.tag-metro{background:var(--metro);color:#fff}
+.tag-metro svg{width:11px;height:11px;vertical-align:-1px;margin-right:2px}
 .tag-members{background:#6b5bd6;color:#fff}
 
 /* ── LEGEND ── */
@@ -1415,7 +1417,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">1,158 ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-metro" title="~2 hrs from LA — closest major park to LA"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-1a2 2 0 00-2-2H9a2 2 0 00-2 2v1"/><path d="M19 10h1a2 2 0 012 2v1"/><path d="M5 10H4a2 2 0 00-2 2v1"/><circle cx="12" cy="11" r="3"/><circle cx="18" cy="4" r="2"/><circle cx="6" cy="4" r="2"/></svg>LA</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -1479,7 +1481,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">968 ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-new">New</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-new">New</span><span class="tag tag-metro" title="90 min from LA"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-1a2 2 0 00-2-2H9a2 2 0 00-2 2v1"/><path d="M19 10h1a2 2 0 012 2v1"/><path d="M5 10H4a2 2 0 00-2 2v1"/><circle cx="12" cy="11" r="3"/><circle cx="18" cy="4" r="2"/><circle cx="6" cy="4" r="2"/></svg>LA</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -1525,7 +1527,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">1,810 ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-metro" title="~1.5 hrs from Denver via US-40"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-1a2 2 0 00-2-2H9a2 2 0 00-2 2v1"/><path d="M19 10h1a2 2 0 012 2v1"/><path d="M5 10H4a2 2 0 00-2 2v1"/><circle cx="12" cy="11" r="3"/><circle cx="18" cy="4" r="2"/><circle cx="6" cy="4" r="2"/></svg>Denver</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -1541,7 +1543,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">2,303 ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-metro" title="~1.5–2 hrs from Denver via I-70"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-1a2 2 0 00-2-2H9a2 2 0 00-2 2v1"/><path d="M19 10h1a2 2 0 012 2v1"/><path d="M5 10H4a2 2 0 00-2 2v1"/><circle cx="12" cy="11" r="3"/><circle cx="18" cy="4" r="2"/><circle cx="6" cy="4" r="2"/></svg>Denver</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -1669,7 +1671,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">1,482 ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span><span class="tag tag-metro" title="~1.5 hrs from Denver via I-70"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-1a2 2 0 00-2-2H9a2 2 0 00-2 2v1"/><path d="M19 10h1a2 2 0 012 2v1"/><path d="M5 10H4a2 2 0 00-2 2v1"/><circle cx="12" cy="11" r="3"/><circle cx="18" cy="4" r="2"/><circle cx="6" cy="4" r="2"/></svg>Denver</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -1717,7 +1719,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">1,325 ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-metro" title="~1.5–2 hrs from Denver via I-70"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-1a2 2 0 00-2-2H9a2 2 0 00-2 2v1"/><path d="M19 10h1a2 2 0 012 2v1"/><path d="M5 10H4a2 2 0 00-2 2v1"/><circle cx="12" cy="11" r="3"/><circle cx="18" cy="4" r="2"/><circle cx="6" cy="4" r="2"/></svg>Denver</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -1734,7 +1736,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">1,300 ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Gondola</span><span class="tag tag-new">New</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Gondola</span><span class="tag tag-new">New</span><span class="tag tag-metro" title="40 min from Denver on I-70"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-1a2 2 0 00-2-2H9a2 2 0 00-2 2v1"/><path d="M19 10h1a2 2 0 012 2v1"/><path d="M5 10H4a2 2 0 00-2 2v1"/><circle cx="12" cy="11" r="3"/><circle cx="18" cy="4" r="2"/><circle cx="6" cy="4" r="2"/></svg>Denver</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -1905,7 +1907,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">475 ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span><span class="tag tag-metro" title="Under 3 hrs from Naperville, IL (2.5 hrs from Crystal Lake, IL)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-1a2 2 0 00-2-2H9a2 2 0 00-2 2v1"/><path d="M19 10h1a2 2 0 012 2v1"/><path d="M5 10H4a2 2 0 00-2 2v1"/><circle cx="12" cy="11" r="3"/><circle cx="18" cy="4" r="2"/><circle cx="6" cy="4" r="2"/></svg>Chicago</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -2229,7 +2231,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">1,000+ ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-power" title="On the MTB Power Pass"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/><path d="M4.14 15.08c2.62-1.57 5.24-1.43 7.86.42 2.74 1.94 5.49 2 8.23.19"/></svg>Power Pass</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-power" title="On the MTB Power Pass"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/><path d="M4.14 15.08c2.62-1.57 5.24-1.43 7.86.42 2.74 1.94 5.49 2 8.23.19"/></svg>Power Pass</span><span class="tag tag-metro" title="45 min from downtown Las Vegas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-1a2 2 0 00-2-2H9a2 2 0 00-2 2v1"/><path d="M19 10h1a2 2 0 012 2v1"/><path d="M5 10H4a2 2 0 00-2 2v1"/><circle cx="12" cy="11" r="3"/><circle cx="18" cy="4" r="2"/><circle cx="6" cy="4" r="2"/></svg>Las Vegas</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -2259,7 +2261,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">600 ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span><span class="tag tag-metro" title="90 min from Boston"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-1a2 2 0 00-2-2H9a2 2 0 00-2 2v1"/><path d="M19 10h1a2 2 0 012 2v1"/><path d="M5 10H4a2 2 0 00-2 2v1"/><circle cx="12" cy="11" r="3"/><circle cx="18" cy="4" r="2"/><circle cx="6" cy="4" r="2"/></svg>Boston</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -2353,7 +2355,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">1,040 ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-metro" title="~1 hr from NYC"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-1a2 2 0 00-2-2H9a2 2 0 00-2 2v1"/><path d="M19 10h1a2 2 0 012 2v1"/><path d="M5 10H4a2 2 0 00-2 2v1"/><circle cx="12" cy="11" r="3"/><circle cx="18" cy="4" r="2"/><circle cx="6" cy="4" r="2"/></svg>NYC</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -2642,7 +2644,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">1,213 ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-metro" title="~60–75 min from Portland, OR"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-1a2 2 0 00-2-2H9a2 2 0 00-2 2v1"/><path d="M19 10h1a2 2 0 012 2v1"/><path d="M5 10H4a2 2 0 00-2 2v1"/><circle cx="12" cy="11" r="3"/><circle cx="18" cy="4" r="2"/><circle cx="6" cy="4" r="2"/></svg>Portland</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -2674,7 +2676,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">~1,500 ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-metro" title="~60–75 min from Portland, OR"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-1a2 2 0 00-2-2H9a2 2 0 00-2 2v1"/><path d="M19 10h1a2 2 0 012 2v1"/><path d="M5 10H4a2 2 0 00-2 2v1"/><circle cx="12" cy="11" r="3"/><circle cx="18" cy="4" r="2"/><circle cx="6" cy="4" r="2"/></svg>Portland</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -2704,7 +2706,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">1,072 ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-metro" title="~90 min from Philadelphia/NYC"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-1a2 2 0 00-2-2H9a2 2 0 00-2 2v1"/><path d="M19 10h1a2 2 0 012 2v1"/><path d="M5 10H4a2 2 0 00-2 2v1"/><circle cx="12" cy="11" r="3"/><circle cx="18" cy="4" r="2"/><circle cx="6" cy="4" r="2"/></svg>Philly/NYC</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -2794,7 +2796,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">3,000 ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-metro" title="~35–40 min from Salt Lake City"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-1a2 2 0 00-2-2H9a2 2 0 00-2 2v1"/><path d="M19 10h1a2 2 0 012 2v1"/><path d="M5 10H4a2 2 0 00-2 2v1"/><circle cx="12" cy="11" r="3"/><circle cx="18" cy="4" r="2"/><circle cx="6" cy="4" r="2"/></svg>Salt Lake</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -2810,7 +2812,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">2,494 ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-metro" title="~45 min from Salt Lake City"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-1a2 2 0 00-2-2H9a2 2 0 00-2 2v1"/><path d="M19 10h1a2 2 0 012 2v1"/><path d="M5 10H4a2 2 0 00-2 2v1"/><circle cx="12" cy="11" r="3"/><circle cx="18" cy="4" r="2"/><circle cx="6" cy="4" r="2"/></svg>Salt Lake</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -2858,7 +2860,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">300 ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-metro" title="~45–60 min from Salt Lake City"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-1a2 2 0 00-2-2H9a2 2 0 00-2 2v1"/><path d="M19 10h1a2 2 0 012 2v1"/><path d="M5 10H4a2 2 0 00-2 2v1"/><circle cx="12" cy="11" r="3"/><circle cx="18" cy="4" r="2"/><circle cx="6" cy="4" r="2"/></svg>Salt Lake</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -2874,7 +2876,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">728 ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span><span class="tag tag-metro" title="~35–40 min from Salt Lake City"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-1a2 2 0 00-2-2H9a2 2 0 00-2 2v1"/><path d="M19 10h1a2 2 0 012 2v1"/><path d="M5 10H4a2 2 0 00-2 2v1"/><circle cx="12" cy="11" r="3"/><circle cx="18" cy="4" r="2"/><circle cx="6" cy="4" r="2"/></svg>Salt Lake</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -2906,7 +2908,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">4 flow trails</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-new">New</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-new">New</span><span class="tag tag-metro" title="45 min from Salt Lake City"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-1a2 2 0 00-2-2H9a2 2 0 00-2 2v1"/><path d="M19 10h1a2 2 0 012 2v1"/><path d="M5 10H4a2 2 0 00-2 2v1"/><circle cx="12" cy="11" r="3"/><circle cx="18" cy="4" r="2"/><circle cx="6" cy="4" r="2"/></svg>Salt Lake</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -3055,7 +3057,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">816 ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-metro" title="~90 min from Washington, DC"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-1a2 2 0 00-2-2H9a2 2 0 00-2 2v1"/><path d="M19 10h1a2 2 0 012 2v1"/><path d="M5 10H4a2 2 0 00-2 2v1"/><circle cx="12" cy="11" r="3"/><circle cx="18" cy="4" r="2"/><circle cx="6" cy="4" r="2"/></svg>DC</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -3094,7 +3096,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">~1,800 ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-metro" title="75 min from Seattle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-1a2 2 0 00-2-2H9a2 2 0 00-2 2v1"/><path d="M19 10h1a2 2 0 012 2v1"/><path d="M5 10H4a2 2 0 00-2 2v1"/><circle cx="12" cy="11" r="3"/><circle cx="18" cy="4" r="2"/><circle cx="6" cy="4" r="2"/></svg>Seattle</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -3110,7 +3112,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">1,447 ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-new">New</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-new">New</span><span class="tag tag-metro" title="~1 hr from Seattle on I-90"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-1a2 2 0 00-2-2H9a2 2 0 00-2 2v1"/><path d="M19 10h1a2 2 0 012 2v1"/><path d="M5 10H4a2 2 0 00-2 2v1"/><circle cx="12" cy="11" r="3"/><circle cx="18" cy="4" r="2"/><circle cx="6" cy="4" r="2"/></svg>Seattle</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
