@@ -747,14 +747,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	}
 </style>
 <style>
-:root{--dirt:#c4682a;--forest:#2d4a1e;--sky:#1a2e3b;--chalk:#f5f0e8;--chalk-dim:#ddd6c8;--warn:#e8b84b;--new:#5ba85c;--closed:#c0392b;--loam:#2a8c6e;--card-bg:#1e2f3c;--card-border:#2e4255;}
+:root{--dirt:#c4682a;--forest:#2d4a1e;--sky:#1a2e3b;--chalk:#f5f0e8;--chalk-dim:#ddd6c8;--warn:#e8b84b;--new:#5ba85c;--closed:#c0392b;--loam:#2a8c6e;--power:#3d7dc9;--card-bg:#1e2f3c;--card-border:#2e4255;}
 /* ── COLOR SCHEMES (named after hub spacings, obviously) ── */
 body.theme-150{--dirt:#c94040;--forest:#2a1618;--sky:#17171c;--chalk:#f2f0ef;--chalk-dim:#c9c4c2;--warn:#e8a84b;--card-bg:#222228;--card-border:#3a3a44;}
 body.theme-148{--dirt:#5ba85c;--forest:#0f1f14;--sky:#14231a;--chalk:#eef4ec;--chalk-dim:#c2d4c4;--warn:#c4d94b;--card-bg:#1b2f22;--card-border:#2e4a38;}
 /* 142 = the old standard, so: 1990s. Greys with neon pink, aqua, lime,
    coral and pastel purple — Memphis/Trapper Keeper territory. */
 body.theme-142{--dirt:#ff2e93;--forest:#2d2d38;--sky:#1e1e24;--chalk:#f4f4f8;
-  --chalk-dim:#bcbcc9;--warn:#2ff0d6;--new:#a3f53f;--closed:#ff6b5c;--loam:#b47cff;
+  --chalk-dim:#bcbcc9;--warn:#2ff0d6;--new:#a3f53f;--closed:#ff6b5c;--loam:#b47cff;--power:#4dd0ff;
   --card-bg:#2a2a33;--card-border:#454553;}
 /* the orange glows/washes are hardcoded elsewhere; retint them for 142 */
 body.theme-142 header::before{background:radial-gradient(circle,rgba(255,46,147,.20) 0%,transparent 70%)}
@@ -831,6 +831,8 @@ header h1 span{color:var(--dirt)}
 .tag-closed{background:var(--closed);color:#fff}
 .tag-lift{background:var(--dirt);color:#fff}
 .tag-loam{background:var(--loam);color:#fff}
+.tag-power{background:var(--power);color:#fff}
+.tag-power svg{width:11px;height:11px;vertical-align:-1px;margin-right:2px}
 .tag-members{background:#6b5bd6;color:#fff}
 
 /* ── LEGEND ── */
@@ -1699,7 +1701,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">1,512 ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-power" title="On the MTB Power Pass"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/><path d="M4.14 15.08c2.62-1.57 5.24-1.43 7.86.42 2.74 1.94 5.49 2 8.23.19"/></svg>Power Pass</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -2227,7 +2229,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">1,000+ ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-power" title="On the MTB Power Pass"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/><path d="M4.14 15.08c2.62-1.57 5.24-1.43 7.86.42 2.74 1.94 5.49 2 8.23.19"/></svg>Power Pass</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -2762,7 +2764,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">351 ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-loam">&#127807; Loam</span><span class="tag tag-power" title="On the MTB Power Pass"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/><path d="M4.14 15.08c2.62-1.57 5.24-1.43 7.86.42 2.74 1.94 5.49 2 8.23.19"/></svg>Power Pass</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
@@ -2840,7 +2842,7 @@ header .wrap{position:relative;z-index:2}
             <span class="park-vert">1,161 ft</span>
           </div>
         </div>
-        <div class="park-tags"><span class="tag tag-lift">Lift</span></div>
+        <div class="park-tags"><span class="tag tag-lift">Lift</span><span class="tag tag-power" title="On the MTB Power Pass"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/><path d="M4.14 15.08c2.62-1.57 5.24-1.43 7.86.42 2.74 1.94 5.49 2 8.23.19"/></svg>Power Pass</span></div>
         <span class="park-expand-btn">&#9660;</span>
       </div>
       <div class="park-details">
