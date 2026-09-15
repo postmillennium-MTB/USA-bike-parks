@@ -3996,7 +3996,26 @@ function renderStats(){
 /* ══════════════════════════════════════════════════════════════════════════
    MOUNTAIN — compare park vertical as a skyline
    ══════════════════════════════════════════════════════════════════════════ */
-let mtnSelected = [];
+/* Curated starter skyline so the Mountain tab isn't empty on first visit —
+   a spread across small/large verticals and many states/regions rather
+   than just the biggest 5. Resolved by name (not hardcoded 'pN' ids,
+   which are assigned by DOM order in buildParks() and would silently
+   point at the wrong park if a row is ever added/removed/reordered
+   above these). Anything renamed or removed just drops out of the
+   starter set via the .filter(Boolean) below — no error. */
+const DEFAULT_MTN_NAMES = [
+  'Hilltop Bike Park', 'Mt. Hood Skibowl Bike Park', 'Mammoth Mountain Bike Park',
+  'Tamarack Resort Bike Park', 'Solitude Mountain Bike Park', 'Woodward Park City',
+  'Jackson Hole Mountain Resort Bike Park', 'Crested Butte Bike Park', 'Snowmass Bike Park',
+  'Beaver Creek Bike Park', 'Keystone Bike Park', 'Granby Ranch Bike Park',
+  'OZ Trails Bike Park', 'Trails at Mena (Under Construction)', 'The Highlands Bike Park',
+  'Beech Mountain Bike Park', 'Bryce Bike Park', 'HoliMont Bike Park',
+  'Mt. Abram Bike Park', 'Sugarloaf Bike Park'
+];
+let mtnSelected = DEFAULT_MTN_NAMES
+  .map(n => PARKS.find(p => p.name === n))
+  .filter(Boolean)
+  .map(p => p.id);
 const esc = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
 function renderMtnPicker(){
