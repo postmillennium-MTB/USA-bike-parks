@@ -431,6 +431,25 @@ State count: Washington 2 &rarr; 3. Total: 94 &rarr; 95 parks.
 
 ---
 
+### Inclined Plane Trails (Johnstown, PA) added
+
+The Johnstown Inclined Plane funicular &mdash; the world's steepest
+(70.9% grade) &mdash; reopened September 10, 2026 after a 6-year
+rehabilitation, again serving as uplift for the Inclined Plane Trails: ~4
+miles across 14 mostly downhill-only/primary trails on the hillside above
+town. A funicular is a fixed lift, so this fits the guide's lift-access
+scope the same way Schweitzer's chairlift-plus-shuttle row does. Stackhouse
+Park, a few blocks away in the same city, was considered and excluded: its
+own site and the Inclined Plane's own site describe it as a separate
+hiking-only park with no lift or mountain biking.
+
+Source: [Singletracks, Sept 28, 2026](https://www.singletracks.com/mtb-trails/the-worlds-steepest-funicular-is-open-for-mountain-bikers-in-johnstown-pennsylvania-again/),
+confirmed by [inclinedplane.org/hiking-biking](https://www.inclinedplane.org/hiking-biking/).
+
+State count: Pennsylvania 1 &rarr; 2. Total: 95 &rarr; 96 parks.
+
+---
+
 ## How the data flows
 
 The state/park list in the HTML (`<div class="state-section" data-state="...">`)
