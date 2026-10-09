@@ -450,6 +450,21 @@ State count: Pennsylvania 1 &rarr; 2. Total: 95 &rarr; 96 parks.
 
 ---
 
+### Blue Mountain Bike Park (Palmerton, PA) tagged Loam Pass
+
+Loam Pass announced Blue Mountain as one of three new destinations for 2027
+(rideable on a 2026 pass). The row now carries `data-loam="true"` and the
+Loam tag, plus an e-Bikes: No stat (the Loam Pass listing states e-bikes are
+not allowed). Header "Updated" date and the footer's "Loam Pass data current
+as of" line moved to October 2026. No park or state count change.
+
+Source: Loam Pass "3 New Loam Destinations" email (Oct 8, 2026) and
+loampass.com/Destination/Blue-Mountain-Bike-Park. Not changed, pending
+confirmation with the park: the Loam listing gives 1,082 ft of vertical (this
+guide has 1,072 ft) and Fri&ndash;Sun hours (this guide has Thurs&ndash;Sun).
+
+---
+
 ## How the data flows
 
 The state/park list in the HTML (`<div class="state-section" data-state="...">`)
