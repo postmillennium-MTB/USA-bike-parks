@@ -465,6 +465,63 @@ guide has 1,072 ft) and Fri&ndash;Sun hours (this guide has Thurs&ndash;Sun).
 
 ---
 
+### Marquette Mountain Bike Park (MI) marked closed for 2026
+
+The resort's own pages say the downhill bike park, flow trails and all trail
+access are closed for summer 2026 while a new lift is built; the trails are
+getting zero maintenance and are off-limits. The lift ran only for select
+events (e.g. the Marquette Fall Enduro, Oct 2&ndash;3). Same pattern as
+Telluride: `class="park-row closed"`, `data-status="closed"`, Closed tag,
+Status: Closed 2026, and a note. No Reopens stat, because no reopening date
+has been announced. The park link now points at the resort's closure page.
+Row stays in the list (Loam tag unchanged). No count change.
+
+Source: marquettemountain.com/summer-closures-lift-upgrades/ and
+marquettemountain.com/the-mountain/lift-terrain-status-spring/ (supplied by
+Jon, Oct 2026).
+
+---
+
+### Detroit Mountain Bike Park (MN) stats updated from Trailforks
+
+Trail Miles 15 &rarr; 18 and a note. Vertical Drop stays 164 ft (resort
+vertical, base 1,443 ft to summit 1,607 ft, which matches Trailforks);
+Trailforks also lists 255 ft of total trail vertical, noted but not used as
+the headline figure. Open question: Trailforks' 39 trails / 18 miles may
+include pedal-access trails, not only lift-served ones.
+
+Source: trailforks.com/region/detroit-mountain-recreation-area-23381/
+(supplied by Jon).
+
+---
+
+### Saddleback (Rangeley, ME) and Kelly Canyon (Ririe, ID) added
+
+Both are chairlift-served downhill riding, so they fit the guide's scope.
+Added with confirmed fields only; neither publishes (or I could not confirm)
+a vertical drop, so each shows a descriptor in the vertical slot, the way
+Brighton does, and both are left out of the Stats ranking rather than guessed.
+
+- **Saddleback:** South Branch Quad chairlift, 6 downhill trails, lift access
+  Fri&ndash;Sun in summer and fall, rentals. Tagged New because the first
+  downhill trails opened fall 2021 and lift service came after &mdash; not
+  confirmed against a dated press release.
+- **Kelly Canyon:** Lift 4, 18&ndash;20 miles of trail, first summer 2019,
+  lift days vary by year. Not tagged New. The claim that its lifts and
+  gravity network were recently expanded was not confirmed.
+
+Map pins for both are town centres (Rangeley, Ririe), not the resort base;
+see "Coordinates are estimates" below.
+
+Sources (secondary, not the resorts' own spec pages): saddlebackmaine.com
+mountain-biking and lift-access pages, Singletracks, Snow Industry News;
+East Idaho News, KIVI-TV, Visit Idaho.
+
+State counts: Maine 2 &rarr; 3, Idaho 6 &rarr; 7. Total: 96 &rarr; 98 parks.
+Dry Hill (NY) was considered and left out: no evidence of a bike park.
+
+---
+
 ## How the data flows
 
 The state/park list in the HTML (`<div class="state-section" data-state="...">`)
