@@ -495,30 +495,33 @@ Source: trailforks.com/region/detroit-mountain-recreation-area-23381/
 
 ---
 
-### Saddleback (Rangeley, ME) and Kelly Canyon (Ririe, ID) added
+### Saddleback (Rangeley, ME) added
 
-Both are chairlift-served downhill riding, so they fit the guide's scope.
-Added with confirmed fields only; neither publishes (or I could not confirm)
-a vertical drop, so each shows a descriptor in the vertical slot, the way
-Brighton does, and both are left out of the Stats ranking rather than guessed.
+South Branch Quad chairlift, so it fits the guide's lift-access scope. Specs
+are from the resort's own mountain-biking page: nearly 4 miles of trails,
+8 miles from Rangeley village, beginner-friendly with Bronco as the new
+black-diamond trail. Added through the Telluride/Brighton conventions:
+the vertical slot shows "6 downhill trails" and the row is left out of the
+Stats ranking, because the resort's only figure is "1,800 total vertical
+feet", which reads as a combined number rather than one run's vertical drop.
+It is quoted in the note instead. Tagged New because the first downhill
+trails opened fall 2021 with lift service after; not confirmed against a
+dated press release.
 
-- **Saddleback:** South Branch Quad chairlift, 6 downhill trails, lift access
-  Fri&ndash;Sun in summer and fall, rentals. Tagged New because the first
-  downhill trails opened fall 2021 and lift service came after &mdash; not
-  confirmed against a dated press release.
-- **Kelly Canyon:** Lift 4, 18&ndash;20 miles of trail, first summer 2019,
-  lift days vary by year. Not tagged New. The claim that its lifts and
-  gravity network were recently expanded was not confirmed.
+Map pin is the Rangeley town centre, about 8 miles from the resort; see
+"Coordinates are estimates" below.
 
-Map pins for both are town centres (Rangeley, Ririe), not the resort base;
-see "Coordinates are estimates" below.
+Source: saddlebackmaine.com/mountain-biking/ (supplied by Jon).
 
-Sources (secondary, not the resorts' own spec pages): saddlebackmaine.com
-mountain-biking and lift-access pages, Singletracks, Snow Industry News;
-East Idaho News, KIVI-TV, Visit Idaho.
+State count: Maine 2 &rarr; 3. Total: 96 &rarr; 97 parks.
 
-State counts: Maine 2 &rarr; 3, Idaho 6 &rarr; 7. Total: 96 &rarr; 98 parks.
-Dry Hill (NY) was considered and left out: no evidence of a bike park.
+**Considered and left out:** Dry Hill (NY) &mdash; no evidence of a bike park.
+Kelly Canyon (ID) &mdash; it opened lift-served biking in 2019 and a Visit Idaho
+guide describes it, but current operation could not be confirmed (one report
+mentions a summer closed for lift work, there has been an ownership change,
+and nothing found is dated 2026). Held until skikelly.com or the resort
+confirms 2026 lift-served riding. The Singletracks Feb 2025 article is about
+Forest Service trails near the resort, not the resort's lifts.
 
 ---
 
