@@ -174,3 +174,28 @@ which is just what the `Season` stat already says).
   bulk edits and consistency checks easier, but that's a real structural
   change under the PMR standard's "ask before restructuring" rule, not
   something to do incidentally while fixing one park's entry.
+
+## Mountain chart and page texture (shared with the Canada guide)
+
+- **Mountain tab = `renderPeakChart`** (search `PEAK CHART`; styles are the
+  `.pk-*` rules). It is a **twin copy**: the same block, byte-for-byte, sits in
+  the Canada repo. Fix or tune it in one, make the same change in the other. Each
+  repo only supplies a small "park → item" function (`drawMountainStage` /
+  `drawMtnStage`) and a few `--pk-*` theme variables. It draws SVG at 1:1 pixel
+  scale (never shrunk to fit) and picks a label style from the pixel width per
+  peak: horizontal names (wide) → 90°-rotated names and values (rot) → no printed
+  labels, hover/tap only (dense). Hover or keyboard focus floats the name over the
+  peak; on touch, first tap shows it and a second tap removes the peak. A peak
+  that was not on the previous render plays a one-off shimmer (`pk-fresh`).
+- **Page texture = the "Crowe carpet, 1884" mask** from the PMR texture catalogue
+  (`postmillennium-MTB/pmr-website` → `textures/`, pattern `crowe-1884-14685`).
+  `.texture` layer is the first child of `<body>`; retint a theme by changing only
+  its `--tex-ink` / `--tex-opacity`. Catalogue rules apply: one large layer per
+  page, `position:absolute` (never fixed — Pinkbike embeds clip it), 4–7% ink.
+  The chart backdrop reuses the same mask. The credit line in the footer is
+  required — keep it. Do not describe this pattern as adapted: it is the
+  genuine patent drawing.
+- `low-pile-carpet.css` (repo root of the **Canada** repo) is an unused, reusable
+  procedural texture kit for small accents (cards, plates). Not wired into the
+  page.
+
