@@ -52,9 +52,8 @@ park":
   lower section — e.g. the Schweitzer row's "Chairlift + lower shuttle" —
   is still in-scope; the test is whether the *primary* access is a lift.)
 
-Unlike the Canada repo, this rule isn't stated anywhere in this tool's own
-UI copy — it's enforced only by which rows exist, nowhere written down
-until now. When vetting a "new park" candidate (see Recurring maintenance
+Like the Canada repo, this rule is now stated in the page footer (the footer
+copy is deliberately identical in both guides). When vetting a "new park" candidate (see Recurring maintenance
 below), apply it explicitly: the test is always "is there a lift," never
 "does the operator call it a bike park."
 
