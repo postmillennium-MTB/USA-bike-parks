@@ -23,8 +23,7 @@ the same data schema:
 If you're fixing a structural/dependency bug (the CARTO tile-provider
 issue below is exactly this kind — it hit both repos identically) or
 introducing a new maintenance convention (e.g. how closures are tracked —
-Canada doesn't have this repo's `data-status` pattern yet and was pointed
-here to borrow it), check whether the Canada repo has the same problem or
+Canada now has a `closed` badge modelled on this repo's `data-status` pattern), check whether the Canada repo has the same problem or
 would benefit from the same fix. The two repos share no code, so nothing
 here propagates there automatically. That repo isn't attached to your
 session by default — use `add_repo` (or ask Jon) before assuming its
