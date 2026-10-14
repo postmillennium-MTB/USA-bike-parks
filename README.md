@@ -152,7 +152,7 @@ packages. It's listed for completeness with a purple **Members** tag, a
 matching legend entry, an "Access: Members & lodging guests only" stat, and
 a bolded note that it is not open to the general public.
 
-**Brighton has no vertical figure on purpose.** No source publishes a
+**Brighton has no vertical figure on purpose.** *(Superseded October 2026 — see "Brighton vertical drop added".)* No source publishes a
 bike-park vertical for Brighton (its 4 flow trails run off two lifts, not the
 full 1,745 ft ski vertical), so rather than invent a number the Vertical Drop
 stat is omitted — which means Brighton is automatically excluded from the
@@ -576,6 +576,12 @@ accent. Both are hidden in print. At fully inked pixels the texture lowers muted
 about 5.9–6.9:1; main text stays above 10:1. The credit lines in the footer are
 required.
 
+### Brighton vertical drop added (October 2026)
+
+Brighton (UT) now shows a Vertical Drop of 2,494 ft, sourced from Pinkbike's DH Bike Parks Guide, so it joins the Stats and Mountain views. The note flags that this exceeds the resort's 1,745 ft winter ski vertical. Excluded-from-rankings count: 5 → 4.
+
+---
+
 ### Footer wording unified with the Canada guide (October 2026)
 
 Both guides now share the same footer: Last update: October 2026; base list from Two
@@ -624,7 +630,7 @@ on the map.
 Mountain High (968 ft) and Dodge Ridge (1,600 ft) previously fell back to summit
 elevations and topped the Stats ranking; both now carry a real "Vertical Drop" stat.
 
-### Five parks are excluded from Stats/Mountain (correctly)
+### Four parks are excluded from Stats/Mountain (correctly)
 These publish no vertical-drop figure that reads as a single run's drop, and are
 deliberately left out of the ranked views rather than having a number invented for
 them. This is disclosed on-page ("X of 97 parks ranked · N publish no vertical drop and
@@ -632,9 +638,12 @@ are left out rather than guessed at"):
 
 - Saddleback Bike Park (ME) — the resort quotes only combined total vertical
 - Deer Mountain Village Bike Park (Under Development) (SD) — "Coming 2027"
-- Brighton Bike Park (UT)
 - Bluewood Bike Park (Under Construction) (WA)
 - Snow King Mountain (WY) — explicitly "NO lift bike access currently"
+
+Brighton Bike Park (UT) was in this list until October 2026; it now carries 2,494 ft from
+Pinkbike's DH Bike Parks Guide (Jon's guide). That is more than the resort's own winter
+ski vertical (1,745 ft), so the card says to treat it as approximate.
 
 If any of these get a real vertical drop added later, they will automatically join the
 ranked views.
