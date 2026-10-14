@@ -199,3 +199,24 @@ which is just what the `Season` stat already says).
   procedural texture kit for small accents (cards, plates). Not wired into the
   page.
 
+## Color schemes and contrast ("would this survive being printed?")
+
+Standard for every theme, solved numerically against that theme's page and card
+surfaces (not by eye) — keep it when retinting or adding a theme:
+- `--chalk` ≥ 11.5:1, `--chalk-dim` ≥ 9:1, `--chalk-mute` ≥ 7:1 (solid replacement for
+  the old `rgba(255,255,255,.3–.4)` greys), `--warn` ≥ 8:1, `--link` ≥ 7:1.
+- The accent has two jobs, so two tokens: `--dirt` is the accent as a **fill** (white
+  text on it ≥ 6:1, so tabs/pills/buttons stay legible), `--link` is the accent as
+  **text, borders and chart strokes** on dark surfaces. Don't use `--dirt` as text.
+- `--edge` (≥ 3:1) is for control borders (buttons, search, chips); `--card-border`
+  (≥ 2.2:1) is for card outlines.
+- No dimming text with `opacity`. Closed park rows are dimmed only to `.88` and get a
+  dashed border — a cue that survives grayscale.
+- Theme 142 (neon) keeps its bright fills but uses near-black text on them (≥ 5.6:1).
+- `@media print` (search `PRINT / SAVE-AS-PDF PALETTE`) prints every theme on white
+  with solved dark text, because browsers drop dark backgrounds when printing. No print
+  button exists by design.
+- Audit method: load each theme in a browser, walk every visible text node, composite
+  its colour over the effective background, compare to 4.5 (3 for large text) and 7.
+  Status at last run: zero text below 4.5:1 on any theme; body text ≥ 7:1; the only
+  items under 7:1 are white-on-fill pills (6:1). Print: zero below 4.5:1.
