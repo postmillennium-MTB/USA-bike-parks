@@ -186,14 +186,18 @@ which is just what the `Season` stat already says).
   labels, hover/tap only (dense). Hover or keyboard focus floats the name over the
   peak; on touch, first tap shows it and a second tap removes the peak. A peak
   that was not on the previous render plays a one-off shimmer (`pk-fresh`).
-- **Page texture = the "Crowe carpet, 1884" mask** from the PMR texture catalogue
-  (`postmillennium-MTB/pmr-website` → `textures/`, pattern `crowe-1884-14685`).
-  `.texture` layer is the first child of `<body>`; retint a theme by changing only
-  its `--tex-ink` / `--tex-opacity`. Catalogue rules apply: one large layer per
-  page, `position:absolute` (never fixed — Pinkbike embeds clip it), 4–7% ink.
-  The chart backdrop reuses the same mask. The credit line in the footer is
-  required — keep it. Do not describe this pattern as adapted: it is the
-  genuine patent drawing.
+- **Page texture = two layers from the PMR texture catalogue** (`postmillennium-MTB/pmr-website`
+  → `textures/`), designed in the texture studio: `.texture` is `crowe-1884-14685` (US Design
+  Patent 14,685, Eugene A. Crowe, 1884; genuine drawing) at 136px, strongest at the left edge
+  and fading right; `.texture-2` is `us-d268339` (US Design Patent 268,339, line art) at 64px,
+  strongest at the right edge and fading left. Both are the first children of `<body>`. Retint a
+  theme by changing only `--tex-ink`, `--tex-opacity`, `--tex-2-opacity` (opacities are higher
+  than the catalogue's 4–7% because each layer is faded and layer 2 is thin line art; at full
+  strength they leave muted text at ≥ 5.9:1 and main text at ≥ 10:1). `position:absolute`, never
+  fixed (Pinkbike embeds clip it). Both layers are hidden in the print palette. The Mountain
+  chart backdrop reuses mask 1 at its own quieter strength (`--tex-opacity` scoped on
+  `.pk-stage`). Both credit lines in the footer are required; 268,339's inventor and grant date
+  are not verified in the catalogue, so cite it by number only until they are.
 - `low-pile-carpet.css` (repo root of the **Canada** repo) is an unused, reusable
   procedural texture kit for small accents (cards, plates). Not wired into the
   page.
