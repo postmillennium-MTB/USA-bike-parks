@@ -1,11 +1,30 @@
-# USA Bike Parks — Update README
+# USA Bike Parks — README
 
-This covers the changes made to `index.html` (the USA lift-served bike parks
-tool) in this round of edits. Deploy by replacing `index.html` in the
-`postmillennium-MTB/USA-bike-parks` repo via GitHub's web UI, same as always.
+The US lift-served bike parks guide: a single `index.html` (no build step; Leaflet is
+inlined, fonts come from Google Fonts) embedded by iframe on
+postmillenniumrenaissance.com and in Pinkbike articles. Deploy by replacing
+`index.html` in the `postmillennium-MTB/USA-bike-parks` repo via GitHub's web UI.
 
-Built from the live GitHub file at the time of editing, single-file,
-zero-dependency, no build step — open it and it works.
+Last update: October 2026.
+
+## Current state
+
+| | |
+|---|---|
+| Parks | 97 across 30 states: 91 open, 3 coming (announced / under construction), 3 closed |
+| Loam Pass | 27 parks flagged |
+| Map | Real US state-boundary polygons baked into the file — no tile server, no API key |
+| Views | Map, Stats, Mountain |
+| Scope | Lift-access, downhill-oriented riding only (pump tracks, skills parks and shuttle-only operations are excluded) |
+| File size | ~596 KB (most of it inlined Leaflet and the state-boundary data) |
+
+Maintainer conventions — how to add, close and retire parks, the scope rule, the
+contrast standard and the shared Mountain chart — live in `CLAUDE.md`. The Canadian
+twin (`postmillennium-MTB/Canada-mtb-parks`) shares the build standard but not the
+data schema; its README is `README.md` as well.
+
+This file is the running log of changes, newest sections near the bottom of
+"What changed".
 
 ---
 
@@ -525,6 +544,47 @@ Forest Service trails near the resort, not the resort's lifts.
 
 ---
 
+### Mountain chart rebuilt (October 2026)
+
+The Mountain tab now draws the skyline with a shared renderer (`renderPeakChart`,
+identical in the Canada guide). It is drawn at 1:1 pixel scale, so labels are the
+same size at 5 parks as at 90, and picks a label style by how much width each peak
+gets: names under the peak (wide), names and values turned 90° (medium), or no
+printed labels with hover/tap only (dense). Hovering or keyboard-focusing a peak
+floats its name above it; on touch the first tap shows the name and a second tap
+removes the peak. A peak that was just added shimmers once. The chart backdrop has
+a soft horizon glow and a quiet texture.
+
+### Colour schemes revised for contrast (October 2026)
+
+Every theme was re-solved numerically under a "legible if printed or saved as a PDF"
+standard: main text ≥ 11.5:1, secondary ≥ 9:1, muted ≥ 7:1, links ≥ 7:1, control
+borders ≥ 3:1. The accent has two tokens: `--dirt` as a fill (white text on it ≥ 6:1)
+and `--link` as text and borders. Closed park rows are dimmed only slightly and get a
+dashed border, a cue that survives grayscale. A built-in print palette prints every
+theme on white; there is deliberately no print button. Audit result: zero text below
+4.5:1 on any theme and body text ≥ 7:1; the only items under 7:1 are the white-on-fill
+pills (6:1).
+
+### Two-layer page texture (October 2026)
+
+The page has two faded texture layers from the PMR texture catalogue, designed in the
+texture studio: `crowe-1884-14685` (US Design Patent 14,685, Eugene A. Crowe, 1884; the
+patent has long expired) at 136px fading left to right, and `us-d268339` (US Design
+Patent 268,339) at 64px fading right to left, each inked in the current theme's
+accent. Both are hidden in print. At fully inked pixels the texture lowers muted text to
+about 5.9–6.9:1; main text stays above 10:1. The credit lines in the footer are
+required.
+
+### Footer wording unified with the Canada guide (October 2026)
+
+Both guides now share the same footer: Last update: October 2026; base list from Two
+Wheeled Wanderer (Becky Timbers); Loam Pass note; verify-with-the-park note; the
+approximate-figures and scope sentence ("Inclusion requires chairlift or gondola access
+for bikes; shuttle-only parks excluded"); sources; texture credit.
+
+---
+
 ## How the data flows
 
 The state/park list in the HTML (`<div class="state-section" data-state="...">`)
@@ -544,7 +604,7 @@ chart, the map, stats, and mountain views** — nothing else needs touching,
 Your original file had no latitude/longitude anywhere, so a `COORDS` lookup
 table (keyed by exact park name) was built from general knowledge of each
 resort's location — resort base area where known, town center otherwise.
-All 87 parks in the current list have a coordinate and pin successfully, but
+All 97 parks in the current list have a coordinate and pin successfully, but
 these are **approximate, not surveyed**. Worth a spot-check on the more
 obscure ones:
 
@@ -560,41 +620,24 @@ everywhere else — pie chart, filters, stats if it has a vertical). A missing
 match doesn't break anything; the park is simply not one of the pins shown
 on the map.
 
-### Two vertical-drop figures look wrong
-The Stats/Mountain views read the **"Vertical Drop"** stat cell on each card.
-Two parks don't have one:
-
-| Park | Card shows | Likely issue |
-|---|---|---|
-| Mountain High Bike Park (CA) | "Summit: 8,200 ft" | Summit elevation, not vertical drop |
-| Dodge Ridge Bike Park (CA) | "Summit: 7,400 ft" | Summit elevation, not vertical drop |
-
-Because neither card has a proper "Vertical Drop" stat, the parser currently
-falls back to those summit figures, which puts both parks at the top of the
-Stats ranking — well above Jackson Hole, Snowmass, etc. That's very unlikely
-to be their actual vertical drop.
-
-**Fix:** add a genuine `Vertical Drop` stat item to both cards in the source
-HTML with the real figure (probably somewhere in the 1,000–2,000 ft range
-based on comparable SoCal/Sierra parks, but don't take my estimate — the
-actual number should come from you or the resort). Once that stat exists,
-the parser will pick it up automatically and these two will re-rank without
-any other code changes needed.
+### Vertical-drop figures that were wrong are now fixed
+Mountain High (968 ft) and Dodge Ridge (1,600 ft) previously fell back to summit
+elevations and topped the Stats ranking; both now carry a real "Vertical Drop" stat.
 
 ### Five parks are excluded from Stats/Mountain (correctly)
-These publish no vertical-drop figure at all in their existing cards, and are
-deliberately left out of the ranked views rather than having a number
-invented for them. This is disclosed on-page ("X of 87 parks ranked · 5
-publish no vertical drop and are left out rather than guessed at"):
+These publish no vertical-drop figure that reads as a single run's drop, and are
+deliberately left out of the ranked views rather than having a number invented for
+them. This is disclosed on-page ("X of 97 parks ranked · N publish no vertical drop and
+are left out rather than guessed at"):
 
-- Sugarloaf Bike Park (ME) — only lists lift name
-- Lee Canyon Bike Park (NV) — only lists trail count
+- Saddleback Bike Park (ME) — the resort quotes only combined total vertical
 - Deer Mountain Village Bike Park (Under Development) (SD) — "Coming 2027"
-- Summit Bike Park — Snoqualmie Pass (WA)
+- Brighton Bike Park (UT)
+- Bluewood Bike Park (Under Construction) (WA)
 - Snow King Mountain (WY) — explicitly "NO lift bike access currently"
 
-If any of these get a real vertical drop added later, they'll automatically
-join the ranked views.
+If any of these get a real vertical drop added later, they will automatically join the
+ranked views.
 
 ---
 
@@ -624,13 +667,23 @@ index.html
         addFiveMtn), renderNoParkNote, resetAll, pie-click handlers
 ```
 
-File size: ~407KB (was 162KB before this round of updates — the increase is
-almost entirely the inlined Leaflet + MarkerCluster libraries, needed to
-keep the map single-file and dependency-free like the rest of your tools).
+File size: ~596KB (it was 162KB before the map was added — the increase is the
+inlined Leaflet + MarkerCluster libraries, which keep the map single-file and
+dependency-free, plus the baked-in US state-boundary data and the two texture masks).
+
+Later additions to the file: `US_STATES_GEO` (state polygons, replacing the raster tile
+map), the shared `renderPeakChart` block, the `.texture` / `.texture-2` layers and their
+two inlined masks, the solved theme tokens, and the `PRINT / SAVE-AS-PDF PALETTE`
+`@media print` block.
 
 ---
 
 ## Testing performed
+
+*The notes below describe the original build. Since then, each round of changes has
+been checked in a real browser: every theme loaded and every visible text node
+measured for contrast, the Mountain tab's hover/tap/keyboard behaviour exercised at
+several park counts, and print emulation checked for the white palette.*
 
 The built file was executed in a real DOM (jsdom) to check for runtime
 errors, and to verify: all parks parse into the `PARKS` array; every park has
