@@ -222,3 +222,7 @@ surfaces (not by eye) — keep it when retinting or adding a theme:
   its colour over the effective background, compare to 4.5 (3 for large text) and 7.
   Status at last run: zero text below 4.5:1 on any theme; body text ≥ 7:1; the only
   items under 7:1 are white-on-fill pills (6:1). Print: zero below 4.5:1.
+
+## License and notice (do not remove)
+
+This repo is licensed under PolyForm Noncommercial 1.0.0 (`LICENSE`). Every edit and rebuild must keep: the `Required Notice:` line at the top of `LICENSE`; the (c) / SPDX comment right after the doctype of each HTML page; and the visible `.pmr-license` footer on each page. Do not remove, reword or hide them. New pages get the same footer. Third-party material keeps its own license: never relicense it, and keep its notices. Jon holds the copyright and decides any license change.
