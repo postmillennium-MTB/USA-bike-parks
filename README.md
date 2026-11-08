@@ -14,9 +14,9 @@ Last update: October 2026.
 | Parks | 97 across 30 states: 91 open, 3 coming (announced / under construction), 3 closed |
 | Loam Pass | 27 parks flagged |
 | Map | Real US state-boundary polygons baked into the file — no tile server, no API key |
-| Views | Map, Stats, Mountain |
+| Views | Map (with road-trip mode), Stats, Mountain |
 | Scope | Lift-access, downhill-oriented riding only (pump tracks, skills parks and shuttle-only operations are excluded) |
-| File size | ~596 KB (most of it inlined Leaflet and the state-boundary data) |
+| File size | ~774 KB (most of it inlined Leaflet, the state-boundary data and the ~144 KB highway network) |
 
 Maintainer conventions — how to add, close and retire parks, the scope rule, the
 contrast standard and the shared Mountain chart — live in `CLAUDE.md`. The Canadian
@@ -588,6 +588,55 @@ Both guides now share the same footer: Last update: October 2026; base list from
 Wheeled Wanderer (Becky Timbers); Loam Pass note; verify-with-the-park note; the
 approximate-figures and scope sentence ("Inclusion requires chairlift or gondola access
 for bikes; shuttle-only parks excluded"); sources; texture credit.
+
+### Road-trip mode on the Map tab (November 2026)
+
+**Plan a road trip** (above the map) turns the map into a sketch pad for one stroke,
+with a finger or a mouse. Let go and the line snaps to real highways. The page then shows:
+
+- the snapped route (solid line) over your sketch (dashed), with a shaded corridor;
+- every park inside that corridor as a numbered square, numbered in the order you reach it;
+- a list below the map: road miles for the trip, the main highways ("via I-94 → I-80 →
+  I-90"), and for each park the trip mile where you reach it and how far it sits off the route;
+- "Parks within" 10 / 25 / 50 / 100 / 150 mi, or Auto (about 4% of the trip, 25–100 mi);
+- tick "Stop" on up to 9 parks, then **Open in Google Maps** for turn-by-turn directions
+  (a plain link, no API key).
+
+**How the snapping works.** The file now carries its own highway network, `US_ROADS`:
+interstates, other expressways and US routes from Natural Earth's public-domain 1:10m
+roads. That's about 263,000 km of road, rounded and simplified to ~144 KB. Snapping is
+a shortest-path search where each road's length is inflated the further it strays from
+your sketch, and US routes cost 20% more than interstates. The route keeps the shape
+you drew but runs on roads people actually drive. As with the state boundaries, nothing
+is fetched from any server, so there is no routing service to pay for or lose.
+`tools/build-road-network.py` rebuilds the data, and its defaults reproduce the
+shipped string exactly.
+
+**Limits, stated on the page.** Road miles come from a simplified map, so they are
+roughly ±10%. "Off route" is straight-line distance, not drive time. Routes never cross
+into Canada (Detroit → Buffalo goes around Lake Erie). Only US parks are listed. Drawing
+needs a pointer (finger, mouse or pen); there is no keyboard-only way to draw a route yet.
+
+**Colour.** The route uses `--warn` on a `--sky` casing (≥ 8:1 on every surface in all four
+themes and print). Pin numbers are ≥ 8:1, and all list text is ≥ 7:1. Theme 142's sketch line
+is violet (`--loam`) instead of white: its cyan route and a white sketch fall to OKLab ΔE 6.2
+under protanopia, and violet holds ΔE ≥ 22 in every colour-vision type. Normal map pins are
+hidden in trip mode (Clear brings them back), so the route colour never sits next to them.
+
+**Engine update (same week).** Start and finish now attach to the nearest point *along* a
+road rather than the nearest junction. Junctions on long rural stretches can be 70+ km apart,
+so trips used to begin or end well away from where you drew. A line drawn back to its start
+is treated as a loop (split at its farthest point and routed out and back). The engine is now
+shared byte-for-byte with the Canada guide, which got road-trip mode next.
+
+**Open idea: a separate Routes tab.** Road-trip mode lives inside the Map tab for now
+(Jon's call, November 2026). A dedicated fourth tab stays on the table, e.g. once the
+feature grows (city dropdowns for keyboard users, a share link, Canada routes). The move is
+mostly cut-and-paste: the snapping engine (`rt*`) knows nothing about the page, and the UI
+(`trip*`) only touches `#tripDrawBtn`, `#tripCorr`, `#tripClearBtn`, `#tripHint` and
+`#tripResults`. The one real decision is the map. Either the Routes tab gets its own Leaflet
+map (simplest, but a second copy of the state layer in memory), or the existing `#usMap`
+moves between panels when the tab switches.
 
 ---
 
