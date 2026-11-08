@@ -167,6 +167,15 @@ which is just what the `Season` stat already says).
   verified-real (not pre-projected-for-display) province boundary dataset
   reachable from a standard sandboxed session — check that repo's own
   CLAUDE.md before assuming otherwise.
+- **Road-trip mode (Map tab) runs on a baked-in highway graph, `US_ROADS`** — search
+  `MAP DATA — US highway network`; the engine is `rtSnap` / `rtParksNear` and the UI is the
+  `trip*` functions right after it. Same no-server rule as `US_STATES_GEO`: don't swap it
+  for a routing API (OSRM, Mapbox, Google), which would bring back the dependency risk above.
+  The data is Natural Earth 1:10m roads, rebuilt by `tools/build-road-network.py`. Natural Earth
+  has real gaps: I-80 stops ~26 km short in Utah, and the builder's gap-closing step exists
+  for that. If you rebuild, re-run a long east–west and a Wasatch route to check
+  connectivity. Trip pins read `MAPPED`, so a new park appears in trip results as soon as
+  it has `COORDS`. Do not invent drive times or road-mile precision: the page says ±10%.
 - Park data lives in the HTML, not a data array — a future refactor to a
   `PARKS` array literal (matching the Canada repo's pattern) would make
   bulk edits and consistency checks easier, but that's a real structural
