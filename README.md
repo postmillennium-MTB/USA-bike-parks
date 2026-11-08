@@ -623,6 +623,15 @@ is violet (`--loam`) instead of white: its cyan route and a white sketch fall to
 under protanopia, and violet holds ΔE ≥ 22 in every colour-vision type. Normal map pins are
 hidden in trip mode (Clear brings them back), so the route colour never sits next to them.
 
+**Open idea: a separate Routes tab.** Road-trip mode lives inside the Map tab for now
+(Jon's call, November 2026). A dedicated fourth tab stays on the table, e.g. once the
+feature grows (city dropdowns for keyboard users, a share link, Canada routes). The move is
+mostly cut-and-paste: the snapping engine (`rt*`) knows nothing about the page, and the UI
+(`trip*`) only touches `#tripDrawBtn`, `#tripCorr`, `#tripClearBtn`, `#tripHint` and
+`#tripResults`. The one real decision is the map. Either the Routes tab gets its own Leaflet
+map (simplest, but a second copy of the state layer in memory), or the existing `#usMap`
+moves between panels when the tab switches.
+
 ---
 
 ## How the data flows

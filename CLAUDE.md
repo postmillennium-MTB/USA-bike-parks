@@ -176,6 +176,9 @@ which is just what the `Season` stat already says).
   for that. If you rebuild, re-run a long east–west and a Wasatch route to check
   connectivity. Trip pins read `MAPPED`, so a new park appears in trip results as soon as
   it has `COORDS`. Do not invent drive times or road-mile precision: the page says ±10%.
+  **Open idea, not scheduled:** Jon wants to keep the option of moving road-trip mode
+  to its own Routes tab later (see README, "Open idea: a separate Routes tab"). Don't do it
+  incidentally; it's a layout change under the ask-first rule.
 - Park data lives in the HTML, not a data array — a future refactor to a
   `PARKS` array literal (matching the Canada repo's pattern) would make
   bulk edits and consistency checks easier, but that's a real structural
