@@ -623,6 +623,12 @@ is violet (`--loam`) instead of white: its cyan route and a white sketch fall to
 under protanopia, and violet holds ΔE ≥ 22 in every colour-vision type. Normal map pins are
 hidden in trip mode (Clear brings them back), so the route colour never sits next to them.
 
+**Engine update (same week).** Start and finish now attach to the nearest point *along* a
+road rather than the nearest junction. Junctions on long rural stretches can be 70+ km apart,
+so trips used to begin or end well away from where you drew. A line drawn back to its start
+is treated as a loop (split at its farthest point and routed out and back). The engine is now
+shared byte-for-byte with the Canada guide, which got road-trip mode next.
+
 **Open idea: a separate Routes tab.** Road-trip mode lives inside the Map tab for now
 (Jon's call, November 2026). A dedicated fourth tab stays on the table, e.g. once the
 feature grows (city dropdowns for keyboard users, a share link, Canada routes). The move is

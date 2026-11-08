@@ -4180,6 +4180,9 @@ const US_ROADS = {"q":250,"names":["US-83","US-151","GSP","US-85","I-5","US-2","
 
 /* ══════════════════════════════════════════════════════════════════════════
    ROAD TRIP — snap a freehand sketch to highways, list parks along it
+   The engine (rt* functions) is a twin copy of the Canada guide's: fix it in one,
+   make the same change in the other. Only rtClass (road costs) and the UI below
+   are per-guide.
    ══════════════════════════════════════════════════════════════════════════ */
 const TRIP_NAV_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-navigation" aria-hidden="true" focusable="false"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>';
 /* ── Road-trip core: decode network, snap a freehand sketch to highways, measure parks ── */
@@ -4276,11 +4279,6 @@ function rtThin(sketch, minKm){
   return out;
 }
 
-/* Interstates are the default road-trip road; US routes and other numbered highways are
-   slower (towns, lights), so they cost a little more per km and only win when they save distance
-   or follow the sketch much better. */
-function rtClass(name){ return /^I-/.test(name) ? 1 : /^US-/.test(name) ? 1.2 : 1.1; }
-
 function rtLength(line){ let t = 0; for (let i = 1; i < line.length; i++) t += rtKm(line[i-1], line[i]); return t; }
 
 /* Snap a sketch to the network. Shortest path where each edge's length is inflated by how far
@@ -4292,7 +4290,7 @@ function rtSnap(G, sketch){
   const sk = rtThin(sketch, 2);
   const skLen = rtLength(sk);
   if (sk.length < 2 || skLen < 20) return null;
-  const D = Math.max(25, Math.min(160, skLen * (0.05))), W = 3;
+  const D = Math.max(25, Math.min(160, skLen * 0.05)), W = 3;
 
   /* sketch bounding box padded by 4D: edges far outside it can never be on a good route */
   let mnLat = 90, mxLat = -90, mnLng = 180, mxLng = -180;
@@ -4300,26 +4298,54 @@ function rtSnap(G, sketch){
   const padLat = 4 * D / RT_KM_PER_DEG, padLng = padLat / Math.cos(((mnLat + mxLat) / 2) * Math.PI / 180);
   const inBox = p => p[0] >= mnLat - padLat && p[0] <= mxLat + padLat && p[1] >= mnLng - padLng && p[1] <= mxLng + padLng;
 
-  /* nearest network node to each sketch end (start/end), restricted to one component */
-  const nearestNode = (p, compWanted) => {
-    let best = -1, bd = Infinity;
-    G.nodes.forEach((n, i) => {
-      if (!n.adj.length || (compWanted !== undefined && G.comp[i] !== compWanted)) return;
-      const d = rtKm(p, [n.lat, n.lng]);
-      if (d < bd){ bd = d; best = i; }
+  /* Anchor each sketch end on the nearest point ALONG a road (not the nearest junction: on
+     long rural stretches junctions can be 70+ km apart). The anchor becomes a temporary node
+     with two half-edges to the road's real ends; the finish must be on the start's network. */
+  const N = G.nodes.length, S = N, T = N + 1;
+  const anchor = (p, compWanted) => {
+    let best = null;
+    G.edges.forEach(e => {
+      if (compWanted !== undefined && G.comp[e.a] !== compWanted) return;
+      const cum = rtCumulative(e.pts), r = rtNearest(p, e.pts, cum);
+      if (!best || r.km < best.km) best = { e, cum, km: r.km, along: r.along };
     });
     return best;
   };
-  const s = nearestNode(sk[0]);
-  const t = nearestNode(sk[sk.length-1], G.comp[s]);
-  if (s < 0 || t < 0 || s === t) return null;
+  const splitAt = (pts, cum, along) => {   // -> [pts from start to X, pts from X to end]
+    let i = 1;
+    while (i < cum.length - 1 && cum[i] < along) i++;
+    const f = cum[i] > cum[i-1] ? (along - cum[i-1]) / (cum[i] - cum[i-1]) : 0;
+    const X = [pts[i-1][0] + f * (pts[i][0] - pts[i-1][0]), pts[i-1][1] + f * (pts[i][1] - pts[i-1][1])];
+    return [pts.slice(0, i).concat([X]), [X].concat(pts.slice(i))];
+  };
+  const as = anchor(sk[0]);
+  if (!as) return null;
+  const at = anchor(sk[sk.length-1], G.comp[as.e.a]);
+  if (!at) return null;
+  const extra = new Map();                  // node -> virtual half-edges
+  const link = (a, b, pts, name) => {
+    const v = { a, b, pts, name, km: rtLength(pts), id: -1 };
+    [a, b].forEach(n => { if (!extra.has(n)) extra.set(n, []); extra.get(n).push(v); });
+  };
+  [[as, S], [at, T]].forEach(([h, node]) => {
+    const [p1, p2] = splitAt(h.e.pts, h.cum, h.along);
+    link(h.e.a, node, p1, h.e.name);
+    link(node, h.e.b, p2, h.e.name);
+  });
+  if (as.e === at.e){                        // both ends on one road: also the direct stretch
+    const lo = Math.min(as.along, at.along), hi = Math.max(as.along, at.along);
+    const first = splitAt(as.e.pts, as.cum, hi)[0];
+    const mid = splitAt(first, rtCumulative(first), lo)[1];
+    if (rtLength(mid) < 1) return null;
+    as.along <= at.along ? link(S, T, mid, as.e.name) : link(T, S, mid, as.e.name);
+  }
 
-  /* per-edge cost (lazy, cached for this sketch) */
+  /* per-edge cost (cached per sketch for real edges) */
   const cost = new Float64Array(G.edges.length).fill(-1);
   const edgeCost = e => {
-    if (cost[e.id] >= 0) return cost[e.id];
+    if (e.id >= 0 && cost[e.id] >= 0) return cost[e.id];
     let c;
-    if (!inBox(e.pts[0]) && !inBox(e.pts[e.pts.length-1])) c = Infinity;
+    if (e.id >= 0 && !inBox(e.pts[0]) && !inBox(e.pts[e.pts.length-1])) c = Infinity;
     else {
       const step = Math.max(1, Math.floor(e.pts.length / 6));
       let sum = 0, n = 0;
@@ -4328,12 +4354,12 @@ function rtSnap(G, sketch){
       const dev = sum / n;
       c = e.km * rtClass(e.name) * (1 + W * (dev / D) * (dev / D));
     }
-    cost[e.id] = c;
+    if (e.id >= 0) cost[e.id] = c;
     return c;
   };
 
-  /* Dijkstra with a binary heap */
-  const N = G.nodes.length, dist = new Float64Array(N).fill(Infinity), via = new Int32Array(N).fill(-1);
+  /* Dijkstra with a binary heap, over the real graph plus the two anchor nodes */
+  const dist = new Float64Array(N + 2).fill(Infinity), via = new Array(N + 2).fill(null);
   const heap = [];
   const push = (d, n) => { heap.push([d, n]); let i = heap.length - 1;
     while (i){ const p = (i - 1) >> 1; if (heap[p][0] <= heap[i][0]) break; [heap[p], heap[i]] = [heap[i], heap[p]]; i = p; } };
@@ -4344,22 +4370,25 @@ function rtSnap(G, sketch){
         if (r < heap.length && heap[r][0] < heap[m][0]) m = r;
         if (m === i) break; [heap[m], heap[i]] = [heap[i], heap[m]]; i = m; } }
     return top; };
-  dist[s] = 0; push(0, s);
+  const relax = (d, n, e) => {
+    const o = e.a === n ? e.b : e.a, c = edgeCost(e);
+    if (c === Infinity) return;
+    if (d + c < dist[o]){ dist[o] = d + c; via[o] = e; push(d + c, o); }
+  };
+  dist[S] = 0; push(0, S);
   while (heap.length){
     const [d, n] = pop();
     if (d > dist[n]) continue;
-    if (n === t) break;
-    G.nodes[n].adj.forEach(eid => {
-      const e = G.edges[eid], o = e.a === n ? e.b : e.a, c = edgeCost(e);
-      if (c === Infinity) return;
-      if (d + c < dist[o]){ dist[o] = d + c; via[o] = eid; push(d + c, o); }
-    });
+    if (n === T) break;
+    if (n < N) G.nodes[n].adj.forEach(eid => relax(d, n, G.edges[eid]));
+    (extra.get(n) || []).forEach(e => relax(d, n, e));
   }
-  if (via[t] < 0) return null;
+  if (!via[T]) return null;
+  const s = S, t = T;
 
   /* walk back, stitching edge paths in travel order */
   const seq = [];
-  for (let n = t; n !== s; ){ const e = G.edges[via[n]]; seq.push(e); n = e.a === n ? e.b : e.a; }
+  for (let n = t; n !== s; ){ const e = via[n]; seq.push(e); n = e.a === n ? e.b : e.a; }
   seq.reverse();
   const path = [];
   const roads = [];   // [{name, km}] merged runs, for the "via I-90 → I-94" summary
@@ -4375,6 +4404,22 @@ function rtSnap(G, sketch){
   });
   const cum = rtCumulative(path);
   return { path, cum, km: cum[cum.length-1], roads, sketch: sk };
+}
+
+/* A trip that ends near where it began is a loop: split the sketch at its farthest point and
+   route the two halves, so start and finish don't collapse onto the same spot. */
+function rtSnapTrip(G, sketch){
+  const sk = rtThin(sketch, 2), len = rtLength(sk);
+  if (sk.length > 3 && rtKm(sk[0], sk[sk.length-1]) < Math.max(30, len * 0.1)){
+    let k = 1, far = 0;
+    sk.forEach((p, i) => { const d = rtKm(sk[0], p); if (d > far){ far = d; k = i; } });
+    const a = rtSnap(G, sk.slice(0, k + 1)), b = a && rtSnap(G, sk.slice(k));
+    if (!a || !b) return null;
+    const path = a.path.concat(b.path.slice(1)), cum = rtCumulative(path), roads = a.roads.slice();
+    b.roads.forEach(r => { const l = roads[roads.length-1]; if (l && l.name === r.name) l.km += r.km; else roads.push({ ...r }); });
+    return { path, cum, km: cum[cum.length-1], roads, sketch: sk, loop: true };
+  }
+  return rtSnap(G, sketch);
 }
 
 /* Main roads in travel order: runs of at least 8% of the trip (or 80 km), repeats collapsed. */
@@ -4396,6 +4441,11 @@ function rtParksNear(route, parks, corridorKm){
   out.sort((a, b) => a.alongKm - b.alongKm);
   return out;
 }
+
+/* Interstates are the default road-trip road; US routes and other numbered highways are
+   slower (towns, lights), so they cost a little more per km and only win when they save distance
+   or follow the sketch much better. */
+function rtClass(name){ return /^I-/.test(name) ? 1 : /^US-/.test(name) ? 1.2 : 1.1; }
 
 /* ── Road-trip mode: UI ──────────────────────────────────────────────────────
    "Plan a road trip" turns the map into a sketch pad for one stroke. On release
@@ -4487,7 +4537,7 @@ function tripPointerUp(e){
   }
   tripEndDraw();
   let route = null;
-  try { route = rtSnap(tripGraph, tripSketch.map(ll => [ll.lat, ll.lng])); } catch (err){ route = null; }
+  try { route = rtSnapTrip(tripGraph, tripSketch.map(ll => [ll.lat, ll.lng])); } catch (err){ route = null; }
   if (!route){
     tripHint('No highway route matched that line. Start and finish on land in the US (the lower 48 or Alaska, not both), then try again.');
     return;
@@ -4525,9 +4575,9 @@ function tripRenderRoute(){
   L.polyline(path, { className:'trip-route-casing', interactive:false, weight:7 }).addTo(tripLayer);
   L.polyline(path, { className:'trip-route', interactive:false, weight:4 }).addTo(tripLayer);
   if (tripSketchLine) tripSketchLine.bringToFront();
-  [['Start', path[0]], ['Finish', path[path.length - 1]]].forEach(([label, ll]) => {
+  (tripRoute.loop ? [['Start / Finish', path[0]]] : [['Start', path[0]], ['Finish', path[path.length - 1]]]).forEach(([label, ll]) => {
     L.marker(ll, { interactive:false, keyboard:false,
-      icon: L.divIcon({ className:'', html:`<div class="trip-end">${label}</div>`, iconSize:null, iconAnchor:[label === 'Start' ? 0 : 0, 22] })
+      icon: L.divIcon({ className:'', html:`<div class="trip-end">${label}</div>`, iconSize:null, iconAnchor:[0, 22] })
     }).addTo(tripLayer);
   });
 
