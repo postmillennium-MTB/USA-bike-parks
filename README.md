@@ -639,6 +639,10 @@ shared byte-for-byte with the Canada guide, which got road-trip mode next.
 - On phones the controls fit on one row.
 - Changing the distance no longer wipes the on-screen instructions.
 
+**Add to my trip (November 2026).** After you draw a route, every other park stays on the map
+as a dot. Tap a dot (or tick "Stop" on a listed park) and the route is re-planned through that
+park, and it becomes a Google Maps stop. Remove it from its pin, or untick it, and the route goes back.
+
 **Open idea: a separate Routes tab.** Road-trip mode lives inside the Map tab for now
 (Jon's call, November 2026). A dedicated fourth tab stays on the table, e.g. once the
 feature grows (city dropdowns for keyboard users, a share link, Canada routes). The move is
