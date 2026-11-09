@@ -163,10 +163,8 @@ which is just what the `Season` stat already says).
   `483fc82cea02ea4a708feed5b940160bb827119e` if this ever needs reverting —
   `git show 483fc82:index.html > index.html` restores it wholesale, or
   `git diff 483fc82 HEAD -- index.html` shows exactly what changed.
-  Canada's sibling repo could not get the same treatment yet: there's no
-  verified-real (not pre-projected-for-display) province boundary dataset
-  reachable from a standard sandboxed session — check that repo's own
-  CLAUDE.md before assuming otherwise.
+  The Canada guide got the same treatment in November 2026 (Natural Earth 1:50m provinces,
+  `CA_LAND_GEO`), so neither guide uses a tile server now.
 - **Road-trip mode (Map tab) runs on a baked-in highway graph, `US_ROADS`** — search
   `MAP DATA — US highway network`; the engine is `rtSnap` / `rtParksNear` and the UI is the
   `trip*` functions right after it. Same no-server rule as `US_STATES_GEO`: don't swap it
@@ -188,6 +186,11 @@ which is just what the `Season` stat already says).
   under 300 km (`compKm`). Colour check for trip mode: `node tools/check-trip-colours.js` (needs
   Playwright). It measures the rendered colours in every theme and print, and the same file is
   in both repos.
+  "Add to my trip": after a route is drawn every other park stays on the map as a tappable dot
+  (`.trip-ghost-live`); ticking "Stop" in the list, or Add / Remove in a pin or dot popup, re-plans
+  the trip through that park (`rtSnapTrip(G, sketch, vias)`; vias slot into the sketch in travel
+  order and become must-visit points) and makes it a Google Maps stop (max 9). A park you added
+  stays listed even if its road is outside the band.
   **Open idea, not scheduled:** Jon wants to keep the option of moving road-trip mode
   to its own Routes tab later (see README, "Open idea: a separate Routes tab"). Don't do it
   incidentally; it's a layout change under the ask-first rule.
