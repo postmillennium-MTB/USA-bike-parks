@@ -165,22 +165,32 @@ which is just what the `Season` stat already says).
   `git diff 483fc82 HEAD -- index.html` shows exactly what changed.
   The Canada guide got the same treatment in November 2026 (Natural Earth 1:50m provinces,
   `CA_LAND_GEO`), so neither guide uses a tile server now.
-- **Road-trip mode (Map tab) runs on a baked-in highway graph, `US_ROADS`** — search
-  `MAP DATA — US highway network`; the engine is `rtSnap` / `rtParksNear` and the UI is the
+- **Road-trip mode (Map tab) runs on a baked-in highway graph, `NA_ROADS`** — search
+  `MAP DATA — US + Canada highway network`; the engine is `rtSnap` / `rtParksNear` and the UI is the
   `trip*` functions right after it. Same no-server rule as `US_STATES_GEO`: don't swap it
   for a routing API (OSRM, Mapbox, Google), which would bring back the dependency risk above.
   The data is Natural Earth 1:10m roads, rebuilt by `tools/build-road-network.py`. Natural Earth
   has real gaps: I-80 stops ~26 km short in Utah, and the builder's gap-closing step exists
   for that. If you rebuild, re-run a long east–west and a Wasatch route to check
-  connectivity. Trip pins read `MAPPED`, so a new park appears in trip results as soon as
-  it has `COORDS`. Do not invent drive times or road-mile precision: the page says ±10%.
-  The engine (`rt*` functions) is a **byte-for-byte twin** of the Canada guide's (its
-  `CA_ROADS` is built by the same script with `CAN`): fix it in one, make the same change in
-  the other. Only `rtClass` and the `trip*` UI are per-guide. Cross-border trips aren't
-  supported yet: the networks are separate. Jon's call is to handle that later, so ask first.
+  connectivity. Trip pins read `TRIP_PARKS` (`MAPPED` plus the Canada snapshot), so a new US park
+  appears in trip results as soon as it has `COORDS`. The US map also draws `CA_OUTLINE_GEO`
+  (Canada, Natural Earth 1:50m, orientation only) behind the states. Do not invent drive times or road-mile precision: the page says ±10%.
+  The engine (`rt*` functions) is a **byte-for-byte twin** of the Canada guide's: fix it in
+  one, make the same change in the other. `rtClass` is shared too; only the `trip*` UI is per-guide.
+  **Cross-border trips (November 2026).** Both guides route on one network, `NA_ROADS` (search
+  `MAP DATA — US + Canada highway network`): US interstates, US routes and Alaska's highways plus
+  every Canadian road class and ferries, built together by `tools/build-road-network.py ... 0.01
+  4 250 NA` so the border crossings connect. It is byte-identical in both pages, as are the engine
+  and `rtClass` (one set of road costs). Each guide also carries a snapshot of the OTHER guide's
+  parks, `OTHER_PARKS` (between the `OTHER_PARKS:BEGIN` / `OTHER_PARKS:END` markers), so trips
+  list, pin and route through parks across the border, tagged with their country and linked to
+  their own guide. Each guide stays the only place its own parks are edited. **After adding,
+  closing or moving a park in either guide, run `node tools/sync-other-parks.js
+  ../USA-bike-parks ../Canada-mtb-parks`** (needs Playwright and both repos) to refresh the other
+  guide's snapshot; the snapshot records its sync date.
   `rtSnapTrip` returns a route or `{ error: 'short' | 'noroad' | 'disconnected' | 'none' }`;
   sharp corners (>= 60 deg, see `rtCorners`) are must-visit points. Alaska's state highways
-  are in `US_ROADS` (named AK-n); Alaska has no US routes.
+  are in `NA_ROADS` (named AK-n); Alaska has no US routes.
   A drawn end that runs past the roads (border, sea) is trimmed back to where the line leaves the
   road network, so a trip stops at the crossing the line used. Trip ends ignore road fragments
   under 300 km (`compKm`). Colour check for trip mode: `node tools/check-trip-colours.js` (needs
