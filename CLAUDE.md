@@ -191,6 +191,10 @@ which is just what the `Season` stat already says).
   the trip through that park (`rtSnapTrip(G, sketch, vias)`; vias slot into the sketch in travel
   order and become must-visit points) and makes it a Google Maps stop (max 9). A park you added
   stays listed even if its road is outside the band.
+  Whole-line coverage: after planning, the drawn point the route strays farthest from becomes a
+  must-visit point when that gap is over 8% of the line (100–250 km) and a road is within 40 km;
+  repeats up to 8 times. This is what makes a narrow loop (down the coast, back up the Rockies)
+  get driven instead of cut across. Ordinary drawings never reach the threshold.
   **Open idea, not scheduled:** Jon wants to keep the option of moving road-trip mode
   to its own Routes tab later (see README, "Open idea: a separate Routes tab"). Don't do it
   incidentally; it's a layout change under the ask-first rule.
