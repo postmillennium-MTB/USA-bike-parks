@@ -216,6 +216,12 @@ which is just what the `Season` stat already says).
   must-visit point when that gap is over 8% of the line (100–250 km) and a road is within 40 km;
   repeats up to 8 times. This is what makes a narrow loop (down the coast, back up the Rockies)
   get driven instead of cut across. Ordinary drawings never reach the threshold.
+  **Highlight Loam Pass (November 2026).** Trip mode offers a "Highlight Loam Pass" checkbox
+  (shown only while a trip is drawn or being drawn). Loam parks then get `--trip-loam` (solved per
+  theme and for print; the values sit next to the `.trip-pin.is-loam` rule) and a second cue: round
+  pins instead of square, bigger dots, a ring on a merged pin that contains one, and a Loam tag in
+  the list. Cross-border Loam status comes from the `loam` field the park sync copies. Re-run
+  `node tools/check-trip-colours.js` after changing any theme colour: it checks the Loam marks too.
   **Open idea, not scheduled:** Jon wants to keep the option of moving road-trip mode
   to its own Routes tab later (see README, "Open idea: a separate Routes tab"). Don't do it
   incidentally; it's a layout change under the ask-first rule.
