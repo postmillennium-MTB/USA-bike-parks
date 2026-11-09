@@ -180,6 +180,9 @@ which is just what the `Season` stat already says).
   `CA_ROADS` is built by the same script with `CAN`): fix it in one, make the same change in
   the other. Only `rtClass` and the `trip*` UI are per-guide. Cross-border trips aren't
   supported yet: the networks are separate. Jon's call is to handle that later, so ask first.
+  `rtSnapTrip` returns a route or `{ error: 'short' | 'noroad' | 'disconnected' | 'none' }`;
+  sharp corners (>= 60 deg, see `rtCorners`) are must-visit points. Alaska's state highways
+  are in `US_ROADS` (named AK-n); Alaska has no US routes.
   **Open idea, not scheduled:** Jon wants to keep the option of moving road-trip mode
   to its own Routes tab later (see README, "Open idea: a separate Routes tab"). Don't do it
   incidentally; it's a layout change under the ask-first rule.

@@ -629,6 +629,16 @@ so trips used to begin or end well away from where you drew. A line drawn back t
 is treated as a loop (split at its farthest point and routed out and back). The engine is now
 shared byte-for-byte with the Canada guide, which got road-trip mode next.
 
+**Review fixes (November 2026).** A hands-on review of both guides led to these changes:
+- Alaska's state highways were added, so Alyeska and Hilltop are reachable.
+- A sharp corner in a drawing is now a must-visit point. Previously a drawn detour could be cut short when no road followed the drawn leg.
+- Clear messages now explain lines drawn over water, lines that end across the border (with a link to the Canada guide), places with no road link inside the US, and lines that are too short. The minimum is now 20 km of distance, not 40 screen pixels, so regional trips work once you zoom in.
+- Park dots stay visible while you draw.
+- Numbered pins that would overlap merge into one "4–8" badge. It splits when you zoom in or click it, and clicking a park's name zooms until its own pin shows.
+- Start/Finish labels sit beside the route ends, under the pins and inside the map.
+- On phones the controls fit on one row.
+- Changing the distance no longer wipes the on-screen instructions.
+
 **Open idea: a separate Routes tab.** Road-trip mode lives inside the Map tab for now
 (Jon's call, November 2026). A dedicated fourth tab stays on the table, e.g. once the
 feature grows (city dropdowns for keyboard users, a share link, Canada routes). The move is
