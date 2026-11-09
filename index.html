@@ -844,6 +844,14 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,7vw,4.5rem);l
 .pmr-link{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.08em;color:var(--warn);text-decoration:none;background:rgba(0,0,0,.35);border:1px solid var(--link);border-radius:6px;padding:8px 14px;transition:background .15s,color .15s;white-space:nowrap;touch-action:manipulation}
 .pmr-link:hover{background:var(--dirt);color:#fff}
 .theme-row{display:flex;gap:6px}
+/* Share button: same look as the PMR link; the status bubble drops below it */
+.corner-links{display:flex;gap:8px;align-items:center}
+.share-wrap{position:relative}
+.share-btn{display:inline-flex;align-items:center;gap:6px;cursor:pointer;line-height:1}
+.share-btn .lucide{width:16px;height:16px;flex:0 0 auto}
+.share-status{position:absolute;top:calc(100% + 6px);right:0;z-index:30;background:var(--card-bg);color:var(--chalk);border:1px solid var(--edge);border-radius:6px;padding:8px 10px;font-size:.85rem;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.share-status input{display:block;margin-top:6px;width:min(280px,70vw);font:inherit;color:var(--chalk);background:var(--sky);border:1px solid var(--edge);border-radius:4px;padding:4px 6px}
+@media print{.share-wrap{display:none}}
 .theme-btn{font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:.05em;background:rgba(0,0,0,.35);border:1px solid var(--edge);color:var(--chalk-dim);border-radius:6px;padding:8px 12px;cursor:pointer;transition:all .15s;touch-action:manipulation;min-height:36px;min-width:36px}
 .theme-btn:hover{border-color:var(--link);color:var(--chalk)}
 .theme-btn:active{transform:scale(.94)}
@@ -1060,6 +1068,9 @@ header .wrap{position:relative;z-index:2}
    VIEW TABS — Map / Stats / Mountain
    ══════════════════════════════════════════════════════════════════ */
 .view-section{background:rgba(0,0,0,.18);border-bottom:2px solid var(--card-border);padding:16px 24px 20px}
+/* Map / Stats / Mountain capped near the Canada guide's 900px frame: at the page's full 1400px the
+   lower 48 filled only the middle of a very wide map, and zooming in felt aimless */
+.view-section>.wrap{max-width:960px}
 .view-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
 .view-tab{display:flex;align-items:center;gap:7px;background:var(--card-bg);border:1px solid var(--edge);
   color:var(--chalk-dim);padding:8px 15px;border-radius:7px;font-family:'Bebas Neue',sans-serif;
@@ -1072,7 +1083,7 @@ header .wrap{position:relative;z-index:2}
 .view-intro{font-size:.78rem;color:var(--chalk-dim);line-height:1.5;margin-bottom:12px;max-width:760px}
 
 /* ── MAP ── */
-#usMap{height:520px;width:100%;border-radius:8px;border:1px solid var(--card-border);background:var(--sky);z-index:1}
+#usMap{height:480px;width:100%;border-radius:8px;border:1px solid var(--card-border);background:var(--sky);z-index:1}
 .us-other-shape{fill:color-mix(in srgb,var(--card-bg) 55%,var(--sky));stroke:var(--card-border);stroke-width:1;vector-effect:non-scaling-stroke;}
 .us-state-shape{fill:var(--card-bg);stroke:var(--card-border);stroke-width:1;vector-effect:non-scaling-stroke;}
 @media(max-width:768px){#usMap{height:400px}}
@@ -1150,6 +1161,23 @@ body.theme-142 .trip-sketch{stroke:var(--loam)}
 .trip-warn a{color:var(--link)}
 .trip-grp{font-size:.78rem;line-height:1.6}
 .trip-ghost-live{cursor:pointer}
+/* "Highlight Loam Pass" (road-trip mode only). --trip-loam is solved per theme against the land,
+   the route, the numbered pins, the plain park dots and the sketch (>= 3:1 on land, OKLab dE >= 15
+   normal / >= 8 colour-blind; tools/check-trip-colours.js checks it). Not colour alone: Loam pins
+   are round (others square), Loam dots are bigger, and the list tags them "Loam Pass". */
+:root{--trip-loam:#00b3a9;--trip-loam-fg:#111111}
+body.theme-150{--trip-loam:#0ba68c}
+body.theme-148{--trip-loam:#04ac7b}
+body.theme-142{--trip-loam:#49b02e}
+.trip-pin.is-loam{background:var(--trip-loam);color:var(--trip-loam-fg);border-radius:11px}
+.trip-ghost.is-loam{fill:var(--trip-loam);fill-opacity:1}
+/* a merged pin with some (not all) Loam parks: Loam ring around it; its tooltip names them */
+.trip-pin.has-loam{box-shadow:0 0 0 3px var(--trip-loam),0 1px 4px rgba(0,0,0,.5)}
+.tag.tag-trip-loam{background:var(--trip-loam);color:var(--trip-loam-fg)}
+.trip-loam{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;color:var(--chalk);cursor:pointer;
+  padding:6px 10px;border:1px solid var(--edge);border-radius:6px;white-space:nowrap}
+.trip-loam input{width:16px;height:16px;accent-color:var(--trip-loam);margin:0}
+.trip-loam:has(input:checked){border-color:var(--trip-loam)}
 .trip-pop-btn{display:block;margin-top:8px;width:100%;background:var(--dirt);border:1px solid var(--dirt);color:#fff;
   font-family:'DM Sans',sans-serif;font-size:.74rem;font-weight:700;padding:6px 10px;border-radius:6px;cursor:pointer}
 .trip-pop-btn[data-on="1"]{background:transparent;color:var(--chalk);border-color:var(--edge)}
@@ -1359,6 +1387,7 @@ body.theme-142 .trip-sketch{stroke:var(--loam)}
    (white text on --dirt needs its fill). The header artwork and carpet are left off to save ink. */
 @media print{
   body,body.theme-150,body.theme-148,body.theme-142{
+    --trip-loam:#297d0f;--trip-loam-fg:#ffffff;
     --sky:#ffffff;--forest:#ffffff;--card-bg:#f3f1ec;--card-border:#aaa395;--edge:#8f8a7e;
     --chalk:#14181c;--chalk-dim:#3a4046;--chalk-mute:#4c5256;--warn:#634100;--link:#823e0e;
   }
@@ -1385,7 +1414,13 @@ body.theme-142 .trip-sketch{stroke:var(--loam)}
  <div class="header-scrim"></div>
  <div class="wrap">
   <div class="header-corner">
-    <a class="pmr-link" href="https://www.postmillenniumrenaissance.com/" target="_blank">PMR MTB &#8599;</a>
+    <div class="corner-links">
+      <div class="share-wrap">
+        <button type="button" class="pmr-link share-btn" id="share-btn" aria-label="Share this guide"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send" aria-hidden="true" focusable="false"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg><span class="share-label">Share</span></button>
+        <div class="share-status" id="share-status" role="status" aria-live="polite" hidden></div>
+      </div>
+      <a class="pmr-link" href="https://www.postmillenniumrenaissance.com/" target="_blank">PMR MTB &#8599;</a>
+    </div>
     <div class="theme-row">
       <button class="theme-btn" data-theme="157" title="157 mm — orange" aria-label="Color scheme 157, orange" aria-pressed="false"><span class="theme-swatch" aria-hidden="true"></span>157</button>
       <button class="theme-btn" data-theme="150" title="150 mm — red" aria-label="Color scheme 150, red" aria-pressed="false"><span class="theme-swatch" aria-hidden="true"></span>150</button>
@@ -1478,6 +1513,7 @@ body.theme-142 .trip-sketch{stroke:var(--loam)}
           <option value="100">100 mi</option>
           <option value="150">150 mi</option>
         </select> <span class="trip-corr-long">of the route</span></label>
+      <label class="trip-loam" id="tripLoamWrap" hidden><input type="checkbox" id="tripLoam"> Highlight Loam Pass</label>
       <button type="button" class="trip-btn" id="tripClearBtn" aria-label="Clear trip" hidden><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true" focusable="false"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg><span class="trip-btn-text">Clear trip</span></button>
       <p class="trip-hint" id="tripHint" aria-live="polite"></p>
     </div>
@@ -3548,9 +3584,9 @@ body.theme-142 .trip-sketch{stroke:var(--loam)}
 <footer>
   <p>Last update: November 2026. Base list sourced from <a href="https://www.twowheeledwanderer.com/posts/mountain-bike-parks-united-states/" target="_blank">Two Wheeled Wanderer</a> &mdash; Becky Timbers' website. Loam Pass status subject to change. Always verify hours and season status directly with each park before visiting.</p>
   <p>Trail counts, vert, and season dates are approximate and subject to change. Inclusion requires chairlift or gondola access for bikes; shuttle-only parks excluded.</p>
-  <p>Sources: park websites, <a href="https://www.twowheeledwanderer.com/posts/mountain-bike-parks-united-states/" target="_blank">Becky Timbers</a>, Trailforks, Singletracks, Gravity Logic, Kodiak Trail Works, UCI MTB World Series.</p>
-  <p class="texture-credit">Road-trip highways and the Canada outline: <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener">Natural Earth</a> 1:10m roads and 1:50m boundaries (public domain), simplified. Park access roads (the last stretch to resorts Natural Earth doesn&rsquo;t reach): &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a> (ODbL), routed with <a href="https://project-osrm.org/" target="_blank" rel="noopener">OSRM</a>.</p>
-  <p class="texture-credit">Background patterns from US Design Patent No. 14,685 (Eugene A. Crowe, 1884; the patent has long expired) and US Design Patent No. 268,339.</p>
+  <p>Sources: park websites, <a href="https://www.twowheeledwanderer.com/posts/mountain-bike-parks-united-states/" target="_blank">Becky Timbers</a>, Trailforks, Singletracks, Gravity Logic, Kodiak Trail Works, UCI MTB World Series, and others.</p>
+  <p class="texture-credit">Road-trip highways and the Canada outline: <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener">Natural Earth</a> 1:10m roads and 1:50m boundaries (public domain), simplified. Park access roads: &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a> (ODbL), routed with <a href="https://project-osrm.org/" target="_blank" rel="noopener">OSRM</a>.</p>
+  <p class="texture-credit">Background patterns from US Design Patents No. 14,685 (Eugene A. Crowe, 1884) and No. 268,339, both expired.</p>
 </footer>
 
 <script id="leaflet-js">/* Leaflet 1.9.4 */
@@ -4118,8 +4154,12 @@ function initMap(){
   mapInstance.on('click', () => mapInstance.scrollWheelZoom.enable());
   mapInstance.on('mouseout', () => mapInstance.scrollWheelZoom.disable());
 
+  /* Groups at country / multi-region zooms only; from zoom 6 (a few states across) a park merges
+     only with one its dot would almost completely cover (within 4px: Solitude/Brighton are 1.4px
+     apart at zoom 6), so zooming into Colorado shows each park as its own dot. Same rule in the
+     Canada guide. */
   markerCluster = L.markerClusterGroup({
-    maxClusterRadius: 42,
+    maxClusterRadius: z => z <= 4 ? 42 : z === 5 ? 24 : 4,
     showCoverageOnHover: false,
     spiderfyOnMaxZoom: true
   });
@@ -4214,7 +4254,7 @@ const NA_ROADS = {"q":250,"names":["","US-83","US-151","GSP","US-85","I-5","US-2
 
 /* OTHER_PARKS:BEGIN — generated by tools/sync-other-parks.js; do not edit by hand.
    Canada parks from the Canada guide (https://postmillennium-mtb.github.io/Canada-mtb-parks/), synced 2026-11-09. */
-const OTHER_PARKS = {"guide":"https://postmillennium-mtb.github.io/Canada-mtb-parks/","country":"Canada","synced":"2026-11-09","parks":[{"id":1,"name":{"en":"Whistler Mountain Bike Park","fr":"Parc de vélo de montagne de Whistler"},"city":{"en":"Whistler, BC","fr":"Whistler, C.-B."},"coords":[50.086,-122.958],"vertFt":4949,"vertM":1508,"status":"open"},{"id":2,"name":{"en":"Revelstoke Mountain Bike Park","fr":"Parc de vélo de montagne de Revelstoke"},"city":{"en":"Revelstoke, BC","fr":"Revelstoke, C.-B."},"coords":[51.0152,-118.1659],"vertFt":5620,"vertM":1713,"status":"open"},{"id":3,"name":{"en":"Kicking Horse Bike Park","fr":"Parc de vélo de Kicking Horse"},"city":{"en":"Golden, BC","fr":"Golden, C.-B."},"coords":[51.3535,-117.044],"vertFt":3937,"vertM":1200,"status":"open"},{"id":4,"name":{"en":"Fernie Alpine Resort Bike Park","fr":"Parc de vélo de Fernie Alpine Resort"},"city":{"en":"Fernie, BC","fr":"Fernie, C.-B."},"coords":[49.4688,-115.0907],"vertFt":2150,"vertM":655,"status":"open"},{"id":5,"name":{"en":"Mount Washington Bike Park","fr":"Parc de vélo de Mount Washington"},"city":{"en":"Courtenay, BC (Vancouver Island)","fr":"Courtenay, C.-B. (île de Vancouver)"},"coords":[49.7538,-125.2995],"vertFt":1640,"vertM":500,"status":"open"},{"id":6,"name":{"en":"Sun Peaks Bike Park","fr":"Parc de vélo de Sun Peaks"},"city":{"en":"Sun Peaks, BC","fr":"Sun Peaks, C.-B."},"coords":[50.8828,-119.8877],"vertFt":1952,"vertM":595,"status":"open"},{"id":7,"name":{"en":"SilverStar Bike Park","fr":"Parc de vélo de SilverStar"},"city":{"en":"Vernon, BC","fr":"Vernon, C.-B."},"coords":[50.3667,-119.0582],"vertFt":2500,"vertM":760,"status":"open"},{"id":8,"name":{"en":"Big White Bike Park","fr":"Parc de vélo de Big White"},"city":{"en":"Big White (Kelowna area), BC","fr":"Big White (région de Kelowna), C.-B."},"coords":[49.7227,-118.9367],"vertFt":2293,"vertM":699,"status":"open"},{"id":9,"name":{"en":"Panorama Bike Park","fr":"Parc de vélo de Panorama"},"city":{"en":"Invermere, BC","fr":"Invermere, C.-B."},"coords":[50.4617,-116.2362],"vertFt":1243,"vertM":379,"status":"open"},{"id":10,"name":{"en":"Grouse Mountain Bike Park","fr":"Parc de vélo de Grouse Mountain"},"city":{"en":"North Vancouver, BC","fr":"Vancouver-Nord, C.-B."},"coords":[49.37,-123.078],"vertFt":900,"vertM":274,"status":"open"},{"id":11,"name":{"en":"RED Mountain Bike Park","fr":"Parc de vélo de RED Mountain"},"city":{"en":"Rossland, BC (Kootenays)","fr":"Rossland, C.-B. (Kootenays)"},"coords":[49.1096,-117.8237],"vertFt":624,"vertM":190,"status":"open"},{"id":29,"name":{"en":"Cypress Mountain Bike Park","fr":"Parc de vélo de montagne de Cypress Mountain"},"city":{"en":"West Vancouver, BC","fr":"Vancouver-Ouest, C.-B."},"coords":[49.3956,-123.2033],"vertFt":915,"vertM":279,"status":"coming"},{"id":12,"name":{"en":"WinSport Bike Park","fr":"Parc de vélo WinSport"},"city":{"en":"Calgary, AB","fr":"Calgary, AB"},"coords":[51.0834,-114.2303],"vertFt":394,"vertM":120,"status":"open"},{"id":13,"name":{"en":"Nitehawk Adventure Park","fr":"Parc d'aventure Nitehawk"},"city":{"en":"Grande Prairie, AB","fr":"Grande Prairie, AB"},"coords":[55.1458,-119.0158],"vertFt":525,"vertM":160,"status":"open"},{"id":14,"name":{"en":"Horseshoe Valley Bike Park","fr":"Parc de vélo de Horseshoe Valley"},"city":{"en":"Barrie area, ON (Horseshoe Valley)","fr":"Région de Barrie, ON (Horseshoe Valley)"},"coords":[44.5136,-79.8158],"vertFt":279,"vertM":85,"status":"open"},{"id":15,"name":{"en":"Sir Sam's Bike Park","fr":"Parc de vélo Sir Sam's"},"city":{"en":"Eagle Lake (Haliburton), ON","fr":"Eagle Lake (Haliburton), ON"},"coords":[45.1427,-78.8167],"vertFt":295,"vertM":90,"status":"closed"},{"id":16,"name":{"en":"Mont-Sainte-Anne Bike Park","fr":"Parc de vélo de Mont-Sainte-Anne"},"city":{"en":"Beaupré, QC (near Québec City)","fr":"Beaupré, QC (près de Québec)"},"coords":[47.0727,-70.9183],"vertFt":2027,"vertM":618,"status":"open"},{"id":17,"name":{"en":"Bromont Bike Park","fr":"Parc de vélo de Bromont"},"city":{"en":"Bromont, QC (Eastern Townships)","fr":"Bromont, QC (Cantons-de-l'Est)"},"coords":[45.2976,-72.657],"vertFt":1175,"vertM":358,"status":"open"},{"id":18,"name":{"en":"Le Massif de Charlevoix","fr":"Le Massif de Charlevoix"},"city":{"en":"Petite-Rivière-Saint-François, QC","fr":"Petite-Rivière-Saint-François, QC"},"coords":[47.2747,-70.62],"vertFt":2526,"vertM":770,"status":"open"},{"id":19,"name":{"en":"Camp Fortune Bike Park","fr":"Parc de vélo Camp Fortune"},"city":{"en":"Chelsea, QC (Gatineau Park, near Ottawa)","fr":"Chelsea, QC (Parc de la Gatineau, près d'Ottawa)"},"coords":[45.528,-75.872],"vertFt":600,"vertM":183,"status":"open"},{"id":20,"name":{"en":"Montcalm Bike Park","fr":"Parc de vélo Montcalm"},"city":{"en":"Rawdon, QC (Lanaudière)","fr":"Rawdon, QC (Lanaudière)"},"coords":[46.0658,-73.6902],"vertFt":413,"vertM":126,"status":"open"},{"id":21,"name":{"en":"Sommet Saint-Sauveur Bike Park","fr":"Parc de vélo Sommet Saint-Sauveur"},"city":{"en":"Saint-Sauveur, QC (Versant Avila)","fr":"Saint-Sauveur, QC (Versant Avila)"},"coords":[45.8987,-74.168],"vertFt":591,"vertM":180,"status":"open"},{"id":22,"name":{"en":"MbPark / Mont Blanc","fr":"MbPark / Mont Blanc"},"city":{"en":"Saint-Faustin-Lac-Carré, QC (Laurentians)","fr":"Saint-Faustin-Lac-Carré, QC (Laurentides)"},"coords":[46.082,-74.454],"vertFt":656,"vertM":200,"status":"open"},{"id":23,"name":{"en":"Mont Sutton","fr":"Mont Sutton"},"city":{"en":"Sutton, QC (Eastern Townships)","fr":"Sutton, QC (Cantons-de-l'Est)"},"coords":[45.1042,-72.5581],"vertFt":1864,"vertM":568,"status":"open"},{"id":28,"name":{"en":"Vélo MSM","fr":"Vélo MSM"},"city":{"en":"Lac-Sainte-Marie, QC (near Ottawa)","fr":"Lac-Sainte-Marie, QC (près d'Ottawa)"},"coords":[45.9376,-75.8646],"vertFt":1250,"vertM":381,"status":"open"},{"id":24,"name":{"en":"Parc-Vélo Sugarloaf","fr":"Parc-Vélo Sugarloaf"},"city":{"en":"Campbellton, NB","fr":"Campbellton, N.-B."},"coords":[48.0047,-66.6776],"vertFt":741,"vertM":226,"status":"open"},{"id":25,"name":{"en":"Poley Mountain Bike Park","fr":"Parc de vélo Poley Mountain"},"city":{"en":"Sussex, NB","fr":"Sussex, N.-B."},"coords":[45.7334,-65.5336],"vertFt":656,"vertM":200,"status":"open"},{"id":26,"name":{"en":"Wentworth Bike Park","fr":"Parc de vélo de Wentworth"},"city":{"en":"Wentworth Valley, NS","fr":"Vallée de Wentworth, N.-É."},"coords":[45.6236,-63.5641],"vertFt":817,"vertM":249,"status":"open"},{"id":27,"name":{"en":"Mount Sima Bike Park","fr":"Parc de vélo du mont Sima"},"city":{"en":"Whitehorse, YK","fr":"Whitehorse, YK"},"coords":[60.76,-135.07],"vertFt":1043,"vertM":318,"status":"open"}]};
+const OTHER_PARKS = {"guide":"https://postmillennium-mtb.github.io/Canada-mtb-parks/","country":"Canada","synced":"2026-11-09","parks":[{"id":1,"name":{"en":"Whistler Mountain Bike Park","fr":"Parc de vélo de montagne de Whistler"},"city":{"en":"Whistler, BC","fr":"Whistler, C.-B."},"coords":[50.086,-122.958],"vertFt":4949,"vertM":1508,"loam":false,"status":"open"},{"id":2,"name":{"en":"Revelstoke Mountain Bike Park","fr":"Parc de vélo de montagne de Revelstoke"},"city":{"en":"Revelstoke, BC","fr":"Revelstoke, C.-B."},"coords":[51.0152,-118.1659],"vertFt":5620,"vertM":1713,"loam":true,"status":"open"},{"id":3,"name":{"en":"Kicking Horse Bike Park","fr":"Parc de vélo de Kicking Horse"},"city":{"en":"Golden, BC","fr":"Golden, C.-B."},"coords":[51.3535,-117.044],"vertFt":3937,"vertM":1200,"loam":false,"status":"open"},{"id":4,"name":{"en":"Fernie Alpine Resort Bike Park","fr":"Parc de vélo de Fernie Alpine Resort"},"city":{"en":"Fernie, BC","fr":"Fernie, C.-B."},"coords":[49.4688,-115.0907],"vertFt":2150,"vertM":655,"loam":false,"status":"open"},{"id":5,"name":{"en":"Mount Washington Bike Park","fr":"Parc de vélo de Mount Washington"},"city":{"en":"Courtenay, BC (Vancouver Island)","fr":"Courtenay, C.-B. (île de Vancouver)"},"coords":[49.7538,-125.2995],"vertFt":1640,"vertM":500,"loam":false,"status":"open"},{"id":6,"name":{"en":"Sun Peaks Bike Park","fr":"Parc de vélo de Sun Peaks"},"city":{"en":"Sun Peaks, BC","fr":"Sun Peaks, C.-B."},"coords":[50.8828,-119.8877],"vertFt":1952,"vertM":595,"loam":false,"status":"open"},{"id":7,"name":{"en":"SilverStar Bike Park","fr":"Parc de vélo de SilverStar"},"city":{"en":"Vernon, BC","fr":"Vernon, C.-B."},"coords":[50.3667,-119.0582],"vertFt":2500,"vertM":760,"loam":false,"status":"open"},{"id":8,"name":{"en":"Big White Bike Park","fr":"Parc de vélo de Big White"},"city":{"en":"Big White (Kelowna area), BC","fr":"Big White (région de Kelowna), C.-B."},"coords":[49.7227,-118.9367],"vertFt":2293,"vertM":699,"loam":false,"status":"open"},{"id":9,"name":{"en":"Panorama Bike Park","fr":"Parc de vélo de Panorama"},"city":{"en":"Invermere, BC","fr":"Invermere, C.-B."},"coords":[50.4617,-116.2362],"vertFt":1243,"vertM":379,"loam":false,"status":"open"},{"id":10,"name":{"en":"Grouse Mountain Bike Park","fr":"Parc de vélo de Grouse Mountain"},"city":{"en":"North Vancouver, BC","fr":"Vancouver-Nord, C.-B."},"coords":[49.37,-123.078],"vertFt":900,"vertM":274,"loam":true,"status":"open"},{"id":11,"name":{"en":"RED Mountain Bike Park","fr":"Parc de vélo de RED Mountain"},"city":{"en":"Rossland, BC (Kootenays)","fr":"Rossland, C.-B. (Kootenays)"},"coords":[49.1096,-117.8237],"vertFt":624,"vertM":190,"loam":false,"status":"open"},{"id":29,"name":{"en":"Cypress Mountain Bike Park","fr":"Parc de vélo de montagne de Cypress Mountain"},"city":{"en":"West Vancouver, BC","fr":"Vancouver-Ouest, C.-B."},"coords":[49.3956,-123.2033],"vertFt":915,"vertM":279,"loam":false,"status":"coming"},{"id":12,"name":{"en":"WinSport Bike Park","fr":"Parc de vélo WinSport"},"city":{"en":"Calgary, AB","fr":"Calgary, AB"},"coords":[51.0834,-114.2303],"vertFt":394,"vertM":120,"loam":false,"status":"open"},{"id":13,"name":{"en":"Nitehawk Adventure Park","fr":"Parc d'aventure Nitehawk"},"city":{"en":"Grande Prairie, AB","fr":"Grande Prairie, AB"},"coords":[55.1458,-119.0158],"vertFt":525,"vertM":160,"loam":false,"status":"open"},{"id":14,"name":{"en":"Horseshoe Valley Bike Park","fr":"Parc de vélo de Horseshoe Valley"},"city":{"en":"Barrie area, ON (Horseshoe Valley)","fr":"Région de Barrie, ON (Horseshoe Valley)"},"coords":[44.5136,-79.8158],"vertFt":279,"vertM":85,"loam":true,"status":"open"},{"id":15,"name":{"en":"Sir Sam's Bike Park","fr":"Parc de vélo Sir Sam's"},"city":{"en":"Eagle Lake (Haliburton), ON","fr":"Eagle Lake (Haliburton), ON"},"coords":[45.1427,-78.8167],"vertFt":295,"vertM":90,"loam":false,"status":"closed"},{"id":16,"name":{"en":"Mont-Sainte-Anne Bike Park","fr":"Parc de vélo de Mont-Sainte-Anne"},"city":{"en":"Beaupré, QC (near Québec City)","fr":"Beaupré, QC (près de Québec)"},"coords":[47.0727,-70.9183],"vertFt":2027,"vertM":618,"loam":false,"status":"open"},{"id":17,"name":{"en":"Bromont Bike Park","fr":"Parc de vélo de Bromont"},"city":{"en":"Bromont, QC (Eastern Townships)","fr":"Bromont, QC (Cantons-de-l'Est)"},"coords":[45.2976,-72.657],"vertFt":1175,"vertM":358,"loam":false,"status":"open"},{"id":18,"name":{"en":"Le Massif de Charlevoix","fr":"Le Massif de Charlevoix"},"city":{"en":"Petite-Rivière-Saint-François, QC","fr":"Petite-Rivière-Saint-François, QC"},"coords":[47.2747,-70.62],"vertFt":2526,"vertM":770,"loam":true,"status":"open"},{"id":19,"name":{"en":"Camp Fortune Bike Park","fr":"Parc de vélo Camp Fortune"},"city":{"en":"Chelsea, QC (Gatineau Park, near Ottawa)","fr":"Chelsea, QC (Parc de la Gatineau, près d'Ottawa)"},"coords":[45.528,-75.872],"vertFt":600,"vertM":183,"loam":false,"status":"open"},{"id":20,"name":{"en":"Montcalm Bike Park","fr":"Parc de vélo Montcalm"},"city":{"en":"Rawdon, QC (Lanaudière)","fr":"Rawdon, QC (Lanaudière)"},"coords":[46.0658,-73.6902],"vertFt":413,"vertM":126,"loam":false,"status":"open"},{"id":21,"name":{"en":"Sommet Saint-Sauveur Bike Park","fr":"Parc de vélo Sommet Saint-Sauveur"},"city":{"en":"Saint-Sauveur, QC (Versant Avila)","fr":"Saint-Sauveur, QC (Versant Avila)"},"coords":[45.8987,-74.168],"vertFt":591,"vertM":180,"loam":false,"status":"open"},{"id":22,"name":{"en":"MbPark / Mont Blanc","fr":"MbPark / Mont Blanc"},"city":{"en":"Saint-Faustin-Lac-Carré, QC (Laurentians)","fr":"Saint-Faustin-Lac-Carré, QC (Laurentides)"},"coords":[46.082,-74.454],"vertFt":656,"vertM":200,"loam":false,"status":"open"},{"id":23,"name":{"en":"Mont Sutton","fr":"Mont Sutton"},"city":{"en":"Sutton, QC (Eastern Townships)","fr":"Sutton, QC (Cantons-de-l'Est)"},"coords":[45.1042,-72.5581],"vertFt":1864,"vertM":568,"loam":false,"status":"open"},{"id":28,"name":{"en":"Vélo MSM","fr":"Vélo MSM"},"city":{"en":"Lac-Sainte-Marie, QC (near Ottawa)","fr":"Lac-Sainte-Marie, QC (près d'Ottawa)"},"coords":[45.9376,-75.8646],"vertFt":1250,"vertM":381,"loam":true,"status":"open"},{"id":24,"name":{"en":"Parc-Vélo Sugarloaf","fr":"Parc-Vélo Sugarloaf"},"city":{"en":"Campbellton, NB","fr":"Campbellton, N.-B."},"coords":[48.0047,-66.6776],"vertFt":741,"vertM":226,"loam":false,"status":"open"},{"id":25,"name":{"en":"Poley Mountain Bike Park","fr":"Parc de vélo Poley Mountain"},"city":{"en":"Sussex, NB","fr":"Sussex, N.-B."},"coords":[45.7334,-65.5336],"vertFt":656,"vertM":200,"loam":false,"status":"open"},{"id":26,"name":{"en":"Wentworth Bike Park","fr":"Parc de vélo de Wentworth"},"city":{"en":"Wentworth Valley, NS","fr":"Vallée de Wentworth, N.-É."},"coords":[45.6236,-63.5641],"vertFt":817,"vertM":249,"loam":false,"status":"open"},{"id":27,"name":{"en":"Mount Sima Bike Park","fr":"Parc de vélo du mont Sima"},"city":{"en":"Whitehorse, YK","fr":"Whitehorse, YK"},"coords":[60.76,-135.07],"vertFt":1043,"vertM":318,"loam":false,"status":"open"}]};
 /* OTHER_PARKS:END */
 
 /* Canada's outline (Natural Earth 1:50m, simplified, Arctic 3x harder), drawn behind the states
@@ -4646,7 +4686,7 @@ const TRIP_OTHER_GUIDE = '<a href="https://postmillennium-mtb.github.io/Canada-m
    snapshot (refresh it with tools/sync-other-parks.js). Canadian parks are marked other: true. */
 const TRIP_PARKS = MAPPED.concat((typeof OTHER_PARKS !== 'undefined' ? OTHER_PARKS.parks : []).map(p => ({
   id: 'x' + p.id, name: p.name.en || p.name, city: p.city.en || p.city, coords: p.coords,
-  vertFt: p.vertFt, vertApprox: false, status: p.status, other: true })));
+  vertFt: p.vertFt, vertApprox: false, status: p.status, loam: !!p.loam, other: true })));
 const TRIP_MSG = {
   draw: 'Drag one line across the map from start to finish (the thin lines are the highways it can use). Let go and it snaps to the nearest highways, in the US or Canada. Esc cancels.',
   cancelled: 'Drawing cancelled.',
@@ -4664,6 +4704,10 @@ let tripDrawing = false, tripPointer = null, tripSketch = [], tripSketchLine = n
 let tripRoute = null, tripHits = [], tripStops = new Set(), tripPins = {}, tripHintKey = '', tripSketchArr = null;
 const TRIP_RESULTS_ID = 'tripResults';
 const TRIP_IS_CLOSED = p => p.status === 'closed';
+/* Loam Pass parks: this guide's rows (data-loam) and the Canada snapshot's loam flag */
+const TRIP_IS_LOAM = p => !!(p.isLoam || p.loam);
+const tripLoamOn = () => { const c = document.getElementById('tripLoam'); return !!(c && c.checked); };
+const tripLoamCls = p => tripLoamOn() && TRIP_IS_LOAM(p) && !TRIP_IS_CLOSED(p) ? ' is-loam' : '';
 const TRIP_TXT = k => ({ addTrip: 'Add to my trip', removeTrip: 'Remove from my trip' })[k];
 
 function tripHint(key){
@@ -4677,6 +4721,14 @@ function tripSetDrawButton(on){
   if (!b) return;
   b.setAttribute('aria-pressed', on ? 'true' : 'false');
   b.querySelector('.trip-btn-label').textContent = on ? 'Cancel drawing' : (tripRoute ? 'Draw a new trip' : 'Plan a road trip');
+  /* "Highlight Loam Pass" is offered only while a trip is being drawn or shown */
+  const lw = document.getElementById('tripLoamWrap');
+  if (lw) lw.hidden = !(on || tripRoute);
+}
+/* Re-colour the dots, pins and list when "Highlight Loam Pass" is ticked or unticked */
+function tripLoamToggle(){
+  if (tripDrawing) tripShowGhosts(true);
+  if (tripRoute){ tripRenderPins(); tripRenderList(); }
 }
 
 function tripMapLock(lock){
@@ -4697,8 +4749,8 @@ function tripShowNetwork(){
 function tripShowGhosts(on){
   if (tripGhostLayer){ mapInstance.removeLayer(tripGhostLayer); tripGhostLayer = null; }
   if (!on) return;
-  tripGhostLayer = L.layerGroup(TRIP_PARKS.map(p => L.circleMarker(p.coords,
-    { radius:4, weight:1.5, className:'trip-ghost', interactive:false }))).addTo(mapInstance);
+  tripGhostLayer = L.layerGroup(TRIP_PARKS.map(p => { const lm = tripLoamCls(p); return L.circleMarker(p.coords,
+    { radius: lm ? 6 : 4, weight:1.5, className:'trip-ghost' + lm, interactive:false }); })).addTo(mapInstance);
 }
 
 function tripToggleDraw(){
@@ -4875,9 +4927,9 @@ function tripRenderPins(){
     if (g.items.length === 1){
       const { h, n } = g.items[0], p = h.park, closed = p.status === 'closed';
       const m = L.marker(p.coords, { title: p.name, riseOnHover:true, zIndexOffset:1000,
-        icon: L.divIcon({ className:'', html:`<div class="trip-pin${closed ? ' is-closed' : ''}">${n}</div>`, iconSize:[22, 22], iconAnchor:[11, 11] }) });
+        icon: L.divIcon({ className:'', html:`<div class="trip-pin${closed ? ' is-closed' : ''}${tripLoamCls(p)}">${n}</div>`, iconSize:[22, 22], iconAnchor:[11, 11] }) });
       m.bindPopup(() => tripPopup(p));
-      m.bindTooltip(`${n}. ${p.name}`, { direction:'top', offset:[0, -10], className:'pin-tip' });
+      m.bindTooltip(`${n}. ${p.name}${tripLoamCls(p) ? ' &middot; Loam Pass' : ''}`, { direction:'top', offset:[0, -10], className:'pin-tip' });
       m.addTo(tripPinLayer);
       tripPins[p.id] = m;
       return;
@@ -4886,10 +4938,11 @@ function tripRenderPins(){
     const lat = g.items.reduce((s, x) => s + x.h.park.coords[0], 0) / g.items.length;
     const lng = g.items.reduce((s, x) => s + x.h.park.coords[1], 0) / g.items.length;
     const closed = g.items.every(x => x.h.park.status === 'closed');
+    const loam = g.items.every(x => tripLoamCls(x.h.park)) ? ' is-loam' : g.items.some(x => tripLoamCls(x.h.park)) ? ' has-loam' : '';
     const w = 14 + label.length * 7;
-    const names = g.items.map(x => `${x.n}. ${x.h.park.name}`);
+    const names = g.items.map(x => `${x.n}. ${x.h.park.name}${tripLoamCls(x.h.park) ? ' &middot; Loam Pass' : ''}`);
     const m = L.marker([lat, lng], { title: names.join('; '), riseOnHover:true, zIndexOffset:1000,
-      icon: L.divIcon({ className:'', html:`<div class="trip-pin trip-pin-group${closed ? ' is-closed' : ''}">${label}</div>`, iconSize:[w, 22], iconAnchor:[w / 2, 11] }) });
+      icon: L.divIcon({ className:'', html:`<div class="trip-pin trip-pin-group${closed ? ' is-closed' : ''}${loam}">${label}</div>`, iconSize:[w, 22], iconAnchor:[w / 2, 11] }) });
     m.bindTooltip(names.join('<br>'), { direction:'top', offset:[0, -10], className:'pin-tip' });
     m.isGroup = true;
     m.on('click', () => {
@@ -4904,8 +4957,9 @@ function tripRenderPins(){
   /* every other park stays on the map as a dot you can tap to add it */
   const listed = new Set(tripHits.map(h => h.park.id));
   TRIP_PARKS.filter(p => !listed.has(p.id)).forEach(p => {
-    L.circleMarker(p.coords, { radius:5, weight:1.5, className:'trip-ghost trip-ghost-live' })
-      .bindTooltip(p.name, { direction:'top', offset:[0, -6], className:'pin-tip' })
+    const lm = tripLoamCls(p);
+    L.circleMarker(p.coords, { radius: lm ? 7 : 5, weight:1.5, className:'trip-ghost trip-ghost-live' + lm })
+      .bindTooltip(p.name + (lm ? ' &middot; Loam Pass' : ''), { direction:'top', offset:[0, -6], className:'pin-tip' })
       .bindPopup(() => tripPopup(p)).addTo(tripPinLayer);
   });
 }
@@ -4993,7 +5047,8 @@ function tripRenderList(){
     html += '<ol class="trip-list">' + tripHits.map((h, i) => {
       const p = h.park, closed = p.status === 'closed', coming = p.status === 'coming';
       const tag = (p.other ? '<span class="tag tag-other">Canada</span> ' : '') +
-        (closed ? '<span class="tag tag-closed">Closed</span>' : coming ? '<span class="tag tag-new">Coming</span>' : '');
+        (closed ? '<span class="tag tag-closed">Closed</span>' : coming ? '<span class="tag tag-new">Coming</span>' : '') +
+        (tripLoamCls(p) ? ' <span class="tag tag-trip-loam">Loam Pass</span>' : '');
       const vert = p.vertFt ? ` &middot; ${p.vertFt.toLocaleString()}${p.vertApprox ? '+' : ''} ft vertical` : '';
       const off = h.offKm * RT_MI_PER_KM;
       const offTxt = off < 1 ? 'on the route' : `${tripFmt(off)} mi off route`;
@@ -5088,6 +5143,7 @@ function tripFocusPark(id){
   document.getElementById('tripClearBtn').addEventListener('click', tripClear);
   /* changing the distance re-draws the trip but keeps any message on screen */
   document.getElementById('tripCorr').addEventListener('change', () => { if (tripRoute) tripRenderRoute(); });
+  document.getElementById('tripLoam').addEventListener('change', tripLoamToggle);
   mapEl.addEventListener('pointerdown', tripPointerDown);
   mapEl.addEventListener('pointermove', tripPointerMove);
   mapEl.addEventListener('pointerup', tripPointerUp);
@@ -5657,6 +5713,45 @@ canvas.addEventListener('pointerup', e => {
 });
 
 /* Keep the pie in sync if a theme changes while it's open */
+/* ══════ SHARE — the phone's own share sheet where the browser has one, otherwise copy the link.
+   Shares the guide's public page on postmillenniumrenaissance.com, not the github.io copy.
+   Inside an iframe without allow="web-share" the share sheet is refused, so it falls back to
+   copying; if copying is blocked too, the link is shown selected for a manual copy. */
+const SHARE = {
+  url: 'https://postmillenniumrenaissance.com/parks-us/',
+  title: 'US Lift-Served Bike Parks',
+  text: 'Every lift-served mountain bike park in the US, with a map, stats and a road-trip planner.',
+  copied: 'Link copied',
+  manual: 'Copy this link:'
+};
+let shareTimer = null;
+function shareShow(msg, url){
+  const box = document.getElementById('share-status');
+  box.textContent = msg;
+  if (url){
+    const f = document.createElement('input');
+    f.type = 'text'; f.readOnly = true; f.value = url; f.setAttribute('aria-label', 'Link to this guide');
+    box.appendChild(f); box.hidden = false; f.focus(); f.select();
+  } else box.hidden = false;
+  clearTimeout(shareTimer);
+  shareTimer = setTimeout(() => { box.hidden = true; }, url ? 12000 : 2500);
+}
+async function sharePage(){
+  const d = { title: SHARE.title, text: SHARE.text, url: SHARE.url };
+  if (navigator.share){
+    try { await navigator.share(d); return; }
+    catch (e){ if (e && e.name === 'AbortError') return; }   /* cancelled by the user: nothing to do */
+  }
+  try { await navigator.clipboard.writeText(d.url); shareShow(SHARE.copied); return; } catch (e){}
+  const ta = document.createElement('textarea');
+  ta.value = d.url; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.top = '-1000px';
+  document.body.appendChild(ta); ta.select();
+  let ok = false; try { ok = document.execCommand('copy'); } catch (e){}
+  ta.remove();
+  if (ok) shareShow(SHARE.copied); else shareShow(SHARE.manual, d.url);
+}
+document.getElementById('share-btn').addEventListener('click', sharePage);
+
 document.querySelectorAll('.theme-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     if (currentView === 'mountain') renderMountain();
