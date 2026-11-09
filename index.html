@@ -1068,6 +1068,9 @@ header .wrap{position:relative;z-index:2}
    VIEW TABS — Map / Stats / Mountain
    ══════════════════════════════════════════════════════════════════ */
 .view-section{background:rgba(0,0,0,.18);border-bottom:2px solid var(--card-border);padding:16px 24px 20px}
+/* Map / Stats / Mountain capped near the Canada guide's 900px frame: at the page's full 1400px the
+   lower 48 filled only the middle of a very wide map, and zooming in felt aimless */
+.view-section>.wrap{max-width:960px}
 .view-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
 .view-tab{display:flex;align-items:center;gap:7px;background:var(--card-bg);border:1px solid var(--edge);
   color:var(--chalk-dim);padding:8px 15px;border-radius:7px;font-family:'Bebas Neue',sans-serif;
@@ -1080,7 +1083,7 @@ header .wrap{position:relative;z-index:2}
 .view-intro{font-size:.78rem;color:var(--chalk-dim);line-height:1.5;margin-bottom:12px;max-width:760px}
 
 /* ── MAP ── */
-#usMap{height:520px;width:100%;border-radius:8px;border:1px solid var(--card-border);background:var(--sky);z-index:1}
+#usMap{height:480px;width:100%;border-radius:8px;border:1px solid var(--card-border);background:var(--sky);z-index:1}
 .us-other-shape{fill:color-mix(in srgb,var(--card-bg) 55%,var(--sky));stroke:var(--card-border);stroke-width:1;vector-effect:non-scaling-stroke;}
 .us-state-shape{fill:var(--card-bg);stroke:var(--card-border);stroke-width:1;vector-effect:non-scaling-stroke;}
 @media(max-width:768px){#usMap{height:400px}}
@@ -4132,8 +4135,12 @@ function initMap(){
   mapInstance.on('click', () => mapInstance.scrollWheelZoom.enable());
   mapInstance.on('mouseout', () => mapInstance.scrollWheelZoom.disable());
 
+  /* Groups at country / multi-region zooms only; from zoom 6 (a few states across) a park merges
+     only with one its dot would almost completely cover (within 4px: Solitude/Brighton are 1.4px
+     apart at zoom 6), so zooming into Colorado shows each park as its own dot. Same rule in the
+     Canada guide. */
   markerCluster = L.markerClusterGroup({
-    maxClusterRadius: 42,
+    maxClusterRadius: z => z <= 4 ? 42 : z === 5 ? 24 : 4,
     showCoverageOnHover: false,
     spiderfyOnMaxZoom: true
   });
