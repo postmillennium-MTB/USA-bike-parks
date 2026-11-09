@@ -643,6 +643,15 @@ shared byte-for-byte with the Canada guide, which got road-trip mode next.
 as a dot. Tap a dot (or tick "Stop" on a listed park) and the route is re-planned through that
 park, and it becomes a Google Maps stop. Remove it from its pin, or untick it, and the route goes back.
 
+**Cross-border trips (November 2026).** Road trips now cross into Canada where the highways do
+(Seattle → Whistler, Detroit → Ontario, Calgary ↔ Montana, Montréal ↔ Vermont, the Alaska
+Highway). Canadian parks along a route are listed and pinned, tagged "Canada" and linked to the
+Canada guide, and can be added to the trip like any other. Both guides share one US + Canada
+road network and carry a snapshot of each other's parks, refreshed by
+`tools/sync-other-parks.js`. A drawn loop is now followed all the way round: any stretch of the
+line the route would otherwise cut across becomes a place to visit. The US map also shows
+Canada's outline behind the states.
+
 **Open idea: a separate Routes tab.** Road-trip mode lives inside the Map tab for now
 (Jon's call, November 2026). A dedicated fourth tab stays on the table, e.g. once the
 feature grows (city dropdowns for keyboard users, a share link, Canada routes). The move is
