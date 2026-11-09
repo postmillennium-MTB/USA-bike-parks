@@ -183,6 +183,11 @@ which is just what the `Season` stat already says).
   `rtSnapTrip` returns a route or `{ error: 'short' | 'noroad' | 'disconnected' | 'none' }`;
   sharp corners (>= 60 deg, see `rtCorners`) are must-visit points. Alaska's state highways
   are in `US_ROADS` (named AK-n); Alaska has no US routes.
+  A drawn end that runs past the roads (border, sea) is trimmed back to where the line leaves the
+  road network, so a trip stops at the crossing the line used. Trip ends ignore road fragments
+  under 300 km (`compKm`). Colour check for trip mode: `node tools/check-trip-colours.js` (needs
+  Playwright). It measures the rendered colours in every theme and print, and the same file is
+  in both repos.
   **Open idea, not scheduled:** Jon wants to keep the option of moving road-trip mode
   to its own Routes tab later (see README, "Open idea: a separate Routes tab"). Don't do it
   incidentally; it's a layout change under the ask-first rule.
