@@ -652,6 +652,17 @@ road network and carry a snapshot of each other's parks, refreshed by
 line the route would otherwise cut across becomes a place to visit. The US map also shows
 Canada's outline behind the states.
 
+**Park access roads (November 2026).** Natural Earth has the highways but not the last stretch
+of road up to many resorts. CO-135 from Gunnison to Crested Butte isn't in it at all, and
+neither is US-26 over Mt. Hood, so 47 parks in the two guides sat 15–50 km from any road a trip
+could use, and a trip could not end at them. `tools/fetch-park-access.py` now asks the public
+OSRM router (OpenStreetMap roads) once for the real drive from each of those parks to the
+nearest highway, up to three roads out in different directions (Mt. Hood: Portland, Hood
+River, central Oregon), and saves 51 roads to `tools/park-access.geojson`, which
+`tools/build-road-network.py` adds to `NA_ROADS`. That's +2.5 KB, still baked into the file
+with nothing fetched when the page loads. Every park is now within 14 km of a routable road.
+Credit in the footer: © OpenStreetMap contributors (ODbL).
+
 **Open idea: a separate Routes tab.** Road-trip mode lives inside the Map tab for now
 (Jon's call, November 2026). A dedicated fourth tab stays on the table, e.g. once the
 feature grows (city dropdowns for keyboard users, a share link, Canada routes). The move is
