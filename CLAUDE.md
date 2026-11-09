@@ -327,6 +327,13 @@ surfaces (not by eye) — keep it when retinting or adding a theme:
 - No dimming text with `opacity`. Closed park rows are dimmed only to `.88` and get a
   dashed border — a cue that survives grayscale.
 - Theme 142 (neon) keeps its bright fills but uses near-black text on them (≥ 5.6:1).
+- Themes 150 ("Red Rocks") and 148 ("Alpine", after the Canada guide's Sir John A. Macdonald)
+  are **light** since November 2026; 157 and 142 stay dark. The page's base styles assume a dark
+  page, so the light pair also hides the header artwork and scrim and swaps translucent-black
+  panels for `--card-bg` (the block right after their tokens; it mirrors the print palette).
+  Alpine draws the trip sketch in `--metro` violet (its pine sketch and bronze route were
+  dE 11.6). Same contrast targets as every theme; audit: zero text below 4.5:1, only the 6:1
+  white-on-fill pills under 7:1.
 - `@media print` (search `PRINT / SAVE-AS-PDF PALETTE`) prints every theme on white
   with solved dark text, because browsers drop dark backgrounds when printing. No print
   button exists by design.
