@@ -4173,12 +4173,12 @@ function initMap(){
   mapInstance.on('click', () => mapInstance.scrollWheelZoom.enable());
   mapInstance.on('mouseout', () => mapInstance.scrollWheelZoom.disable());
 
-  /* Groups at country / multi-region zooms only; from zoom 6 (a few states across) a park merges
-     only with one its dot would almost completely cover (within 4px: Solitude/Brighton are 1.4px
-     apart at zoom 6), so zooming into Colorado shows each park as its own dot. Same rule in the
-     Canada guide. */
+  /* Jon's rule (Nov 2026): numbered groups only at the farthest zoom-out (3). From zoom 4, where
+     the map opens, every park is its own dot, even where two sit almost on top of each other
+     (Solitude / Brighton). Same rule in the Canada guide. */
   markerCluster = L.markerClusterGroup({
-    maxClusterRadius: z => z <= 4 ? 42 : z === 5 ? 24 : 4,
+    maxClusterRadius: 42,
+    disableClusteringAtZoom: 4,
     showCoverageOnHover: false,
     spiderfyOnMaxZoom: true
   });
